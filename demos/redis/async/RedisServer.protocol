@@ -1,0 +1,22 @@
+package demos.redis.async;
+
+typestate RedisServer {
+	session
+		Init = {
+           void WATCH(String[]): Watching
+		}
+	where
+		Watching = {
+			void GET(String): Watching,
+			void WATCH(String[]): Watching,
+			void MULTI(): Queued
+		}
+
+		Queued = {
+		    void SET(String, String): Queued,
+			void DISCARD(): end,
+			// What is my state after receiving an asynchronous EXEC request?
+			// I won't know until I'm ready to respond to the client.
+			void EXEC(): ???
+		}
+}

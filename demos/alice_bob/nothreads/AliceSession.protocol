@@ -1,0 +1,5 @@
+package demos.alice_bob.nothreads;
+
+typestate AliceSession {
+		Init = {void sendStringToBob(String) : {}}
+}

@@ -1,0 +1,37 @@
+aspect typestateCheck {
+	protected void ClassDecl.typestateCheck() {
+		getGraph();
+	}
+
+	protected void VariableDeclarator.typestateCheck() {
+		if(getTypeAccess().lookupType() != null && getTypeAccess().lookupType().isTypestateClassDeclType()) {
+			typestate.reportErrors("Object reference is used uninitialised.");
+			if(getTypeAccess().lookupType().getTypestateDecl() != null) {
+				GraphNode t = getTypeAccess().lookupType().getTypestateDecl().createTypestate().normalise();
+				typestate.checkTypestate(t, "The typestate of the created object does not match its declared typestate.");
+			}
+		}
+	}
+
+	protected void ParameterDeclaration.typestateCheck() {
+		if(getTypeAccess().lookupType() != null && getTypeAccess().lookupType().isTypestateClassDeclType()) {
+			typestate.reportErrors("Object reference is used uninitialised");
+			if(getTypeAccess().lookupType().getTypestateDecl() != null) {
+				GraphNode t = getTypeAccess().lookupType().getTypestateDecl().createTypestate().normalise();
+				typestate.checkTypestate(t, "The typestate of the created object does not match its declared typestate.");
+			}
+		}
+	}
+/*
+	protected void MethodAccess.typestateCheck() {
+		MethodDecl md= lookupMethod(getQualifiedType());		//TODO get a lookupMethod()
+		if(md != null && md.isTypestateMethod()) {
+			GraphNode t = md.getTypestateMethod().getTType().createTypestate();
+			if(t != null) {
+				t.normalise();
+				typestate.checkTypestate(t, "The typestate of the returned object does not match the return typestate.");
+			}
+		}
+	}
+*/
+}

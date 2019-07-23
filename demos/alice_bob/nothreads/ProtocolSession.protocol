@@ -1,0 +1,5 @@
+package demos.alice_bob.nothreads;
+
+typestate ProtocolSession {
+		Init	=	{ void AliceSaysHi(): { void BobReceivesGreet(): end } }
+}

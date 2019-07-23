@@ -1,0 +1,39 @@
+package demos.redis.channeloriented;
+
+typestate RedisClientProtocol {
+	session
+		Init = {
+           void sendWATCH(String[]): Watching
+		}
+	where
+		Watching = {
+			WatchingLabel sendLabel_Watching(int): <
+				GET: {
+					void sendArg_GET(String): {
+						String receiveGET_response(): Watching
+	 				}
+				},
+				WATCH: {
+	 				void sendArg_WATCH(String[]): Watching
+	 			},
+				MULTI: Queued
+			>
+		}
+		
+		Queued = {
+			QueuedLabel sendLabel_Queued(int): <
+		    	SET: {
+					void sendArg0_SET(String): {
+						void sendArg1_SET(String): Queued 
+					} 
+				},
+				DISCARD: end,
+				EXEC: {
+					ResultLabel receiveEXEC_response(): <
+						OK:end, 
+						FAIL:Queued
+					>
+				}
+			>
+		}
+}

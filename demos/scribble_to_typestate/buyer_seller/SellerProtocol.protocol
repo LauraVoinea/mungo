@@ -1,0 +1,41 @@
+package demos.scribble_to_typestate.buyer_seller;
+
+typestate SellerProtocol {
+	session
+		State0 = {
+			String receivebookStringfromBuyer1(): State1
+		}
+	where
+		State1 = {
+			void sendbookInttoBuyer1(Int): State2
+		}
+
+		State2 = {
+			ChoiceOption receiveLabelfromBuyer2():
+			<AGREE:State3, QUIT:State4>
+		}
+
+		State3 = {
+			String receivePayloadforAGREEfromBuyer2(): State5
+		}
+
+		State4 = {
+			String receivePayloadforQUITfromBuyer2(): State8
+		}
+
+		State5 = {
+			Int receivetransferIntfromBuyer1(): State7
+		}
+
+		State7 = {
+			Int receivetransferIntfromBuyer2(): State8
+		}
+
+		State8 = {
+			String receivegreetingsStringfromBuyer1(): State9
+		}
+
+		State9 = {
+			String receivegreetingsStringfromBuyer2(): end
+		}
+}

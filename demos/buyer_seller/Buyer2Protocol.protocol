@@ -1,0 +1,14 @@
+package demos.buyer_seller;
+
+typestate Buyer2Protocol {
+		InitSession =	{
+							String receiveQuoteFromBuyer1(): QuoteReceived
+						}
+		QuoteReceived = {
+							AgreementLabel sendToSellerBuyer1(String): <AGREE:TalktoSeller, QUIT:end>
+						}
+
+		TalktoSeller = 	{
+							void transferMoneyToSeller(String): end
+						}
+}

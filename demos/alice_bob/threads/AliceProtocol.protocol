@@ -1,0 +1,10 @@
+package demos.alice_bob.threads;
+
+typestate AliceProtocol {
+			Init =	{
+					void sendStringToBob(String) :
+					{
+						String receiveStringFromBob() : end
+					}
+				}
+}

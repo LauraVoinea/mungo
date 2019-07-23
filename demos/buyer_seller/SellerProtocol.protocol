@@ -1,0 +1,18 @@
+package demos.buyer_seller;
+
+typestate SellerProtocol {
+		InitSession =		{
+								String receiveTitleFromBuyer1(): TitleReceived
+							}
+		TitleReceived =		{
+								void sendPriceToBuyer1(String): PriceSent
+							}
+
+		PriceSent =			{
+								AgreementLabel receiveLabelFromBuyer2(): <AGREE: TalktoBothBuyers, QUIT: end>
+							}
+
+		TalktoBothBuyers =	{
+								String receiveMoneyFromBothBuyers(): end
+							}	
+}

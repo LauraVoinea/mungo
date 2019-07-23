@@ -1,0 +1,130 @@
+<!--
+ Targets for working from terminal window:
+       build (default) - generates java files and compiles them
+       clean           - removes all generated files and class files
+ Targets for working from Eclipse:
+       gen             - generates java files
+       genClean        - removes all generated files and their class files
+-->
+<project name="JavaTypestate" default="build">
+    <property name="jj.root" location="${basedir}/.."/>
+    <property file="${jj.root}/build.properties"/>
+    <!-- "package" is the directory where generated files will be stored -->
+    <property name="package" value="JavaTypestate.AST"/>
+
+    <!-- "jflex" is an ant task class for the scanner generator in JFlex.jar -->
+    <taskdef name="jflex" classname="JFlex.anttask.JFlexTask"
+             classpath="${tools.dir}/JFlex.jar"/>
+    <!-- "beaver" is an ant task class for the parser generator in beaver-ant.jar -->
+    <taskdef name="beaver" classname="beaver.comp.run.AntTask"
+             classpath="${tools.dir}/beaver-ant.jar"/>
+    <!-- jastadd task -->
+    <taskdef name="jastadd" classname="org.jastadd.JastAddTask"
+             classpath="${tools.dir}/jastadd2.jar"/>
+
+    <!-- compile sources -->
+    <target name="build" depends="gen">
+        <javac debug="true" nowarn="true" srcdir="${gen.dir}" includes="**/*.java"
+               excludes="test/**"
+               includeantruntime="false"
+               destdir="${bin.dir}"
+               classpath=".:${tools.dir}/junit.jar:${tools.dir}/beaver-ant.jar"/>
+    </target>
+
+    <!-- generate compiler source files -->
+    <target name="gen" depends="scanner,parser">
+        <!-- create AST node types and weave aspect modules -->
+        <jastadd package="${package}" rewrite="true" beaver="true"
+                 visitCheck="false" outdir="${gen.dir}" debug="true">
+            <fileset dir=".">
+                <include name="grammar/*.ast"/>
+                <include name="frontend/*.jrag"/>
+                <include name="frontend/*.jadd"/>
+            </fileset>
+        </jastadd>
+    </target>
+
+    <target name="scanner">
+        <!-- compose the scanner -->
+        <concat destfile="${gen.dir}/JavaTypestate/scanner/JavaScanner.flex" binary="true" force="false">
+            <filelist dir="scanner">
+                <file name="Preamble.flex"/>
+                <file name="Macros.flex"/>
+                <file name="Rules_Preamble.flex"/>
+                <file name="WhiteSpace.flex"/>
+                <file name="Comments.flex"/>
+                <file name="Keywords.flex"/>
+                <file name="Literals.flex"/>
+                <file name="Separators.flex"/>
+                <file name="Operators.flex"/>
+                <file name="Identifiers.flex"/>
+                <file name="Postamble.flex"/>
+            </filelist>
+        </concat>
+        <concat destfile="${gen.dir}/JavaTypestate/scanner/Unicode.java" binary="true" force="false">
+            <filelist dir="scanner">
+                <file name="Unicode.java"/>
+            </filelist>
+
+        </concat>
+        <!-- generate the scanner -->
+        <jflex file="${gen.dir}/JavaTypestate/scanner/JavaScanner.flex" outdir="${gen.dir}/JavaTypestate/scanner" nobak="yes"/>
+    </target>
+
+    <target name="parser">
+        <!-- generate the parser phase 1, create a full .lalr specification from
+             fragments -->
+        <concat destfile="${gen.dir}/JavaTypestate/parser/JavaParser.all" binary="true" force="false">
+            <filelist dir=".">
+                <file name="parser/Preamble.parser"/>
+                <file name="parser/Java14.parser"/>
+                <file name="parser/ErrorRecovery.parser"/>
+                <file name="parser/Typestate.parser"/>
+                <file name="parser/Enums.parser"/>
+                <file name="parser/Annotations.parser"/>
+                <file name="parser/GenericMethods.parser"/>
+                <file name="parser/Generics.parser"/>
+                <file name="parser/VariableArityParameters.parser"/>
+
+            </filelist>
+        </concat>
+        <!-- generate the parser phase 2, translating .lalr to .beaver -->
+        <java classpath="${tools.dir}/JastAddParser.jar:${tools.dir}/beaver-rt.jar"
+              classname="Main" fork="true">
+            <arg line="${gen.dir}/JavaTypestate/parser/JavaParser.all ${gen.dir}/JavaTypestate/parser/JavaParser.beaver"/>
+        </java>
+        <!-- generate the parser phase 3, translating .beaver to .java -->
+        <beaver file="${gen.dir}/JavaTypestate/parser/JavaParser.beaver" terminalNames="yes" compress="no"
+                useSwitch="yes"/>
+    </target>
+
+    <!-- remove generated source files and .class files -->
+    <target name="clean" depends="cleanGen">
+        <delete dir="${bin.dir}"/>
+
+    </target>
+
+    <!-- remove generated source files -->
+    <target name="cleanGen">
+        <delete dir="${gen.dir}/JavaTypestate/AST"/>
+        <delete dir="${gen.dir}/JavaTypestate/parser"/>
+        <delete dir="${gen.dir}/JavaTypestate/scanner"/>
+    </target>
+
+    <!-- build binaries -->
+    <target name="jar" depends="build">
+        <jar destfile="JavaChecker.jar" basedir="." includes="**/*.class"
+             excludes="test/**">
+            <manifest>
+                <attribute name="Main-Class" value="JavaChecker"/>
+            </manifest>
+        </jar>
+        <jar destfile="JavaPrettyPrinter.jar" basedir="." includes="**/*.class"
+             excludes="test/**">
+            <manifest>
+                <attribute name="Main-Class" value="JavaPrettyPrinter"/>
+            </manifest>
+        </jar>
+    </target>
+
+</project>
