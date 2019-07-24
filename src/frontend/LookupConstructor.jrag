@@ -13,7 +13,7 @@ aspect LookupConstructor {
 	//For future work
 	syn ConstructorDecl SuperConstructorAccess.getTarget() {
 		if(getClassDeclAncestor().hasSuperClass())
-			return getClassDeclAncestor().getSuperClass().lookupType().lookupConstructor(getParameterTypes());
+			return getClassDeclAncestor().getSuperClass().type().lookupConstructor(getParameterTypes());
 		return null;
 	}
 
@@ -34,7 +34,7 @@ aspect LookupConstructor {
 			return false;
 
 		for(int i = 0; i < getNumParameter(); i++) {
-			TypeDecl t = getParameter(i).getTypeAccess().lookupType();
+			TypeDecl t = getParameter(i).getTypeAccess().type();
 			//null type should not be matched with primitive type
 			//noname type should be matched with any type
 			//t can never be instanceof NullType

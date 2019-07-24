@@ -1,3 +1,4 @@
+/*
 aspect PrimitiveTypes {
 	static protected final String[] CompilationUnit.primitiveTypeString = {
 		"boolean", "byte", "short", "int", "long", "char", "float", "double"
@@ -204,3 +205,4 @@ aspect PrimitiveTypes {
 		return classDecl;
 	}
 }
+*/

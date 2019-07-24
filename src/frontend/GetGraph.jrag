@@ -70,6 +70,21 @@ aspect GetGraph {
 					getQualifiedAccess().getLeft().getTypestateVar() :
 					null;							//TODO this means that the caller object is this
 
+//TODO:
+	  eq ParTypeAccess.getTypestateVar()= null;
+	  eq Wildcard.getTypestateVar()= null;
+	  eq WildcardExtends.getTypestateVar()= null;
+	  eq WildcardSuper.getTypestateVar()= null;
+	  eq DiamondAccess.getTypestateVar()= null;
+	  eq SyntheticTypeAccess.getTypestateVar()= null;
+	  eq ClassReference.getTypestateVar()= null;
+	  eq ArrayReference.getTypestateVar()= null;
+	  eq IntersectionCastExpr.getTypestateVar()= null;
+	  eq ExprMethodReference.getTypestateVar()= null;
+	  eq TypeMethodReference.getTypestateVar()= null;
+	  eq AmbiguousMethodReference.getTypestateVar()= null;
+	  eq LambdaExpr.getTypestateVar()= null;
+
 
 /*****************************************************************************************************/
 
@@ -176,7 +191,7 @@ protected TypestateVar MethodDecl.typestate = new TypestateVar();	//TODO if it i
 	syn lazy Set<VariableDeclarator> ClassDecl.getTypestateFields() {
 		Set<VariableDeclarator> s = new HashSet<VariableDeclarator>();
 		for(VariableDeclarator vd: getFieldDecls())
-			if(vd.getTypeAccess().lookupType().isTypestateClassDeclType())
+			if(vd.getTypeAccess().type().isTypestateClassDeclType())
 				s.add(vd);
 		return s;
 	}
@@ -200,7 +215,7 @@ protected TypestateVar MethodDecl.typestate = new TypestateVar();	//TODO if it i
 
 				if(getConstructorDecls().isEmpty())
 					for(VariableDeclarator vd: getTypestateFields())
-						if(vd.getTypeAccess().lookupType().isTypestateClassDeclType())
+						if(vd.getTypeAccess().type().isTypestateClassDeclType())
 							vd.typestate.checkError(vd/*, getBodyDeclAncestor()*/);
 			}
 		}
@@ -343,7 +358,7 @@ protected TypestateVar MethodDecl.typestate = new TypestateVar();	//TODO if it i
 		}
 
 		for(int i = 0; i < getNumParameter(); i++)
-			if(getParameter(i).getTypeAccess().lookupType().isTypestateClassDeclType()) {
+			if(getParameter(i).getTypeAccess().type().isTypestateClassDeclType()) {
 				if(getParameter(i).typestate == null)
 					getParameter(i).typestate = new TypestatePar();
 
@@ -357,7 +372,7 @@ protected TypestateVar MethodDecl.typestate = new TypestateVar();	//TODO if it i
 			getBlock().getGraph(env);
 
 		for(int i = 0; i < getNumParameter(); i++)
-			if(getParameter(i).getTypeAccess().lookupType().isTypestateClassDeclType()) {
+			if(getParameter(i).getTypeAccess().type().isTypestateClassDeclType()) {
 				getParameter(i).typestate.connectGraph(null);
 				env.remove(getParameter(i).typestate);
 			}
@@ -384,7 +399,7 @@ protected TypestateVar MethodDecl.typestate = new TypestateVar();	//TODO if it i
 		ConstructorDecl.ConstructorSuccessors() for getConstructorDeclAncestor();
 
 		inh ConstructorDecl ConstructorAccess.getConstructorDeclAncestor();
-		eq ConstructorDecl.getConstructorInvocation().getConstructorDeclAncestor() = this;
+		eq ConstructorDecl.getParsedConstructorInvocation().getConstructorDeclAncestor() = this;
 //	eq CompilationUnit.getImportDecl().getConstructorDeclAncestor() = null;
 		eq Program.getCompilationUnit().getConstructorDeclAncestor() = null;
 
@@ -407,7 +422,7 @@ protected TypestateVar MethodDecl.typestate = new TypestateVar();	//TODO if it i
 		}
 
 		for(int i = 0; i < getNumParameter(); i++)
-		if(getParameter(i).getTypeAccess().lookupType().isTypestateClassDeclType()) {
+		if(getParameter(i).getTypeAccess().type().isTypestateClassDeclType()) {
 		if(getParameter(i).typestate == null)
 		getParameter(i).typestate = new TypestatePar();
 
@@ -420,7 +435,7 @@ protected TypestateVar MethodDecl.typestate = new TypestateVar();	//TODO if it i
 		getConstructorInvocation().getGraph(env);
 
 		for(int i = 0; i < getNumParameter(); i++)
-		if(getParameter(i).getTypeAccess().lookupType().isTypestateClassDeclType()) {
+		if(getParameter(i).getTypeAccess().type().isTypestateClassDeclType()) {
 		getParameter(i).typestate.connectGraph(null);
 		env.remove(getParameter(i).typestate);
 		}
@@ -429,7 +444,7 @@ protected TypestateVar MethodDecl.typestate = new TypestateVar();	//TODO if it i
 		tv.connectGraph(this);
 
 		for(VariableDeclarator vd: getTypestateFields())
-		if(vd.getTypeAccess().lookupType().isTypestateClassDeclType())
+		if(vd.getTypeAccess().type().isTypestateClassDeclType())
 		vd.typestate.checkError(vd/*, getBodyDeclAncestor()*/);
 
 		isRec = false;
@@ -461,7 +476,7 @@ protected TypestateVar MethodDecl.typestate = new TypestateVar();	//TODO if it i
 		//TODO bug. Does not add variables declared in switch statements.
 		eq Block.getGraph(Set<TypestateVar> env) {
 		for(VariableDeclarator v: getVariableDeclarators())
-		if(v.getTypeAccess().lookupType().isTypestateClassDeclType()) {
+		if(v.getTypeAccess().type().isTypestateClassDeclType()) {
 		if(v.typestate == null)
 		v.typestate = new TypestateVar();
 		env.add(v.typestate/* = new TypestateVar()*/);
@@ -471,7 +486,7 @@ protected TypestateVar MethodDecl.typestate = new TypestateVar();	//TODO if it i
 		getStmt(i).getGraph(env);
 
 		for(VariableDeclarator v: getVariableDeclarators())
-		if(v.getTypeAccess().lookupType().isTypestateClassDeclType()) {
+		if(v.getTypeAccess().type().isTypestateClassDeclType()) {
 		v.typestate.checkError(v/*, getBodyDeclAncestor()*/);
 		env.remove(v.typestate);
 		}
@@ -479,7 +494,7 @@ protected TypestateVar MethodDecl.typestate = new TypestateVar();	//TODO if it i
 		}
 
 		//Not used stmts
-		eq VariableDeclarator.getGraph(Set<TypestateVar> env) = false;
+		//eq VariableDeclarator.getGraph(Set<TypestateVar> env) = false;
 		eq SynchronizedStmt.getGraph(Set<TypestateVar> env) = false;
 		eq LocalClassDeclStmt.getGraph(Set<TypestateVar> env) = false;
 
@@ -499,7 +514,7 @@ protected TypestateVar MethodDecl.typestate = new TypestateVar();	//TODO if it i
 		//TODO throw
 		eq ThrowStmt.getGraph(Set<TypestateVar> env) = true;
 
-		eq AssertStmt.getGraph(Set<TypestateVar> env) = getfirst().getGraph(env);
+		eq AssertStmt.getGraph(Set<TypestateVar> env) = getCondition().getGraph(env);
 		eq ExprStmt.getGraph(Set<TypestateVar> env) = getExpr().getGraph(env);
 
 		eq LabeledStmt.getGraph(Set<TypestateVar> env) {
@@ -743,7 +758,7 @@ protected TypestateVar MethodDecl.typestate = new TypestateVar();	//TODO if it i
 
 		TypestateVar t = getResult().getTypestateVar();
 		if(t != null)
-			if(getMethodDeclAncestor().getTypeAccess().lookupType().isTypestateClassDeclType()) {
+			if(getMethodDeclAncestor().getTypeAccess().type().isTypestateClassDeclType()) {
 				t.checkError(getResult()/*, getBodyDeclAncestor()*/);
 //				t.current = new ReturnNode(getMethodDeclAncestor().typestate);
 				t.current = new ReturnPlug().addNext(getMethodDeclAncestor().typestate.current);
@@ -762,7 +777,7 @@ protected TypestateVar MethodDecl.typestate = new TypestateVar();	//TODO if it i
 
 		//TODO implement me
 	syn boolean VariableDeclarator.getGraph(Set<TypestateVar> env) {
-		boolean isTypestate = getTypeAccess().lookupType().isTypestateClassDeclType();
+		boolean isTypestate = getTypeAccess().type().isTypestateClassDeclType();
 
 		if(isTypestate)
 			env.remove(typestate);
@@ -972,7 +987,7 @@ protected TypestateVar MethodDecl.typestate = new TypestateVar();	//TODO if it i
 								sessionParameter = true;
 								break;
 							}
-						if(md.getTypeAccess().lookupType().isTypestateClassDeclType() || sessionParameter == true)
+						if(md.getTypeAccess().type().isTypestateClassDeclType() || sessionParameter == true)
 							md.addSemanticError("Cannot infer return type for recursive method call.");
 				}
 				else {
@@ -993,7 +1008,7 @@ protected TypestateVar MethodDecl.typestate = new TypestateVar();	//TODO if it i
 				Boolean sessionParameter = false;
 				for(int i = md.getNumParameter() - 1; i >= 0; i--) {
 //					if(md.getParameter(i).typestate != null) {
-					if(md.getParameter(i).getTypeAccess().lookupType().isTypestateClassDeclType()) {
+					if(md.getParameter(i).getTypeAccess().type().isTypestateClassDeclType()) {
 						sessionParameter = true;
 						break;
 					}
@@ -1003,7 +1018,7 @@ protected TypestateVar MethodDecl.typestate = new TypestateVar();	//TODO if it i
 //				if(md.isTypestateMethod()) {
 				//when the target of the MethodAccess is in the typestate methods
 				if(isTypestateMethod()) {
-					if(md.getTypeAccess().lookupType().isTypestateClassDeclType() || sessionParameter == true) {
+					if(md.getTypeAccess().type().isTypestateClassDeclType() || sessionParameter == true) {
 						ClassDecl c = ((ClassDecl) getQualifiedType());
 						GraphNode tmp = md.typestate.current;
 						//md.typestate.current = new EndNode();
@@ -1032,7 +1047,7 @@ protected TypestateVar MethodDecl.typestate = new TypestateVar();	//TODO if it i
 			}
 			else {
 				//TODO there is something reduntand or missing here
-				if(md.getTypeAccess().lookupType().isTypestateClassDeclType() /*|| sessionParameter == true*/) {
+				if(md.getTypeAccess().type().isTypestateClassDeclType() /*|| sessionParameter == true*/) {
 					md.getGraph();
 				}
 			}
@@ -1062,5 +1077,22 @@ protected TypestateVar MethodDecl.typestate = new TypestateVar();	//TODO if it i
 	}
 
 	eq ClassInstanceExpr.getGraph(Set<TypestateVar> env) = true;
+
+//TODO
+	eq ParTypeAccess.getGraph(Set<TypestateVar> env) = true;
+	eq Wildcard.getGraph(Set<TypestateVar> env) = true;
+	eq WildcardExtends.getGraph(Set<TypestateVar> env) = true;
+	eq WildcardSuper.getGraph(Set<TypestateVar> env) = true;
+	eq DiamondAccess.getGraph(Set<TypestateVar> env) = true;
+	eq SyntheticTypeAccess.getGraph(Set<TypestateVar> env) = true;
+	eq ClassReference.getGraph(Set<TypestateVar> env) = true;
+	eq ArrayReference.getGraph(Set<TypestateVar> env) = true;
+	eq IntersectionCastExpr.getGraph(Set<TypestateVar> env) = true;
+	eq ExprMethodReference.getGraph(Set<TypestateVar> env) = true;
+	eq TypeMethodReference.getGraph(Set<TypestateVar> env) = true;
+	eq AmbiguousMethodReference.getGraph(Set<TypestateVar> env) = true;
+	eq LambdaExpr.getGraph(Set<TypestateVar> env) = true;
+	eq EnhancedForStmt.getGraph(Set<TypestateVar> env) = true;
+
 
 }

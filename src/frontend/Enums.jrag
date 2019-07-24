@@ -1,3 +1,4 @@
+/*
 aspect Enums{
 
 	coll Set<String>EnumDecl.getEnumLabels()[new HashSet<String>()]with add root EnumDecl;
@@ -35,3 +36,4 @@ aspect Enums{
 	}
 
 }
+*/

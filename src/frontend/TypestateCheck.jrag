@@ -4,20 +4,20 @@ aspect typestateCheck {
 	}
 
 	protected void VariableDeclarator.typestateCheck() {
-		if(getTypeAccess().lookupType() != null && getTypeAccess().lookupType().isTypestateClassDeclType()) {
+		if(getTypeAccess().type() != null && getTypeAccess().type().isTypestateClassDeclType()) {
 			typestate.reportErrors("Object reference is used uninitialised.");
-			if(getTypeAccess().lookupType().getTypestateDecl() != null) {
-				GraphNode t = getTypeAccess().lookupType().getTypestateDecl().createTypestate().normalise();
+			if(getTypeAccess().type().getTypestateDecl() != null) {
+				GraphNode t = getTypeAccess().type().getTypestateDecl().createTypestate().normalise();
 				typestate.checkTypestate(t, "The typestate of the created object does not match its declared typestate.");
 			}
 		}
 	}
 
 	protected void ParameterDeclaration.typestateCheck() {
-		if(getTypeAccess().lookupType() != null && getTypeAccess().lookupType().isTypestateClassDeclType()) {
+		if(getTypeAccess().type() != null && getTypeAccess().type().isTypestateClassDeclType()) {
 			typestate.reportErrors("Object reference is used uninitialised");
-			if(getTypeAccess().lookupType().getTypestateDecl() != null) {
-				GraphNode t = getTypeAccess().lookupType().getTypestateDecl().createTypestate().normalise();
+			if(getTypeAccess().type().getTypestateDecl() != null) {
+				GraphNode t = getTypeAccess().type().getTypestateDecl().createTypestate().normalise();
 				typestate.checkTypestate(t, "The typestate of the created object does not match its declared typestate.");
 			}
 		}

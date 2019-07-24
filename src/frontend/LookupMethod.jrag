@@ -10,18 +10,19 @@ aspect LookupMethod {
 	syn lazy TypeDecl[] TypestateMethod.getParameterTypes() {
 		TypeDecl[] ParameterAccess = new TypeDecl[getTTypeList().getNumTType()];
 		for(int i = 0; i <  getTTypeList().getNumTType(); i++)
-			ParameterAccess[i] = getTTypeList().getTType(i).getAccess().lookupType();
+			ParameterAccess[i] = getTTypeList().getTType(i).getAccess().type();
 		return ParameterAccess;
 	}
 
-	syn lazy MethodDecl MethodAccess.lookupMethod(TypeDecl t) = 
+	syn lazy MethodDecl MethodAccess.lookupMethod(TypeDecl t) =
 		t != null ? t.lookupMethod(getID(), getParameterTypes()) : null;
 
-	syn lazy MethodDecl TypestateMethod.lookupMethod(TypeDecl t) {
+	syn lazy MethodDecl TypestateMethod.lookupMethod(String name) {
+
 		if(t != null) {
 			MethodDecl md = t.lookupMethod(getID(), getParameterTypes());
-			TypeDecl td = getTType().getAccess().lookupType();
-			if(md != null && (md.getTypeAccess().lookupType().equals(td) || (td instanceof NoNameType)))
+			TypeDecl td = getTType().getAccess().type();
+			if(md != null && (md.getTypeAccess().type().equals(td) || (td instanceof NoNameType)))
 				return md;
 		}
 
@@ -44,7 +45,7 @@ aspect LookupMethod {
 			return false;
 
 		for(int i = 0; i < getNumParameter(); i++) {
-			TypeDecl t = getParameter(i).getTypeAccess().lookupType();
+			TypeDecl t = getParameter(i).getTypeAccess().type();
 			//null type should not be matched with primitive type
 			//noname type should be matched with any type
 			//t can never be instanceof NullType
@@ -68,13 +69,13 @@ aspect LookupMethod {
 		//Implementing super class access
 		if((a.size() == 0) && hasSuperClass()) {
 			//TODO check if lookupType() really exists
-			return getSuperClass().lookupType().lookupMethodTargets(method, parameters);
+			return getSuperClass().type().lookupMethodTargets(method, parameters);
 		}
 
-		return a;	
+		return a;
 	}
 
-	syn lazy ArrayList<MethodDecl> MethodAccess.lookupMethodTargets(TypeDecl t) = 
+	syn lazy ArrayList<MethodDecl> MethodAccess.lookupMethodTargets(TypeDecl t) =
 		t != null ? t.lookupMethodTargets(getID(), getParameterTypes()) : new ArrayList<MethodDecl>();
 
 

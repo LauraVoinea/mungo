@@ -15,6 +15,7 @@ aspect RewriteAccess {
 	syn lazy boolean Dot.isDotPackage() =
 		!isAbstractDotParent() && !(getParent() instanceof ImportDecl) && isPackageAccess();
 
+/*
 	syn boolean Dot.isPackageAccess() {
 		if(getRight() instanceof ParseName)
 			return getLeft().isPackage();
@@ -22,7 +23,7 @@ aspect RewriteAccess {
 			return getLeft().isPackageAccess((Dot) getRight());
 		return false;
 	}
-
+*/
 	syn boolean Expr.isPackage() = false;
 	eq ParseName.isPackage() = isPackage(getName());
 
@@ -71,6 +72,31 @@ aspect RewriteAccess {
 		return true;
 	}
 	eq TypeImportOnDemandDecl.startsWith(String Package) {
+		String[] imp = getAccess().toString().split("\\.");
+		String[] packages = Package.split("\\.");
+		if(imp.length < packages.length)
+			return false;
+		for(int i = 0; i < packages.length; i++)
+			if(!imp[i].equals(packages[i]))
+				return false;
+
+		return true;
+	}
+
+/* TODO */
+	eq SingleStaticImportDecl.startsWith(String Package) {
+		String[] imp = getAccess().toString().split("\\.");
+		String[] packages = Package.split("\\.");
+		if(imp.length <= packages.length)
+			return false;
+		for(int i = 0; i < packages.length; i++)
+			if(!imp[i].equals(packages[i]))
+				return false;
+
+		return true;
+	}
+/* TODO */
+	eq StaticImportOnDemandDecl.startsWith(String Package) {
 		String[] imp = getAccess().toString().split("\\.");
 		String[] packages = Package.split("\\.");
 		if(imp.length < packages.length)

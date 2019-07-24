@@ -1,7 +1,7 @@
 import beaver.*;
 import java.io.*;
-import JavaTypestate.parser.*;
-import JavaTypestate.scanner.*;
+//import JavaTypestate.parser.*;
+//import JavaTypestate.scanner.*;
 
 aspect Compilation {
 
@@ -133,9 +133,12 @@ aspect Compilation {
 
 	public void Program.createJavaFiles() {
 		for(int i = 0; i < getNumCompilationUnit(); i++) {
-			CompilationUnit cu = getCompilationUnit(i);
-			if(!cu.getTypeDecl().isTypestateDeclType())
-				cu.Rewrite(cu.getType() + javaFileSuffix());
+			CompilationUnit unit = getCompilationUnit(i);
+			for (int j = 0; j < unit.getNumTypeDecl(); j++) {
+      	TypeDecl type = unit.getTypeDecl(j);
+				if(!(type.isTypestateDeclType()))
+					unit.Rewrite(type + javaFileSuffix());
+				}
 		}
 	}
 
@@ -150,9 +153,12 @@ aspect Compilation {
 
 		private void printUnits() {
 			for(int i = 0; i < getNumCompilationUnit(); i++) {
-				getCompilationUnit(i).Rewrite(System.out);
-				if(getCompilationUnit(i).getTypeDecl().isEnumDeclType())
-					((ClassDecl) getCompilationUnit(i).getTypeDecl()).getEnumDecl().Rewrite(System.out);
+				CompilationUnit unit = getCompilationUnit(i);
+				unit.Rewrite(System.out);
+				for (int j = 0; j < unit.getNumTypeDecl(); j++) {
+					if(unit.getTypeDecl(j).isEnumDeclType())
+						((ClassDecl) unit.getTypeDecl(j)).getEnumDecl().Rewrite(System.out);
+					}
 			}
 
 		}

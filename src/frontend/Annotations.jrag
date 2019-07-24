@@ -24,7 +24,7 @@ aspect Annotations {
             when (!(this instanceof TypestateClassDecl) && getModifiers().hasTypestateAnnotation()) to TypestateClassDecl {
               if(hasSuperClass()) {
                 Access a = getSuperClass();
-                if (a.lookupType().isTypestateClassDeclType())
+                if (a.type().isTypestateClassDeclType())
                   addSemanticError("Class " + this.getID() + " cannot extend a class with a typestate.");
               }
               List<BodyDecl> bodydecls = new List<BodyDecl>();

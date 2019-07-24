@@ -23,19 +23,19 @@ aspect typestateSemanticCheck {
 	}
 
 	protected void TTypestate.semanticCheck() {
-		TypeDecl t = getAccess().lookupType();
+		TypeDecl t = getAccess().type();
 
 		if(!t.isTypestateClassDeclType())
 			addSemanticError("Type " + getAccess().toString() + " is not a typestate class type.");
 		else if(t.getTypestateClassDecl().existsTypestateDecl())
-			; //TODO Check if getTypestate() is a postfix of cu.getClassDecl().getTypestateDecl() 
+			; //TODO Check if getTypestate() is a postfix of cu.getClassDecl().getTypestateDecl()
 
 		if(getAccess().hasDims())
 			addSemanticError("Typestate type " + getAccess().toString() + " should not be an array type.");
 	}
 
 	protected void TType.semanticCheck() {
-		TypeDecl t = getAccess().lookupType();
+		TypeDecl t = getAccess().type();
 		if(t.isTypestateDeclType())
 			addSemanticError(getAccess().toString() + " is not a proper java type.");
 		//TODO recheck the next check
@@ -53,7 +53,7 @@ aspect typestateSemanticCheck {
 	protected void TypestateMethod.semanticCheck() {
 		TypeDecl t;
 		if(getTypestate() instanceof TypestateSwitch) {
-			t = getTType().getAccess().lookupType();
+			t = getTType().getAccess().type();
 			if(!t.isEnumDeclType())
 				addSemanticError("Method " + signature() + " should return an enumeration type.");
 			else {
@@ -77,4 +77,3 @@ aspect typestateSemanticCheck {
 		}
 	}
 }
-

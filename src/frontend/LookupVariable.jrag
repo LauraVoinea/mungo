@@ -3,7 +3,7 @@ aspect LookupVariable {
 	inh NameDecl ParseName.lookupVariable(String var);
 	syn lazy NameDecl ParseName.lookupVariable() = lookupVariable(getID());
 //	eq CompilationUnit.getImportDecl(int i).lookupVariable(String var) = null;
-	eq Program.getCompilationUnit().lookupVariable(String var) = null;
+//	eq Program.getCompilationUnit().lookupVariable(String var) = null;
 
 	syn lazy NameDecl ParseName.lookupVariable(TypeDecl t) = t != null ? t.lookupVariable(getID()) : null;
 
@@ -15,7 +15,8 @@ aspect LookupVariable {
 	eq Block.getStmt(int i).getBlockAncestor() = this;
 	eq TypeDecl.getBodyDecl().getBlockAncestor() = null;
 
-	inh NameDecl Block.lookupVariable(String var);
+	//inh NameDecl Block.lookupVariable(String var);
+	/*
 	eq Block.getStmt(int j).lookupVariable(String var) {
 		for(VariableDeclarator vd : getVariableDecls())
 			if(vd.getID().equals(var))
@@ -23,8 +24,9 @@ aspect LookupVariable {
 
 		return lookupVariable(var);
 	}
-
+*/
 	//MethodDecl
+	/*
 	inh NameDecl MethodDecl.lookupVariable(String var);
 	eq MethodDecl.getBlock().lookupVariable(String var) {
 		for(int i = 0; i < getNumParameter(); i++)
@@ -33,19 +35,20 @@ aspect LookupVariable {
 
 		return lookupVariable(var);
 	}
-
+	*/
 	//ConstructorDecl
 	inh NameDecl ConstructorDecl.lookupVariable(String var);
+	/*
 	eq ConstructorDecl.getBlock().lookupVariable(String var) {
 		for(int i = 0; i < getNumParameter(); i++)
 			if(getParameter(i).getID().equals(var))
 				return getParameter(i).toNameDecl();
 		return lookupVariable(var);
 	}
-
+*/
 	//ClassDecl
-	eq TypeDecl.getBodyDecl(int i).lookupVariable(String var) = null;
-	eq ClassDecl.getBodyDecl(int i).lookupVariable(String var) = lookupVariable(var);
+	//eq TypeDecl.getBodyDecl(int i).lookupVariable(String var) = null;
+	//eq ClassDecl.getBodyDecl(int i).lookupVariable(String var) = lookupVariable(var);
 
 	coll Set<VariableDeclarator> ClassDecl.getFieldDecls() [new HashSet<VariableDeclarator>()] with add root ClassDecl;
 	VariableDeclarator contributes this when isField() to ClassDecl.getFieldDecls() for getClassDeclAncestor();
@@ -56,8 +59,8 @@ aspect LookupVariable {
 			if(vd.getID().equals(var))
 				return vd.toNameDecl();
 		//for possible future work
-		if(hasSuperClass())
-			return getSuperClass().lookupType().lookupVariable(var);
+		if(hasSuperclass())
+			return superclass().type().lookupVariable(var);
 		return null;
 	}
 

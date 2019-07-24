@@ -75,7 +75,7 @@
 	eq CompilationUnit.getImportDecl().lookupType(String Package, String name) = null;
 
 	inh TypeDecl Access.lookupType(String Package, String name);
-	syn lazy TypeDecl Access.lookupType() =
+	syn lazy TypeDecl Access.type() =
 		lookupType(getLastAccess().getQualifiedString(), getLastAccess().toString());
 
 }

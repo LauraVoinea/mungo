@@ -524,7 +524,7 @@ aspect Rewrite {
 
 	protected void AssertStmt.Rewrite(TypestateStream stream) {
 		stream.print("assert ");
-		getfirst().Rewrite(stream);
+		getCondition().Rewrite(stream);
 		if(hasExpr()) {
 			stream.print(" : ");
 			getExpr().Rewrite(stream);

@@ -58,7 +58,7 @@ aspect javaASTFunctionality {
 	eq TypestateClassDecl.getTypestateClassDecl() = this;
 	syn lazy boolean TypestateClassDecl.existsTypestateDecl() = getTypestateDecl() != null;
 	syn lazy TypestateDecl TypestateClassDecl.getTypestateDecl() =
-		getTypestateArg().lookupType().isTypestateDeclType() ? getTypestateArg().lookupType().getTypestateDecl() : null;
+		getTypestateArg().type().isTypestateDeclType() ? getTypestateArg().type().getTypestateDecl() : null;
 
 	/*	InterfaceDeclType							*/
 	eq InterfaceDecl.isInterfaceDeclType() = true;
@@ -93,7 +93,7 @@ aspect javaASTFunctionality {
 
 	coll Set<MethodDecl> MethodDecl.selfSuccessors() [new HashSet<MethodDecl>()] with add root MethodDecl;
 	coll Set<MethodAccess> MethodDecl.selfMethodAccess() [new HashSet<MethodAccess>()] with add root MethodDecl;
-
+/*
 	syn lazy String MethodDecl.signature() {
 		// TODO Need of getModifiers().toString();??
 		String s = getTypeAccess().toString() + " " + getID() + "(";
@@ -104,7 +104,7 @@ aspect javaASTFunctionality {
 		}
 		return s + ")";
 	}
-
+*/
 	/*	MethodAccess							*/
 
 	MethodAccess contributes getTarget() when getTarget() != null && isThisAccess() == true
@@ -222,6 +222,8 @@ aspect javaASTFunctionality {
 	/*	VariableDeclarator
 	 *	FieldDecl
 	 *	VarDeclStmt							*/
+
+	/*
 	inh boolean VariableDeclarator.isField();
 	eq FieldDecl.getVariableDeclarator(int i).isField() = true;
 	eq VarDeclStmt.getVariableDeclarator(int i).isField() = false;
@@ -235,7 +237,7 @@ aspect javaASTFunctionality {
 	eq VarDeclStmt.getVariableDeclarator(int i).getTypeAccess() = getTypeAccess();
 
 	inh ClassDecl VariableDeclarator.getClassDeclAncestor();
-
+	*/
 	/*	SwitchStmt							*/
 	coll Set<String> SwitchStmt.getCaseLabels() [new HashSet<String>()] with add root SwitchStmt;
 	ConstCase contributes getValue().toString() to SwitchStmt.getCaseLabels() for getSwitchStmtAncestor();
@@ -250,11 +252,11 @@ aspect javaASTFunctionality {
 				return true;
 		return false;
 	}
-
+/*
 	syn lazy boolean Modifiers.isPublic() = isModifier("public");
 	syn lazy boolean Modifiers.isProtected() = isModifier("protected");
 	syn lazy boolean Modifiers.isPrivate() = isModifier("private");
 	syn lazy boolean Modifiers.isStatic() = isModifier("static");
 	syn lazy boolean Modifiers.isFinal() = isModifier("final");
-
+*/
 }
