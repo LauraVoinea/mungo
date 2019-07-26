@@ -138,7 +138,7 @@ aspect javaASTFunctionality {
 	syn lazy boolean MethodAccess.isRecursiveCall() = reachable().contains(getMethodDeclAncestor());
 */
 
-	syn lazy MethodDecl MethodAccess.getTarget() = lookupMethod(getQualifiedType());
+	syn lazy MethodDecl MethodAccess.getTarget() = lookupMethod(qualifier().type());
 
 	syn lazy String MethodAccess.signature() {
 		String s = getID() + "(";
@@ -153,7 +153,7 @@ aspect javaASTFunctionality {
 
 	syn lazy boolean MethodAccess.isTypestateMethod() {
 		MethodDecl md = getTarget();
-		return (md != null) ? md.getTypestateMethod(getQualifiedType()) != null : false;
+		return (md != null) ? md.getTypestateMethod(qualifier().type()) != null : false;
 	}
 
 	/*	Access								*/
@@ -202,16 +202,16 @@ aspect javaASTFunctionality {
 	eq ArrayTypeAccess.countDims() = 1 + getAccess().countDims();
 
 	/*	ParseName							*/
-	ParseName contributes getVariableDeclarator()
-	when getVariableDeclarator() != null && getVariableDeclarator().isField()
+	ParseName contributes getDeclarator()
+	when getDeclarator() != null && getDeclarator().isField()
 	to MethodDecl.getUsedTypestateFields() for getMethodDeclAncestor();
 
-	syn lazy VariableDeclarator ParseName.getVariableDeclarator() {
+	syn lazy VariableDeclarator ParseName.getDeclarator() {
 		if(!getType().isTypestateClassDeclType())
 			return null;
 		if(getQualifiedAccess() != null)
-			return lookupVariable(getQualifiedType()).getVariableDeclarator();
-		return lookupVariable().getVariableDeclarator();
+			return lookupVariable(qualifier().type()).getDeclarator();
+		return lookupVariable().getDeclarator();
 	}
 
 	inh MethodDecl ParseName.getMethodDeclAncestor();
@@ -225,16 +225,16 @@ aspect javaASTFunctionality {
 
 	/*
 	inh boolean VariableDeclarator.isField();
-	eq FieldDecl.getVariableDeclarator(int i).isField() = true;
-	eq VarDeclStmt.getVariableDeclarator(int i).isField() = false;
+	eq FieldDecl.getDeclarator(int i).isField() = true;
+	eq VarDeclStmt.getDeclarator(int i).isField() = false;
 
 	inh Modifiers VariableDeclarator.getModifiers();
-	eq FieldDecl.getVariableDeclarator(int i).getModifiers() = getModifiers();
-	eq VarDeclStmt.getVariableDeclarator(int i).getModifiers() = getModifiers();
+	eq FieldDecl.getDeclarator(int i).getModifiers() = getModifiers();
+	eq VarDeclStmt.getDeclarator(int i).getModifiers() = getModifiers();
 
 	inh Access VariableDeclarator.getTypeAccess();
-	eq FieldDecl.getVariableDeclarator(int i).getTypeAccess() = getTypeAccess();
-	eq VarDeclStmt.getVariableDeclarator(int i).getTypeAccess() = getTypeAccess();
+	eq FieldDecl.getDeclarator(int i).getTypeAccess() = getTypeAccess();
+	eq VarDeclStmt.getDeclarator(int i).getTypeAccess() = getTypeAccess();
 
 	inh ClassDecl VariableDeclarator.getClassDeclAncestor();
 	*/

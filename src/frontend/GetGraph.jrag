@@ -61,7 +61,7 @@ aspect GetGraph {
 			if(!getType().isTypestateClassDeclType())
 				return null;
 			if(getQualifiedAccess() != null)
-				return lookupVariable(getQualifiedType()).getTypestateVar();
+				return lookupVariable(qualifier().type()).getTypestateVar();
 			return lookupVariable().getTypestateVar();
 		}
 
@@ -475,7 +475,7 @@ protected TypestateVar MethodDecl.typestate = new TypestateVar();	//TODO if it i
 
 		//TODO bug. Does not add variables declared in switch statements.
 		eq Block.getGraph(Set<TypestateVar> env) {
-		for(VariableDeclarator v: getVariableDeclarators())
+		for(VariableDeclarator v: getDeclaratorList())
 		if(v.getTypeAccess().type().isTypestateClassDeclType()) {
 		if(v.typestate == null)
 		v.typestate = new TypestateVar();
@@ -485,7 +485,7 @@ protected TypestateVar MethodDecl.typestate = new TypestateVar();	//TODO if it i
 		for(int i = getNumStmt() - 1; i >= 0; i--)
 		getStmt(i).getGraph(env);
 
-		for(VariableDeclarator v: getVariableDeclarators())
+		for(VariableDeclarator v: getDeclaratorList())
 		if(v.getTypeAccess().type().isTypestateClassDeclType()) {
 		v.typestate.checkError(v/*, getBodyDeclAncestor()*/);
 		env.remove(v.typestate);
@@ -661,14 +661,14 @@ protected TypestateVar MethodDecl.typestate = new TypestateVar();	//TODO if it i
 		Access a = ((Access) getExpr()).getLastAccess();
 		if(a.getType().isEnumDeclType())
 		t = a.getQualifiedAccess() != null ?
-		a.getQualifiedTypestateVar() :
+		a.qualifier().typestateVar() :
 		null;
 		}
 //		if(getExpr().isAccess()) {
 //			Access a = ((Access) getExpr()).getLastAccess();
-//			if(a.getQualifiedType().isEnumDeclType())
+//			if(a.qualifier().type().isEnumDeclType())
 //				t = a.getQualifiedAccess() != null ?
-//					a.getQualifiedAccess().getQualifiedTypestateVar() :
+//					a.getQualifiedAccess().qualifier().typestateVar() :
 //					null;
 //		}
 
@@ -770,9 +770,9 @@ protected TypestateVar MethodDecl.typestate = new TypestateVar();	//TODO if it i
 	}
 
 		eq VarDeclStmt.getGraph(Set<TypestateVar> env) {
-		for(int i = getNumVariableDeclarator() - 1; i >= 0; i--)
-		getVariableDeclarator(i).getGraph(env);
-		return true;
+			for(int i = getNumDeclarator() - 1; i >= 0; i--)
+				getDeclarator(i).getGraph(env);
+			return true;
 		}
 
 		//TODO implement me
@@ -1000,8 +1000,8 @@ protected TypestateVar MethodDecl.typestate = new TypestateVar();	//TODO if it i
 						vd.typestate.current = vd.typestate.getConnectionGraph(md);
 				}
 			}
-			else if(getQualifiedType().isTypestateClassDeclType()) {
-				TypestateVar t = getQualifiedTypestateVar();
+			else if(qualifier().type().isTypestateClassDeclType()) {
+				TypestateVar t = qualifier().typestateVar();
 
 				//TODO better implementation here
 				//only call c.getFieldGraph when return type or parameter type is a session typestate.
@@ -1019,7 +1019,7 @@ protected TypestateVar MethodDecl.typestate = new TypestateVar();	//TODO if it i
 				//when the target of the MethodAccess is in the typestate methods
 				if(isTypestateMethod()) {
 					if(md.getTypeAccess().type().isTypestateClassDeclType() || sessionParameter == true) {
-						ClassDecl c = ((ClassDecl) getQualifiedType());
+						ClassDecl c = ((ClassDecl) qualifier().type());
 						GraphNode tmp = md.typestate.current;
 						//md.typestate.current = new EndNode();
 						boolean addTypestate = TypestateVar.addTypestate;	//TODO better implementation here
@@ -1037,7 +1037,7 @@ protected TypestateVar MethodDecl.typestate = new TypestateVar();	//TODO if it i
 					}
 
 					if (t != null) {
-						t.current = new MethodNode(lookupMethod(getQualifiedType()).getTypeAccess(), getID(), getParameterTypes(), this).addNext(t.current);
+						t.current = new MethodNode(lookupMethod(qualifier().type()).getTypeAccess(), getID(), getParameterTypes(), this).addNext(t.current);
 					}
 				}
 

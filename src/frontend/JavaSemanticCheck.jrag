@@ -74,8 +74,8 @@ aspect JavaSemanticCheck {
 	}
 
 	protected void MethodAccess.semanticCheck() {
-		if(getQualifiedType().isTypestateClassDeclType()) {
-			ArrayList<MethodDecl> a = lookupMethodTargets(getQualifiedType());
+		if(qualifier().type().isTypestateClassDeclType()) {
+			ArrayList<MethodDecl> a = lookupMethodTargets(qualifier().type());
 			if(a.size() == 0)
 				addSemanticError("Method call " + signature() + " has no target.");
 			else if(a.size() > 1) {
@@ -90,7 +90,7 @@ aspect JavaSemanticCheck {
 		}
 
 		if(isThisAccess()) {
-			MethodDecl md = lookupMethod(getQualifiedType());
+			MethodDecl md = lookupMethod(qualifier().type());
 			if(md != null && !md.getUsedTypestateFields().isEmpty() && getMethodDeclAncestor() != null && !getMethodDeclAncestor().isTypestateMethod())
 				addSemanticError(
 					"Cannot call a method that uses a typestate field inside a method that is not defined in the typestate."
@@ -115,8 +115,8 @@ aspect JavaSemanticCheck {
 		//TODO check directly for MethodAccess
 		if(getExpr().isAccess()) {
 			Access a = ((Access)getExpr()).getLastAccess();
-			if (a.getQualifiedType().isEnumDeclType()) {
-				EnumDecl e = a.getQualifiedType().getEnumDecl();
+			if (a.qualifier().type().isEnumDeclType()) {
+				EnumDecl e = a.qualifier().type().getEnumDecl();
 				for(String s : e.getEnumLabels())
 					if(!getCaseLabels().contains(s))
 					addSemanticError("Enumeration type " + s + " should be a switch case.");

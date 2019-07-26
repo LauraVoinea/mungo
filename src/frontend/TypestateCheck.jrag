@@ -24,7 +24,7 @@ aspect typestateCheck {
 	}
 /*
 	protected void MethodAccess.typestateCheck() {
-		MethodDecl md= lookupMethod(getQualifiedType());		//TODO get a lookupMethod()
+		MethodDecl md= lookupMethod(qualifier().type());		//TODO get a lookupMethod()
 		if(md != null && md.isTypestateMethod()) {
 			GraphNode t = md.getTypestateMethod().getTType().createTypestate();
 			if(t != null) {

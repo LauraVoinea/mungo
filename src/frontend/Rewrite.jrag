@@ -403,10 +403,10 @@ aspect Rewrite {
 		getModifiers().Rewrite(stream);
 		getTypeAccess().Rewrite(stream);
 		stream.print(" ");
-		for(int i = 0; i < getNumVariableDeclarator(); i++) {
+		for(int i = 0; i < getNumDeclarator(); i++) {
 			if (i != 0)
 				stream.print(", ");
-			getVariableDeclarator(i).Rewrite(stream);
+			getDeclarator(i).Rewrite(stream);
 		}
 	}
 
@@ -525,9 +525,9 @@ aspect Rewrite {
 	protected void AssertStmt.Rewrite(TypestateStream stream) {
 		stream.print("assert ");
 		getCondition().Rewrite(stream);
-		if(hasExpr()) {
+		if(hasMessage()) {
 			stream.print(" : ");
-			getExpr().Rewrite(stream);
+			getMessage().Rewrite(stream);
 		}
 		stream.println(";");
 	}
@@ -610,10 +610,10 @@ aspect Rewrite {
 		getModifiers().Rewrite(stream);
 		getTypeAccess().Rewrite(stream);
 		stream.print(" ");
-		for(int i = 0; i < getNumVariableDeclarator(); i++) {
+		for(int i = 0; i < getNumDeclarator(); i++) {
 			if (i != 0)
 				stream.print(", ");
-			getVariableDeclarator(i).Rewrite(stream);
+			getDeclarator(i).Rewrite(stream);
 		}
 		stream.println(";");
 	}
