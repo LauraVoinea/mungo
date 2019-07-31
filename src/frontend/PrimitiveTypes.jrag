@@ -109,7 +109,7 @@ aspect PrimitiveTypes {
 		if(super.equals(o))
 			return true;
 
-		if(hasSuperClass() && getSuperClass().getType().equals(o))
+		if(hasSuperClass() && getSuperClass().type().equals(o))
 			return true;
 
 		return false;

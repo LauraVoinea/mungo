@@ -264,7 +264,7 @@ aspect Rewrite {
 	protected void Access.Rewrite(TypestateStream stream) {}
 
 	protected void ParseName.Rewrite(TypestateStream stream) {
-		stream.print(getID());
+		stream.print(name());
 	}
 
 	protected void PackageParseName.Rewrite(TypestateStream stream) {
@@ -280,7 +280,7 @@ aspect Rewrite {
 	}
 
 	protected void PrimitiveTypeAccess.Rewrite(TypestateStream stream) {
-		stream.print(getName());
+		stream.print(name());
 	}
 
 	protected void ArrayAccess.Rewrite(TypestateStream stream) {
@@ -688,7 +688,7 @@ aspect Rewrite {
 		for(int i = 0; i < getNumImportDecl(); i++)
 			getImportDecl(i).Rewrite(stream);
 
-		getTypeDecl().Rewrite(stream);
+		//getTypeDecl().Rewrite(stream);
 	}
 
 	protected void Program.Rewrite(TypestateStream stream) {
@@ -892,7 +892,7 @@ aspect Rewrite {
 	/************************************************************/
 
 	// One toString fits All
-	syn lazy String ASTNode.toString() {
-		return Rewrite().toString();
-	}
+//	syn lazy String ASTNode.toString() {
+//		return Rewrite().toString();
+//	}
 }

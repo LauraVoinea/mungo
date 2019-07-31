@@ -1,4 +1,3 @@
-/*
 aspect Enums{
 
 	coll Set<String>EnumDecl.getEnumLabels()[new HashSet<String>()]with add root EnumDecl;
@@ -17,7 +16,7 @@ aspect Enums{
 	eq EnumDecl.getBodyDecl(int i).getEnumDeclAncestor()=this;
 	eq TypeDecl.getBodyDecl(int i).getEnumDeclAncestor()=null;
 
-
+/*
 	private static Opt<TypeDecl> EnumConstant.createOptAnonymousDecl(List<BodyDecl> bds) {
 		if (bds.getNumChildNoTransform() == 0) {
 			return new Opt<TypeDecl>();
@@ -34,6 +33,5 @@ aspect Enums{
 	public EnumConstant.EnumConstant(Modifiers mods, String name, List<Expr> args, List<BodyDecl> bds) {
 		this(mods, name, args, new Opt<Expr>(new EnumInstanceExpr(createOptAnonymousDecl(bds))));
 	}
-
-}
 */
+}

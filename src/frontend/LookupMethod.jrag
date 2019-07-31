@@ -1,9 +1,9 @@
-aspect LookupMethod {
+aspect LookupTSMethod {
 
 	syn lazy TypeDecl[] MethodAccess.getParameterTypes() {
 		TypeDecl[] ParameterAccess = new TypeDecl[getNumArg()];
 		for(int i = 0; i < getNumArg(); i++)
-			ParameterAccess[i] = getArg(i).getType();
+			ParameterAccess[i] = getArg(i).type();
 		return ParameterAccess;
 	}
 
@@ -14,13 +14,12 @@ aspect LookupMethod {
 		return ParameterAccess;
 	}
 
-	syn lazy MethodDecl MethodAccess.lookupMethod(TypeDecl t) =
-		t != null ? t.lookupMethod(getID(), getParameterTypes()) : null;
+	syn lazy MethodDecl MethodAccess.lookupTSMethod(TypeDecl t) =
+		t != null ? t.lookupTSMethod(getID(), getParameterTypes()) : null;
 
-	syn lazy MethodDecl TypestateMethod.lookupMethod(String name) {
-
+	syn lazy MethodDecl TypestateMethod.lookupTSMethod(TypeDecl t) {
 		if(t != null) {
-			MethodDecl md = t.lookupMethod(getID(), getParameterTypes());
+			MethodDecl md = t.lookupTSMethod(getID(), getParameterTypes());
 			TypeDecl td = getTType().getAccess().type();
 			if(md != null && (md.getTypeAccess().type().equals(td) || (td instanceof NoNameType)))
 				return md;
@@ -29,9 +28,9 @@ aspect LookupMethod {
 		return null;
 	}
 
-	syn MethodDecl TypeDecl.lookupMethod(String method, TypeDecl[] parameters) = null;
-	eq ClassDecl.lookupMethod(String method, TypeDecl[] parameters) {
-		ArrayList<MethodDecl> a = lookupMethodTargets(method, parameters);
+	syn MethodDecl TypeDecl.lookupTSMethod(String method, TypeDecl[] parameters) = null;
+	eq ClassDecl.lookupTSMethod(String method, TypeDecl[] parameters) {
+		ArrayList<MethodDecl> a = lookupTSMethodTargets(method, parameters);
 
 		return (a.size() == 1) ? a.get(0) : null;
 	}
@@ -57,9 +56,9 @@ aspect LookupMethod {
 		return true;
 	}
 
-	syn ArrayList<MethodDecl> TypeDecl.lookupMethodTargets(String method, TypeDecl[] parameters) = new ArrayList<MethodDecl>();
+	syn ArrayList<MethodDecl> TypeDecl.lookupTSMethodTargets(String method, TypeDecl[] parameters) = new ArrayList<MethodDecl>();
 
-	eq ClassDecl.lookupMethodTargets(String method, TypeDecl[] parameters) {
+	eq ClassDecl.lookupTSMethodTargets(String method, TypeDecl[] parameters) {
 		ArrayList<MethodDecl> a = new ArrayList<MethodDecl>();
 
 		for(MethodDecl m : getMethodDecls())
@@ -69,14 +68,14 @@ aspect LookupMethod {
 		//Implementing super class access
 		if((a.size() == 0) && hasSuperClass()) {
 			//TODO check if lookupType() really exists
-			return getSuperClass().type().lookupMethodTargets(method, parameters);
+			return getSuperClass().type().lookupTSMethodTargets(method, parameters);
 		}
 
 		return a;
 	}
 
-	syn lazy ArrayList<MethodDecl> MethodAccess.lookupMethodTargets(TypeDecl t) =
-		t != null ? t.lookupMethodTargets(getID(), getParameterTypes()) : new ArrayList<MethodDecl>();
+	syn lazy ArrayList<MethodDecl> MethodAccess.lookupTSMethodTargets(TypeDecl t) =
+		t != null ? t.lookupTSMethodTargets(getID(), getParameterTypes()) : new ArrayList<MethodDecl>();
 
 
 }

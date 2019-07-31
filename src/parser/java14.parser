@@ -90,7 +90,7 @@ Access name			=
 				;
 
 Access simple_name		=
-					IDENTIFIER			{: return new ParseName(IDENTIFIER); :}
+					IDENTIFIER			{: return new PackageAccess(IDENTIFIER); :}
   				;
 
 Access qualified_name		=
@@ -212,7 +212,7 @@ ClassDecl class_declaration	=
 					:}
 /*				|	modifiers.m? CLASS IDENTIFIER super.s? interfaces.i? class_body.b
 					{:
-						return new ClassDecl(new Modifiers(m), IDENTIFIER, s, i, new ParseName(""), b);
+						return new ClassDecl(new Modifiers(m), IDENTIFIER, s, i, new PackageAccess(""), b);
 					:}
 */				;
 
@@ -226,7 +226,7 @@ List interfaces		=
 
 Access typestate_annotation
 					=
-					AT TYPESTATE_ANNOT LPAREN STRING_LITERAL.s RPAREN  {: return new ParseName(s); :}
+					AT TYPESTATE_ANNOT LPAREN STRING_LITERAL.s RPAREN  {: return new PackageAccess(s); :}
 					;
 
 
@@ -900,7 +900,7 @@ Access method_invocation	=
 					{: 
 						if(n instanceof AbstractDot) {    
 							AbstractDot d = (AbstractDot)n; 
-							ParseName pn = (ParseName) d.extractLast();
+							PackageAccess pn = (PackageAccess) d.extractLast();
 							MethodAccess m = new MethodAccess(pn.getID(), l);
 							m.setStart(pn.getStart()); // add location information
 							/*	m.setEnd(RPAREN.getEnd()); // add location information
@@ -911,7 +911,7 @@ Access method_invocation	=
 							return d;
 						}
 						else {
-							ParseName pn = (ParseName)n;
+							PackageAccess pn = (PackageAccess)n;
 							MethodAccess m = new MethodAccess(pn.getID(), l);
 							m.setStart(pn.getStart()); // add location information
 							/*	m.setEnd(RPAREN.getEnd()); // add location information

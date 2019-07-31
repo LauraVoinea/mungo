@@ -1,66 +1,68 @@
-aspect LookupVariable {
+aspect LookupTSVariable {
 	//NameDecl
-	inh NameDecl ParseName.lookupVariable(String var);
-	syn lazy NameDecl ParseName.lookupVariable() = lookupVariable(getID());
-//	eq CompilationUnit.getImportDecl(int i).lookupVariable(String var) = null;
-//	eq Program.getCompilationUnit().lookupVariable(String var) = null;
+	inh NameDecl ParseName.lookupTSVariable(String var);
+	syn lazy NameDecl ParseName.lookupTSVariable() = lookupTSVariable(name());
+//	eq CompilationUnit.getImportDecl(int i).lookupTSVariable(String var) = null;
+//	eq Program.getCompilationUnit().lookupTSVariable(String var) = null;
 
-	syn lazy NameDecl ParseName.lookupVariable(TypeDecl t) = t != null ? t.lookupVariable(getID()) : null;
+	syn lazy NameDecl ParseName.lookupTSVariable(TypeDecl t) = t != null ? t.lookupTSVariable(name()) : null;
 
 	//Block
 	coll Set<VariableDeclarator> Block.getVariableDecls() [new HashSet<VariableDeclarator>()] with add root Block;
 	VariableDeclarator contributes this to Block.getVariableDecls() for getBlockAncestor();
 
+	inh ClassDecl VariableDeclarator.getClassDeclAncestor();
+
 	inh Block VariableDeclarator.getBlockAncestor();
 	eq Block.getStmt(int i).getBlockAncestor() = this;
 	eq TypeDecl.getBodyDecl().getBlockAncestor() = null;
 
-	//inh NameDecl Block.lookupVariable(String var);
-	/*
-	eq Block.getStmt(int j).lookupVariable(String var) {
+	inh NameDecl Block.lookupTSVariable(String var);
+
+	eq Block.getStmt(int j).lookupTSVariable(String var) {
 		for(VariableDeclarator vd : getVariableDecls())
 			if(vd.getID().equals(var))
 				return vd.toNameDecl();
 
-		return lookupVariable(var);
+		return lookupTSVariable(var);
 	}
-*/
+
 	//MethodDecl
-	/*
-	inh NameDecl MethodDecl.lookupVariable(String var);
-	eq MethodDecl.getBlock().lookupVariable(String var) {
+
+	inh NameDecl MethodDecl.lookupTSVariable(String var);
+	eq MethodDecl.getBlock().lookupTSVariable(String var) {
 		for(int i = 0; i < getNumParameter(); i++)
 			if(getParameter(i).getID().equals(var))
 				return getParameter(i).toNameDecl();
 
-		return lookupVariable(var);
+		return lookupTSVariable(var);
 	}
-	*/
+
 	//ConstructorDecl
-	inh NameDecl ConstructorDecl.lookupVariable(String var);
-	/*
-	eq ConstructorDecl.getBlock().lookupVariable(String var) {
+	inh NameDecl ConstructorDecl.lookupTSVariable(String var);
+
+	eq ConstructorDecl.getBlock().lookupTSVariable(String var) {
 		for(int i = 0; i < getNumParameter(); i++)
 			if(getParameter(i).getID().equals(var))
 				return getParameter(i).toNameDecl();
-		return lookupVariable(var);
+		return lookupTSVariable(var);
 	}
-*/
+
 	//ClassDecl
-	//eq TypeDecl.getBodyDecl(int i).lookupVariable(String var) = null;
-	//eq ClassDecl.getBodyDecl(int i).lookupVariable(String var) = lookupVariable(var);
+	eq TypeDecl.getBodyDecl(int i).lookupTSVariable(String var) = null;
+	eq ClassDecl.getBodyDecl(int i).lookupTSVariable(String var) = lookupTSVariable(var);
 
 	coll Set<VariableDeclarator> ClassDecl.getFieldDecls() [new HashSet<VariableDeclarator>()] with add root ClassDecl;
 	VariableDeclarator contributes this when isField() to ClassDecl.getFieldDecls() for getClassDeclAncestor();
 
-	syn NameDecl TypeDecl.lookupVariable(String var) = null;
-	syn NameDecl ClassDecl.lookupVariable(String var) {
+	syn NameDecl TypeDecl.lookupTSVariable(String var) = null;
+	syn NameDecl ClassDecl.lookupTSVariable(String var) {
 		for(VariableDeclarator vd : getFieldDecls())
 			if(vd.getID().equals(var))
 				return vd.toNameDecl();
 		//for possible future work
 		if(hasSuperclass())
-			return superclass().type().lookupVariable(var);
+			return getSuperClass().type().lookupTSVariable(var);
 		return null;
 	}
 

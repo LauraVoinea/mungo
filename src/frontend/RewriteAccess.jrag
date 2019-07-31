@@ -30,7 +30,7 @@ aspect RewriteAccess {
 	syn boolean Expr.isPackageAccess(Dot a) = false;
 	eq ParseName.isPackageAccess(Dot a) = (a.getLeft() instanceof ParseName) ? isPackage() : false;
 
-	syn lazy String ParseName.getName() = getID();
+	syn lazy String ParseName.getName() =  name();
 	eq PackageParseName.getName() = getPackage() + "." + getID();
 
 	syn String Dot.getRightName() {

@@ -1,7 +1,7 @@
 import beaver.*;
 import java.io.*;
-//import JavaTypestate.parser.*;
-//import JavaTypestate.scanner.*;
+import org.extendj.parser.*;
+import org.extendj.scanner.*;
 
 aspect Compilation {
 
@@ -76,16 +76,20 @@ aspect Compilation {
 			FileInputStream fileStream = new FileInputStream(path);
 			u = (CompilationUnit) parser.parse(fileStream, path);
 		}
+		catch(Exception e) {
+			return null;
+		}
+		/*
 		catch(FileNotFoundException e) {
 			return null;
 		}
 		catch(IOException e) {
 			return null;
-		}
-		catch(ParserFailException e) {
-			errors.addAll(e.getErrors());
-			return null;
-		}
+		}*/
+//		catch(ParserFailException e) {
+//			errors.addAll(e.getErrors());
+//			return null;
+//		}
 
 		if(verbose)
 			outStream().println("Loading file " + path);

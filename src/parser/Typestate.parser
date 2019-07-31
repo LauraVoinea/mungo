@@ -1,3 +1,15 @@
+Access typestate_annotation =
+					AT TYPESTATE_ANNOT LPAREN STRING_LITERAL.s RPAREN  {: return new PackageAccess(s); :}
+					;
+
+ClassDecl class_declaration	=
+					typestate_annotation.t
+					modifiers.m? CLASS IDENTIFIER super.s? interfaces.i? class_body.b
+					{:
+						return new TypestateClassDecl(new Modifiers(m), IDENTIFIER, s, i, b, t);
+					:}
+					;
+
 TypeDecl type_declaration		=
 						typestate_declaration.td	{: return td; :}
 					;
@@ -10,7 +22,7 @@ TypestateDecl typestate_declaration	=
 						is.setEnd(IDENTIFIER.getEnd());
 						return new TypestateDecl(new Modifiers(), id, new List(), is, tnl);
 					:}
-					|	
+					|
 					TYPESTATE IDENTIFIER.id LBRACE IDENTIFIER EQ typestate.t RBRACE
 					{:
 						InitState is = new InitState(IDENTIFIER, t);
@@ -33,7 +45,7 @@ List state_name_list
 
 State state_name			=	IDENTIFIER.i EQ typestate.t
 						{:
-							State s = new State(i, t); 
+							State s = new State(i, t);
 //							s.setStart(EQ.getStart());
 							return s;
 						:}
@@ -146,5 +158,3 @@ List ttype_list				=	ttype.t
 							return tl.add(t);
 						:}
 					;
-
-
