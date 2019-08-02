@@ -66,13 +66,13 @@
 			addErrorsCU(null, fileName);
 			throw new ParserFailException(errors);
 		}
-//		if(!cu.getTypeDecl().getID().equals(fileName))
+//		if(!cu.type().getID().equals(fileName))
 //			errors.add(
 //				new TypestateSemanticError(
-//					"Module name " + cu.getTypeDecl().getID() + " does not much file name",
+//					"Module name " + cu.type().getID() + " does not much file name",
 //					fileName,
-//					cu.getTypeDecl().getStart(),	//TODO find getstart and getEnd
-//					cu.getTypeDecl().getEnd()
+//					cu.type().getStart(),	//TODO find getstart and getEnd
+//					cu.type().getEnd()
 //				)
 //			);
 		addErrorsCU(cu, fileName);

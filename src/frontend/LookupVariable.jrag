@@ -1,9 +1,12 @@
 aspect LookupTSVariable {
 	//NameDecl
+
+	//eq NameDecl ParseName.lookupTSVariable(String var);
+
 	inh NameDecl ParseName.lookupTSVariable(String var);
 	syn lazy NameDecl ParseName.lookupTSVariable() = lookupTSVariable(name());
-//	eq CompilationUnit.getImportDecl(int i).lookupTSVariable(String var) = null;
-//	eq Program.getCompilationUnit().lookupTSVariable(String var) = null;
+	eq CompilationUnit.getImportDecl(int i).lookupTSVariable(String var) = null;
+	eq Program.getCompilationUnit().lookupTSVariable(String var) = null;
 
 	syn lazy NameDecl ParseName.lookupTSVariable(TypeDecl t) = t != null ? t.lookupTSVariable(name()) : null;
 

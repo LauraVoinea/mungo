@@ -251,7 +251,7 @@ aspect Rewrite {
 		stream.print(")");
 		//Deprecated
 		if(hasTypeDecl())
-			getTypeDecl().Rewrite(stream);
+			type().Rewrite(stream);
 	}
 
 	protected void ArrayCreationExpr.Rewrite(TypestateStream stream) {
@@ -688,7 +688,7 @@ aspect Rewrite {
 		for(int i = 0; i < getNumImportDecl(); i++)
 			getImportDecl(i).Rewrite(stream);
 
-		//getTypeDecl().Rewrite(stream);
+		//type().Rewrite(stream);
 	}
 
 	protected void Program.Rewrite(TypestateStream stream) {

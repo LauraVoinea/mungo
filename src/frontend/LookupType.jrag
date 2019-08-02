@@ -25,7 +25,7 @@
 	}
 
 	private String CompilationUnit.getID() {
-		return getTypeDecl().getID();
+		return type().getID();
 	}
 
 	syn TypeDecl CompilationUnit.lookupType(String name) {
@@ -37,17 +37,17 @@
 		type = getPackageString() + name;
 
 		if(localLookupType(type))
-			return this.getTypeDecl();
+			return this.type();
 
 		CompilationUnit cu;
 		if((cu = getCompilationUnit(type)) != null)
-			return cu.getTypeDecl();
+			return cu.type();
 
 		for(int i = 0; i < getNumImportDecl(); i++) {
 			String s;
 			if((s = getImportDecl(i).importType(name)) != null)
 				if((cu = getCompilationUnit(s.replace('.', File.separatorChar))) != null)
-					return cu.getTypeDecl();
+					return cu.type();
 		}
 
 		return new UnknownTypeDecl(new Modifiers(), name, new List<BodyDecl>());
@@ -67,11 +67,11 @@
 		// TODO check local Type??
 		String type = (Package + "." + name).replace('.', File.separatorChar);
 		if((cu = getCompilationUnit(type)) != null)
-			return cu.getTypeDecl();
+			return cu.type();
 		return new UnknownTypeDecl(new Modifiers(), type, new List<BodyDecl>());
 	}
 
-	eq CompilationUnit.getTypeDecl().lookupType(String Package, String name) = lookupType(Package, name);
+	eq CompilationUnit.type().lookupType(String Package, String name) = lookupType(Package, name);
 	eq CompilationUnit.getImportDecl().lookupType(String Package, String name) = null;
 
 	inh TypeDecl Access.lookupType(String Package, String name);

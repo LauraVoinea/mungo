@@ -24,6 +24,8 @@ jastadd {
         include "src/grammar/Typestate.ast"
         include "src/grammar/TypestateTypes.ast"
 
+        // include "src/frontend/Type.jrag"
+        include "src/frontend/Annotations.jrag"
         include "src/frontend/Compilation.jrag"
         include "src/frontend/CreateTypestate.jrag"
         include "src/frontend/Debug.jrag"
@@ -73,8 +75,9 @@ jastadd {
 
 sourceSets.main {
   java {
-    srcDir 'extendj/src/frontend-main'
-    srcDir 'src/java'
+      srcDir 'extendj/src/frontend-main'
+      //srcDir 'extendj/src/backend-main'
+      srcDir 'src/java'
   }
   resources {
     srcDir 'extendj/src/res'

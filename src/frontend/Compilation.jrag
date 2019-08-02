@@ -1,11 +1,11 @@
 import beaver.*;
 import java.io.*;
-import org.extendj.parser.*;
-import org.extendj.scanner.*;
+//import org.extendj.parser.JavaParser;
+import org.extendj.scanner.OriginalScanner;
 
 aspect Compilation {
 
-	JavaParser Program.parser;
+	org.extendj.parser.JavaParser Program.parser;
 	protected String CompilationUnit.filePath;
 
 	private boolean Program.verbose = false;
@@ -147,12 +147,12 @@ aspect Compilation {
 	}
 
 	public class TypestateChecker extends Program {
-		public TypestateChecker(JavaParser parser) {
+		public TypestateChecker(org.extendj.parser.JavaParser parser) {
 			this.parser = parser;
 		}
 
 		public TypestateChecker() {
-			this.parser = new JavaParser();
+			this.parser = new org.extendj.parser.JavaParser();
 		}
 
 		private void printUnits() {
@@ -178,7 +178,7 @@ aspect Compilation {
 		}
 
 		public static void main(String [] args) {
-			new TypestateChecker(new JavaParser()).myDebug(args);
+			new TypestateChecker(new org.extendj.parser.JavaParser()).myDebug(args);
 		}
 	}
 }

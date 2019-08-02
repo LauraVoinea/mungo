@@ -15,6 +15,9 @@ aspect GetGraph {
 		eq DoStmt.getStmt().getTargetStmt() = this;
 		eq SwitchStmt.getBlock().getTargetStmt() = this;
 
+		eq EnhancedForStmt.getStmt().getTargetStmt() = this;
+
+
 		eq TypeDecl.getBodyDecl(int i).getTargetStmt(String label) = null;
 		eq TypeDecl.getBodyDecl(int i).getTargetStmt() = null;
 
@@ -61,7 +64,7 @@ aspect GetGraph {
 			if(!type().isTypestateClassDeclType())
 				return null;
 			if(getQualifiedAccess() != null)
-				return lookupTSVariable(qualifier().type()).getTypestateVar();
+				return lookupTSVariable(type()).getTypestateVar();
 			return lookupTSVariable(type()).getTypestateVar();
 		}
 
@@ -497,6 +500,8 @@ protected TypestateVar MethodDecl.typestate = new TypestateVar();	//TODO if it i
 		//eq VariableDeclarator.getGraph(Set<TypestateVar> env) = false;
 		eq SynchronizedStmt.getGraph(Set<TypestateVar> env) = false;
 		eq LocalClassDeclStmt.getGraph(Set<TypestateVar> env) = false;
+		//TODO
+		//eq BasicTWR.getGraph(Set<TypestateVar> env) = false;
 
 		//No typestate stmts
 		eq ConstCase.getGraph(Set<TypestateVar> env) = true;
@@ -664,7 +669,7 @@ protected TypestateVar MethodDecl.typestate = new TypestateVar();	//TODO if it i
 		}
 //		if(getExpr().isAccess()) {
 //			Access a = ((Access) getExpr()).getLastAccess();
-//			if(a.qualifier().type().isEnumDeclType())
+//			if(a.type().isEnumDeclType())
 //				t = a.getQualifiedAccess() != null ?
 //					a.getQualifiedAccess().qualifier().typestateVar() :
 //					null;
@@ -998,7 +1003,7 @@ protected TypestateVar MethodDecl.typestate = new TypestateVar();	//TODO if it i
 						vd.typestate.current = vd.typestate.getConnectionGraph(md);
 				}
 			}
-			else if(qualifier().type().isTypestateClassDeclType()) {
+			else if(type().isTypestateClassDeclType()) {
 				TypestateVar t = getQualifiedTypestateVar();
 
 				//TODO better implementation here
@@ -1017,7 +1022,7 @@ protected TypestateVar MethodDecl.typestate = new TypestateVar();	//TODO if it i
 				//when the target of the MethodAccess is in the typestate methods
 				if(isTypestateMethod()) {
 					if(md.getTypeAccess().type().isTypestateClassDeclType() || sessionParameter == true) {
-						ClassDecl c = ((ClassDecl) qualifier().type());
+						ClassDecl c = ((ClassDecl) type());
 						GraphNode tmp = md.typestate.current;
 						//md.typestate.current = new EndNode();
 						boolean addTypestate = TypestateVar.addTypestate;	//TODO better implementation here
@@ -1035,7 +1040,7 @@ protected TypestateVar MethodDecl.typestate = new TypestateVar();	//TODO if it i
 					}
 
 					if (t != null) {
-						t.current = new MethodNode(lookupTSMethod(qualifier().type()).getTypeAccess(), getID(), getParameterTypes(), this).addNext(t.current);
+						t.current = new MethodNode(lookupTSMethod(type()).getTypeAccess(), getID(), getParameterTypes(), this).addNext(t.current);
 					}
 				}
 

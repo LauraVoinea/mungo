@@ -4,7 +4,12 @@ aspect typestateCheck {
 	}
 
 	protected void VariableDeclarator.typestateCheck() {
+		System.out.println("Type: " + getTypeAccess().type().toString());
+		System.out.println("Type: " + getTypeAccess().type().isTypestateClassDeclType());
 		if(getTypeAccess().type() != null && getTypeAccess().type().isTypestateClassDeclType()) {
+			System.out.println("Type: " + getTypeAccess().type().toString());
+			System.out.println("Type: " + getTypeAccess().type().isTypestateClassDeclType());
+
 			typestate.reportErrors("Object reference is used uninitialised.");
 			if(getTypeAccess().type().getTypestateDecl() != null) {
 				GraphNode t = getTypeAccess().type().getTypestateDecl().createTypestate().normalise();

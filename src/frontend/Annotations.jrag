@@ -7,7 +7,7 @@ aspect Annotations {
                     if(a.getAccess().toString().equals("Typestate")){
                       if(a.getElementValuePair(0).getElementValue() instanceof ElementConstantValue){
                         ElementConstantValue x = (ElementConstantValue) a.getElementValuePair(0).getElementValue();
-                        return new PrimitiveTypeAccess( x.getExpr().toString().replace("\"", ""));
+                        return new TypeAccess(a.type().packageName(), x.getExpr().toString().replace("\"", ""));
 
                       }
                     }
@@ -37,7 +37,7 @@ aspect Annotations {
               for(int i = 0; i < getNumImplements(); i++) {
                 interfaces.add(getImplements(i));
               }
-
+              System.out.println("in here");
               return new TypestateClassDecl(getModifiers(), getID(), new Opt(), interfaces, bodydecls, getModifiers().getTypestateAnnotation());
             }
         }
