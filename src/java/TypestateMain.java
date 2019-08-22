@@ -25,9 +25,7 @@ class TypestateMain {
 	private int mode = DEFAULT;
 
 	TypestateMain() {
-		System.out.println("JavaChecker:");
 		jc = new JavaChecker();
-		System.out.println("TypestateChecker:");
 		tc = new TypestateChecker();
 	}
 

@@ -180,8 +180,8 @@ aspect PrimitiveTypes {
 				new Opt()
 			);
 		classDecl.addBodyDecl(methodDecl);
-		FieldDeclaration fieldDecl =
-			new FieldDeclaration(
+		Declaratoraration Declarator =
+			new Declaratoraration(
 				new Modifiers(
 					new List().add(new Modifier("public"))
 				),
@@ -189,7 +189,7 @@ aspect PrimitiveTypes {
 				"unknown",
 				new Opt()
 			);
-		classDecl.addBodyDecl(fieldDecl);
+		classDecl.addBodyDecl(Declarator);
 		ConstructorDecl constrDecl =
 			new ConstructorDecl(
 				new Modifiers(

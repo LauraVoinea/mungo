@@ -1,4 +1,4 @@
-TypestateClassDecl	:	ClassDecl	::=	TypestateArg: Access;
+TypestateClassDecl	:	ClassDecl; //	::=	 Annotation; //TypestateArg: Access;//
 
 TypestateDecl		:	TypeDecl	::=	InitState State*;
 
@@ -22,5 +22,3 @@ TTypestate			:	TType		::=	Typestate;
 TTypeList;
 TTypeArgs			:	TTypeList	::=	TType*;
 //EmptyTTypeArgs	:	TTypeList;
-
-

@@ -23,10 +23,11 @@ aspect typestateSemanticCheck {
 	}
 
 	protected void TTypestate.semanticCheck() {
-		TypeDecl t = getAccess().type();
+		System.out.println("and up here bro " + getAccessNoTransform());
 
+		TypeDecl t = getAccessNoTransform().lookupType(getAccessNoTransform().toString()).iterator().next();
 		if(!t.isTypestateClassDeclType())
-			addSemanticError("Type " + getAccess().toString() + " is not a typestate class type.");
+			addSemanticError("Type " + getAccessNoTransform().toString() + " is not a typestate class type.");
 		else if(t.getTypestateClassDecl().existsTypestateDecl())
 			; //TODO Check if getTypestate() is a postfix of cu.getClassDecl().getTypestateDecl()
 
@@ -35,9 +36,12 @@ aspect typestateSemanticCheck {
 	}
 
 	protected void TType.semanticCheck() {
-		TypeDecl t = getAccess().type();
-		if(t.isTypestateDeclType())
-			addSemanticError(getAccess().toString() + " is not a proper java type.");
+		TypeDecl t = getAccessNoTransform().lookupType(getAccessNoTransform().toString()).iterator().next();
+		if(t.isTypestateDeclType()){
+			System.out.println(getAccessNoTransform().toString() + " is not a proper java type.");
+			addSemanticError(getAccessNoTransform().toString() + " is not a proper java type.");
+		}
+
 		//TODO recheck the next check
 /*		else if(t.isTypestateClassDeclType())
 			addSemanticError("Class " + getAccess().toString() + " has a typestate type.");
@@ -46,21 +50,29 @@ aspect typestateSemanticCheck {
 	protected void TypestateSwitch.semanticCheck() {
 		for(int i = 0; i < getNumTypestateSwitchCase(); i++)
 			for(int j = i + 1; j < getNumTypestateSwitchCase(); j++)
-				if(getTypestateSwitchCase(i).getLabel().equals(getTypestateSwitchCase(j).getLabel()))
+				if(getTypestateSwitchCase(i).getLabel().equals(getTypestateSwitchCase(j).getLabel())){
+					System.out.println("Duplicate case label: " + getTypestateSwitchCase(i).getLabel() + ".");
 					addSemanticError("Duplicate case label: " + getTypestateSwitchCase(i).getLabel() + ".");
+				}
 	}
 
 	protected void TypestateMethod.semanticCheck() {
 		TypeDecl t;
 		if(getTypestate() instanceof TypestateSwitch) {
-			t = getTType().getAccess().type();
+			// System.out.println("Right here " + getTType());
+			// System.out.println("Right here * " + getTType().getAccessNoTransform());
+			// System.out.println("Right here * " + getTType().getAccessNoTransform().lookupType(getTType().getAccessNoTransform().toString()));
+
+			t = getTType().getAccessNoTransform().lookupType(getTType().getAccessNoTransform().toString()).iterator().next();
 			if(!t.isEnumDeclType())
 				addSemanticError("Method " + signature() + " should return an enumeration type.");
 			else {
 				for(String s : t.getEnumDecl().getEnumLabels()) {
-					if(!((TypestateSwitch) getTypestate()).getLabels().contains(s))
+					if(!((TypestateSwitch) getTypestate()).getLabels().contains(s)){
 						addSemanticError("Label " + s + " defined for the enumeration type " + t.getEnumDecl().getID() + " is not defined as a switch label.");
+						System.out.println("Label " + s + " defined for the enumeration type " + t.getEnumDecl().getID() + " is not defined as a switch label.");
 				}
+			}
 			}
 
 		}

@@ -3,26 +3,24 @@ aspect typestateCheck {
 		getGraph();
 	}
 
-	protected void VariableDeclarator.typestateCheck() {
-		System.out.println("Type: " + getTypeAccess().type().toString());
-		System.out.println("Type: " + getTypeAccess().type().isTypestateClassDeclType());
-		if(getTypeAccess().type() != null && getTypeAccess().type().isTypestateClassDeclType()) {
-			System.out.println("Type: " + getTypeAccess().type().toString());
-			System.out.println("Type: " + getTypeAccess().type().isTypestateClassDeclType());
-
+	protected void Declarator.typestateCheck() {
+		if(getTypeAccess().lookupTSType() != null && getTypeAccess().lookupTSType().isTypestateClassDeclType()) {
 			typestate.reportErrors("Object reference is used uninitialised.");
-			if(getTypeAccess().type().getTypestateDecl() != null) {
-				GraphNode t = getTypeAccess().type().getTypestateDecl().createTypestate().normalise();
+			if(getTypeAccess().lookupTSType().getTypestateDecl() != null) {
+				GraphNode t = getTypeAccess().lookupTSType().getTypestateDecl().createTypestate().normalise();
+				System.out.println("AAAAAA 1 " + getTypeAccess().lookupTSType().getTypestateDecl() + " ? " + t.getType()+ " ? " + t.getId());
+
 				typestate.checkTypestate(t, "The typestate of the created object does not match its declared typestate.");
 			}
 		}
 	}
 
 	protected void ParameterDeclaration.typestateCheck() {
-		if(getTypeAccess().type() != null && getTypeAccess().type().isTypestateClassDeclType()) {
+		if(getTypeAccess().lookupTSType() != null && getTypeAccess().lookupTSType().isTypestateClassDeclType()) {
 			typestate.reportErrors("Object reference is used uninitialised");
-			if(getTypeAccess().type().getTypestateDecl() != null) {
-				GraphNode t = getTypeAccess().type().getTypestateDecl().createTypestate().normalise();
+			if(getTypeAccess().lookupTSType().getTypestateDecl() != null) {
+				GraphNode t = getTypeAccess().lookupTSType().getTypestateDecl().createTypestate().normalise();
+				System.out.println("AAAAAA 2 " + t.getType()+ " ? " + t.getId() + " " +  getTypeAccess().lookupTSType() + " " + getTypeAccess().lookupTSType().isTypestateClassDeclType());
 				typestate.checkTypestate(t, "The typestate of the created object does not match its declared typestate.");
 			}
 		}

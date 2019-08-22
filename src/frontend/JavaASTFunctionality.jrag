@@ -48,17 +48,28 @@ aspect javaASTFunctionality {
 	eq ClassDecl.isClassDeclType() = true;
 	eq ClassDecl.getClassDecl() = this;
 
-//	eq ClassDecl.isEnumDeclType() = getEnumDecl() != null;
-//	eq ClassDecl.getEnumDecl() = EnumDecl;
-
 	eq ClassDecl.getBodyDecl(int i).getClassDeclAncestor() = this;
 
 	/*	TypestateClassDeclType							*/
 	eq TypestateClassDecl.isTypestateClassDeclType() = true;
 	eq TypestateClassDecl.getTypestateClassDecl() = this;
-	syn lazy boolean TypestateClassDecl.existsTypestateDecl() = getTypestateDecl() != null;
-	syn lazy TypestateDecl TypestateClassDecl.getTypestateDecl() =
-		getTypestateArg().type().isTypestateDeclType() ? getTypestateArg().type().getTypestateDecl() : null;
+	syn lazy boolean TypestateClassDecl.existsTypestateDecl(){
+		// System.out.println("WTF is going on? " + getTypestateDecl());
+		return getTypestateDecl() != null;
+	}
+
+	syn lazy TypestateDecl TypestateClassDecl.getTypestateDecl() {
+		Annotation a = getModifiers().getTypestateAnnotation(packageName());
+		ElementConstantValue ts_v = (ElementConstantValue) a.getElementValuePair(0).getElementValue();
+		Access plm = a.getAccess();
+		CompilationUnit cu = a.getCompilationUnitAncestor();
+
+		// System.out.println("Here I am! " + ts_v.getExpr().toString()
+		// + " ? " + cu.lookupTSType(ts_v.getExpr().toString()).isTypestateDeclType()
+		// + " " + cu.lookupTSType(packageName(), ts_v.getExpr().toString()).getTypestateDecl());
+		return cu.lookupTSType(ts_v.getExpr().toString()).isTypestateDeclType() ?
+		cu.lookupTSType(packageName(), ts_v.getExpr().toString()).getTypestateDecl() : null;
+	}
 
 	/*	InterfaceDeclType							*/
 	eq InterfaceDecl.isInterfaceDeclType() = true;
@@ -71,12 +82,13 @@ aspect javaASTFunctionality {
 	eq CompilationUnit.getTypeDecl().getMethodDeclAncestor() = null;
 	eq ImportDecl.getAccess().getMethodDeclAncestor() = null;
 
-	coll Set<VariableDeclarator> MethodDecl.getUsedTypestateFields() [new HashSet<VariableDeclarator>()] with add root MethodDecl;
+	coll Set<Declarator> MethodDecl.getUsedTypestateFields() [new HashSet<Declarator>()] with add root MethodDecl;
 
 	syn lazy boolean MethodDecl.isTypestateMethod() = getTypestateMethod() != null;
 	syn lazy TypestateMethod MethodDecl.getTypestateMethod() = getTypestateMethod(getClassDeclAncestor());
 
 	syn TypestateMethod MethodDecl.getTypestateMethod(TypeDecl cd) {
+		// System.out.println("Who am I? :() " + cd);
 		//In the case where the method is declared inside an interface
 		if (cd == null)
 			return null;
@@ -115,7 +127,7 @@ aspect javaASTFunctionality {
 
 	inh ClassDecl MethodAccess.getClassDeclAncestor();
 	inh MethodDecl MethodAccess.getMethodDeclAncestor();
-	syn Set<VariableDeclarator> MethodAccess.getTypestateFields() = getClassDeclAncestor().getTypestateFields();
+	syn Set<Declarator> MethodAccess.getTypestateFields() = getClassDeclAncestor().getTypestateFields();
 
 //	inh ConstructorDecl MethodAccess.getConstructorDeclAncestor();
 //	eq ConstructorDecl.getBlock().getConstructorDeclAncestor() = this;
@@ -138,8 +150,10 @@ aspect javaASTFunctionality {
 	syn lazy boolean MethodAccess.isRecursiveCall() = reachable().contains(getMethodDeclAncestor());
 */
 
-	syn lazy MethodDecl MethodAccess.getTarget() = lookupTSMethod(type());
-
+	syn lazy MethodDecl MethodAccess.getTarget(){
+		// System.out.println("and my type is? " + getQualifiedType());
+	  return lookupTSMethod(getQualifiedType());
+	}
 	syn lazy String MethodAccess.signature() {
 		String s = getID() + "(";
 		for(int i = 0; i < getNumArg(); i++) {
@@ -153,7 +167,7 @@ aspect javaASTFunctionality {
 
 	syn lazy boolean MethodAccess.isTypestateMethod() {
 		MethodDecl md = getTarget();
-		return (md != null) ? md.getTypestateMethod(type()) != null : false;
+		return (md != null) ? md.getTypestateMethod(getQualifiedType()) != null : false;
 	}
 
 	/*	Access								*/
@@ -206,12 +220,12 @@ aspect javaASTFunctionality {
 	when getDeclarator() != null && getDeclarator().isField()
 	to MethodDecl.getUsedTypestateFields() for getMethodDeclAncestor();
 
-	syn lazy VariableDeclarator ParseName.getDeclarator() {
+	syn lazy Declarator ParseName.getDeclarator() {
 		if(!type().isTypestateClassDeclType())
 			return null;
 		if(getQualifiedAccess() != null)
-			return lookupTSVariable(type().name()).getVariableDecl();
-		return lookupTSVariable(name()).getVariableDecl();
+			return lookupTSVariable(getQualifiedType()).getVariableDecl();
+		return lookupTSVariable().getVariableDecl();
 	}
 
 	inh MethodDecl ParseName.getMethodDeclAncestor();
@@ -219,24 +233,24 @@ aspect javaASTFunctionality {
 	// ArrayTypeWithSizeAccess inherits ArrayTypeAccess
 	syn lazy boolean Access.hasDims() = countDims() != 0;
 
-	/*	VariableDeclarator
-	 *	FieldDecl
+	/*	Declarator
+	 *	Declarator
 	 *	VarDeclStmt							*/
 
 	/*
-	inh boolean VariableDeclarator.isField();
-	eq FieldDecl.getDeclarator(int i).isField() = true;
+	inh boolean Declarator.isField();
+	eq Declarator.getDeclarator(int i).isField() = true;
 	eq VarDeclStmt.getDeclarator(int i).isField() = false;
 
-	inh Modifiers VariableDeclarator.getModifiers();
-	eq FieldDecl.getDeclarator(int i).getModifiers() = getModifiers();
+	inh Modifiers Declarator.getModifiers();
+	eq Declarator.getDeclarator(int i).getModifiers() = getModifiers();
 	eq VarDeclStmt.getDeclarator(int i).getModifiers() = getModifiers();
 
-	inh Access VariableDeclarator.getTypeAccess();
-	eq FieldDecl.getDeclarator(int i).getTypeAccess() = getTypeAccess();
+	inh Access Declarator.getTypeAccess();
+	eq Declarator.getDeclarator(int i).getTypeAccess() = getTypeAccess();
 	eq VarDeclStmt.getDeclarator(int i).getTypeAccess() = getTypeAccess();
 
-	inh ClassDecl VariableDeclarator.getClassDeclAncestor();
+	inh ClassDecl Declarator.getClassDeclAncestor();
 	*/
 	/*	SwitchStmt							*/
 	coll Set<String> SwitchStmt.getCaseLabels() [new HashSet<String>()] with add root SwitchStmt;
@@ -252,11 +266,4 @@ aspect javaASTFunctionality {
 				return true;
 		return false;
 	}
-/*
-	syn lazy boolean Modifiers.isPublic() = isModifier("public");
-	syn lazy boolean Modifiers.isProtected() = isModifier("protected");
-	syn lazy boolean Modifiers.isPrivate() = isModifier("private");
-	syn lazy boolean Modifiers.isStatic() = isModifier("static");
-	syn lazy boolean Modifiers.isFinal() = isModifier("final");
-*/
 }

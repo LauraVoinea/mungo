@@ -1,18 +1,25 @@
-/*aspect LookupType {
+aspect LookupType {
 
-	syn boolean CompilationUnit.localLookupType(String name) = type().equals(name);
+	syn boolean CompilationUnit.localLookupTSType(String typeName) {
+		return getTypeDecl(0).toString().equals(typeName);
+	}
 
-	inh CompilationUnit CompilationUnit.getCompilationUnit(String type);
-	eq Program.getCompilationUnit(int j).getCompilationUnit(String type) {
-		if(new File(type + Program.fileSuffix()).exists())
-			compile(type + Program.fileSuffix());
+	inh CompilationUnit CompilationUnit.getCompilationUnit(String packageName, String typeName);
+	inh TypeDecl TypestateMethod.lookupType(String packageName, String typeName);
 
-		if(new File(type + Program.protocolSuffix()).exists())
-			compile(type + Program.protocolSuffix());
+	eq Program.getCompilationUnit(int j).getCompilationUnit(String packageName, String typeName) {
+		// System.out.println("I should definetly be here!" + packageName +  typeName);
+		if(new File(packageName +  typeName + Program.fileSuffix()).exists())
+			compile(packageName +  typeName + Program.fileSuffix());
 
-		for(int i = 0; i < getNumCompilationUnit(); i++)
-			if(getCompilationUnit(i).localLookupType(type))
+		if(new File(packageName +  typeName + Program.protocolSuffix()).exists()){
+			compile(packageName +  typeName + Program.protocolSuffix());
+		}
+
+		for(int i = 0; i < getNumCompilationUnit(); i++){
+			if(getCompilationUnit(i).localLookupTSType(typeName))
 				return getCompilationUnit(i);
+			}
 		return null;
 	}
 
@@ -20,63 +27,58 @@
 		return getPackageDecl().equals("") ? "" : getPackageDecl().replace('.', File.separatorChar) + File.separatorChar;
 	}
 
-	protected String CompilationUnit.type() {
-		return getID().startsWith(getPackageString()) ? getID() : getPackageString() + getID();
-	}
+	syn TypeDecl CompilationUnit.lookupTSType(String typeName) {
+			if(!lookupType(PRIMITIVE_PACKAGE_NAME, typeName).isUnknown()){
+				return lookupType(PRIMITIVE_PACKAGE_NAME, typeName);
+			}
+		String packageName = getPackageString();
 
-	private String CompilationUnit.getID() {
-		return type().getID();
-	}
-
-	syn TypeDecl CompilationUnit.lookupType(String name) {
-		TypeDecl p;
-		if((p = getPrimitiveType(name)) != null)
-			return p;
-
-		String type;
-		type = getPackageString() + name;
-
-		if(localLookupType(type))
-			return this.type();
-
-		CompilationUnit cu;
-		if((cu = getCompilationUnit(type)) != null)
-			return cu.type();
-
-		for(int i = 0; i < getNumImportDecl(); i++) {
-			String s;
-			if((s = getImportDecl(i).importType(name)) != null)
-				if((cu = getCompilationUnit(s.replace('.', File.separatorChar))) != null)
-					return cu.type();
+		if(localLookupTSType(typeName)){
+			System.out.println("plm 1 "+ this.getTypeDecl(0));
+			return this.getTypeDecl(0);
 		}
 
-		return new UnknownTypeDecl(new Modifiers(), name, new List<BodyDecl>());
+		CompilationUnit cu; // = getCompilationUnit(getPackageString(), typeName);
+
+		if((cu = getCompilationUnit(packageName, typeName)) != null){
+			System.out.println("plm 2 "+ cu.getTypeDecl(0));
+			return cu.getTypeDecl(0);
+		}
+
+		String s = null;
+		for(int i = 0; i < getNumImportDecl(); i++) {
+			for (TypeDecl item : getImportDecl(i).importedTypes(typeName)) {
+      	s = item.name();
+	      if(s != null)
+	        if((cu = getCompilationUnit(typeName, s.replace('.', File.separatorChar))) != null){
+						System.out.println("plm 3 "+ this.getTypeDecl(0));
+	          return cu.getTypeDecl(0);
+					}
+      }
+		}
+
+		return new UnknownTypeDecl(new Modifiers(), typeName, new List<BodyDecl>());
 	}
 
-	syn String ImportDecl.importType(String name);
-
-	eq SingleTypeImportDecl.importType(String name) =
-		getAccess().getLastAccess().toString().equals(name) ? getAccess().toString() : null;
-	eq TypeImportOnDemandDecl.importType(String name) = getAccess().toString() + "." + name;
-
-	syn TypeDecl CompilationUnit.lookupType(String Package, String name) {
+	syn TypeDecl CompilationUnit.lookupTSType(String Package, String name) {
 		if(Package.equals(""))
-			return lookupType(name);
+			return lookupTSType(name);
 
 		CompilationUnit cu;
 		// TODO check local Type??
 		String type = (Package + "." + name).replace('.', File.separatorChar);
-		if((cu = getCompilationUnit(type)) != null)
-			return cu.type();
+		if((cu = getCompilationUnit(Package, name)) != null)
+			return cu.getTypeDecl(0);
 		return new UnknownTypeDecl(new Modifiers(), type, new List<BodyDecl>());
 	}
 
-	eq CompilationUnit.type().lookupType(String Package, String name) = lookupType(Package, name);
-	eq CompilationUnit.getImportDecl().lookupType(String Package, String name) = null;
+	eq CompilationUnit.getTypeDecl().lookupTSType(String Package, String name) = lookupTSType(Package, name);
+	eq CompilationUnit.getImportDecl().lookupTSType(String Package, String name) = null;
 
-	inh TypeDecl Access.lookupType(String Package, String name);
-	syn lazy TypeDecl Access.type() =
-		lookupType(getLastAccess().getQualifiedString(), getLastAccess().toString());
+	inh TypeDecl Access.lookupTSType(String Package, String name);
+	syn lazy TypeDecl Access.lookupTSType(){
+		return lookupTSType(getLastAccess().getQualifiedString(), getLastAccess().toString());
+	}
+
 
 }
-*/

@@ -1,8 +1,6 @@
 aspect JavaSemanticCheck {
 
 	protected void ClassDecl.semanticCheck() {
-	System.out.println("miau");
-
 		if(hasSuperClass()) {
 			Access a = getSuperClass();
 			if (a.type().isTypestateClassDeclType())
@@ -15,9 +13,11 @@ aspect JavaSemanticCheck {
 	//TODO check for no linear expressions in the throw and try stmts??
 
 	protected void TypestateClassDecl.semanticCheck() {
-		System.out.println("miau");
-		if(!existsTypestateDecl())
-			addSemanticError("Cannot find typestate " + getTypestateArg().toString() + " defined for class " + getID() + ".");
+		if(!existsTypestateDecl()){
+			Annotation a = getModifiers().getTypestateAnnotation(packageName());
+			ElementConstantValue ts_v = (ElementConstantValue) a.getElementValuePair(0).getElementValue();
+			addSemanticError("Cannot find typestate " + ts_v.getExpr().toString() + " defined for class " + getID() + ".");
+		}
 		//TODO maybe put the next check as a warning
 		//TODO The next is a problem. Parameters and return types expect methods to
 		//TODO be in a different file.
@@ -28,7 +28,7 @@ aspect JavaSemanticCheck {
 			}
 	}
 
-	protected void VariableDeclarator.semanticCheck() {
+	protected void Declarator.semanticCheck() {
 		if(getTypeAccess().type().isTypestateClassDeclType()) {
 			if(isField() && !getClassDeclAncestor().isTypestateClassDeclType())
 				addSemanticError("Field " + getID() + " with typestate type " + getTypeAccess().toString() + " is declared in non-typestate class " + getClassDeclAncestor().getID() + "." );
@@ -77,8 +77,8 @@ aspect JavaSemanticCheck {
 	}
 
 	protected void MethodAccess.semanticCheck() {
-		if(type().isTypestateClassDeclType()) {
-			ArrayList<MethodDecl> a = lookupTSMethodTargets(type());
+		if(getQualifiedType().isTypestateClassDeclType()) {
+			ArrayList<MethodDecl> a = lookupTSMethodTargets(getQualifiedType());
 			if(a.size() == 0)
 				addSemanticError("Method call " + signature() + " has no target.");
 			else if(a.size() > 1) {
@@ -93,7 +93,7 @@ aspect JavaSemanticCheck {
 		}
 
 		if(isThisAccess()) {
-			MethodDecl md = lookupTSMethod(type());
+			MethodDecl md = lookupTSMethod(getQualifiedType());
 			if(md != null && !md.getUsedTypestateFields().isEmpty() && getMethodDeclAncestor() != null && !getMethodDeclAncestor().isTypestateMethod())
 				addSemanticError(
 					"Cannot call a method that uses a typestate field inside a method that is not defined in the typestate."
@@ -118,8 +118,8 @@ aspect JavaSemanticCheck {
 		//TODO check directly for MethodAccess
 		if(getExpr().isAccess()) {
 			Access a = ((Access)getExpr()).getLastAccess();
-			if (a.type().isEnumDeclType()) {
-				EnumDecl e = a.type().getEnumDecl();
+			if (a.getQualifiedType().isEnumDeclType()) {
+				EnumDecl e = a.getQualifiedType().getEnumDecl();
 				for(String s : e.getEnumLabels())
 					if(!getCaseLabels().contains(s))
 					addSemanticError("Enumeration type " + s + " should be a switch case.");

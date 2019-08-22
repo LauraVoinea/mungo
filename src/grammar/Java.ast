@@ -76,8 +76,8 @@ ConstructorDecl : BodyDecl ::= Modifiers <ID:String> Parameter:ParameterDeclarat
 
 abstract MemberDecl : BodyDecl;
 
-FieldDecl : MemberDecl ::= Modifiers TypeAccess:Access VariableDecl*;
-FieldDeclaration : MemberDecl ::= Modifiers TypeAccess:Access <ID:String> [Init:Expr]; // Simplified FieldDecl
+Declarator : MemberDecl ::= Modifiers TypeAccess:Access VariableDecl*;
+Declaratoraration : MemberDecl ::= Modifiers TypeAccess:Access <ID:String> [Init:Expr]; // Simplified Declarator
 
 VarDeclStmt : Stmt ::= Modifiers TypeAccess:Access VariableDecl*;
 VariableDeclaration : Stmt ::= Modifiers TypeAccess:Access <ID:String> [Init:Expr]; // Simplified VarDeclStmt

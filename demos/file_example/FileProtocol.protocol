@@ -3,7 +3,7 @@ typestate FileProtocol {
 		Init =	{
 				Status open(): <OK: Open, ERROR: end>
 			}
-    
+
 		Open =	{
 				BooleanEnum hasNext(): <TRUE: Read, FALSE: Close>,
 				void close(): end
@@ -12,9 +12,8 @@ typestate FileProtocol {
 		Read =	{
 				void read(): Open
 			}
-	    
+
 		Close =	{
-				void close(): end 
+				void close(): end
 			}
 }
-

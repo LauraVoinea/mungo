@@ -24,7 +24,7 @@ jastadd {
         include "src/grammar/Typestate.ast"
         include "src/grammar/TypestateTypes.ast"
 
-        // include "src/frontend/Type.jrag"
+        include "src/frontend/Type.jrag"
         include "src/frontend/Annotations.jrag"
         include "src/frontend/Compilation.jrag"
         include "src/frontend/CreateTypestate.jrag"
@@ -38,6 +38,7 @@ jastadd {
         include "src/frontend/LookupConstructor.jrag"
         include "src/frontend/LookupMethod.jrag"
         include "src/frontend/LookupVariable.jrag"
+        include "src/frontend/LookupType.jrag"
         include "src/frontend/Rewrite.jrag"
         include "src/frontend/RewriteAccess.jrag"
         include "src/frontend/TypestateCheck.jrag"
@@ -57,6 +58,8 @@ jastadd {
         // include "**/*.parser"
         // include "src/parser/Java14.parser"
         include "src/parser/Typestate.parser"
+        // include "src/parser/Annotations.parser"
+
       }
     }
   }
@@ -65,18 +68,14 @@ jastadd {
   module = 'mungo'
 
   astPackage = 'org.extendj.ast'
-  // genDir = 'build/generated-src'
   parser.name = 'JavaParser'
-  // parser.genDir = 'build/generated-src/org/extendj/parser'
   scanner.name = 'OriginalScanner'
-  // scanner.genDir = 'build/generated-src/org/extendj/scanner'
 
 }
 
 sourceSets.main {
   java {
       srcDir 'extendj/src/frontend-main'
-      //srcDir 'extendj/src/backend-main'
       srcDir 'src/java'
   }
   resources {

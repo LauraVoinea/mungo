@@ -1,4 +1,5 @@
 aspect typestateFunctionality {
+	eq TType.getAccess().nameType() = NameType.TYPE_NAME;
 
 	inh State TypestateLabel.getTarget(String name);
 	syn lazy State TypestateLabel.getTarget() = getTarget(getLabel());

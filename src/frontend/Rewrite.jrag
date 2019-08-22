@@ -371,7 +371,7 @@ aspect Rewrite {
 		stream.print(getID()+ " ");
 	}
 
-	protected void VariableDeclarator.Rewrite(TypestateStream stream) {
+	protected void Declarator.Rewrite(TypestateStream stream) {
 		stream.print(getID());
 		for(int i = 0; i < getNumDims(); i++)
 			getDims(i).Rewrite(stream);

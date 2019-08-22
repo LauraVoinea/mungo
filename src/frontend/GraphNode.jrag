@@ -157,6 +157,7 @@ aspect GraphNode {
 		//TODO Test a case for Set Rule precondition i)
 		protected boolean includes(GraphNode n, TupleSet ts) {
 			//Terminate Rule and End Rule
+			System.out.println("in includes " + n + " <> " + ts + "<>" + ts.has(this, n));
 			if(ts.has(this, n) || (!hasNext() && !n.hasNext()))
 				return true;
 
@@ -170,7 +171,7 @@ aspect GraphNode {
 			//Set rule: precondition ii)
 			for(GraphNode n1 : n.next) {
 				boolean b = false;
-				for(GraphNode n2: next)
+				for(GraphNode n2 : next)
 					if((b = n2.includes(n1, ts)) == true)
 						break;
 
@@ -198,10 +199,10 @@ aspect GraphNode {
 		public String nextToString() {
 			String s = "";
 			boolean flag = false;
-			for(GraphNode n: next) {
+			for(GraphNode n : next) {
 				if(flag == true)
 					s += ", ";
-				s += n.toString();
+				s += n.toString() + n.id;
 				flag = true;
 			}
 			return s;
@@ -499,10 +500,12 @@ aspect GraphNode {
 	public class MethodNode extends GraphNode {
 		public MethodNode(Access type, String id, TypeDecl[] parameters, ASTNode methodAccess) {
 			super(type, id, parameters, methodAccess);
+			System.out.println("METHOD NODE 1 " + type );
 		}
 
 		public MethodNode(Access type, String id, TypeDecl[] parameters) {
 			this(type, id, parameters, null);
+			System.out.println("METHOD NODE 2 " + type);
 		}
 
 		private boolean equalNode(GraphNode n) {

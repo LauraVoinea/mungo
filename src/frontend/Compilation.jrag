@@ -130,7 +130,6 @@ aspect Compilation {
 					compile(args[i]);
 			else
 				errorStream().println("File " + args[i] + " not found.");
-
 		collect();
 		return !hasErrors();
 	}

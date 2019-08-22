@@ -11,19 +11,19 @@ aspect LookupTSVariable {
 	syn lazy NameDecl ParseName.lookupTSVariable(TypeDecl t) = t != null ? t.lookupTSVariable(name()) : null;
 
 	//Block
-	coll Set<VariableDeclarator> Block.getVariableDecls() [new HashSet<VariableDeclarator>()] with add root Block;
-	VariableDeclarator contributes this to Block.getVariableDecls() for getBlockAncestor();
+	coll Set<Declarator> Block.getVariableDecls() [new HashSet<Declarator>()] with add root Block;
+	Declarator contributes this to Block.getVariableDecls() for getBlockAncestor();
 
-	inh ClassDecl VariableDeclarator.getClassDeclAncestor();
+	inh ClassDecl Declarator.getClassDeclAncestor();
 
-	inh Block VariableDeclarator.getBlockAncestor();
+	inh Block Declarator.getBlockAncestor();
 	eq Block.getStmt(int i).getBlockAncestor() = this;
 	eq TypeDecl.getBodyDecl().getBlockAncestor() = null;
 
 	inh NameDecl Block.lookupTSVariable(String var);
 
 	eq Block.getStmt(int j).lookupTSVariable(String var) {
-		for(VariableDeclarator vd : getVariableDecls())
+		for(Declarator vd : getVariableDecls())
 			if(vd.getID().equals(var))
 				return vd.toNameDecl();
 
@@ -55,12 +55,12 @@ aspect LookupTSVariable {
 	eq TypeDecl.getBodyDecl(int i).lookupTSVariable(String var) = null;
 	eq ClassDecl.getBodyDecl(int i).lookupTSVariable(String var) = lookupTSVariable(var);
 
-	coll Set<VariableDeclarator> ClassDecl.getFieldDecls() [new HashSet<VariableDeclarator>()] with add root ClassDecl;
-	VariableDeclarator contributes this when isField() to ClassDecl.getFieldDecls() for getClassDeclAncestor();
+	coll Set<Declarator> ClassDecl.getDeclarators() [new HashSet<Declarator>()] with add root ClassDecl;
+	Declarator contributes this when isField() to ClassDecl.getDeclarators() for getClassDeclAncestor();
 
 	syn NameDecl TypeDecl.lookupTSVariable(String var) = null;
 	syn NameDecl ClassDecl.lookupTSVariable(String var) {
-		for(VariableDeclarator vd : getFieldDecls())
+		for(Declarator vd : getDeclarators())
 			if(vd.getID().equals(var))
 				return vd.toNameDecl();
 		//for possible future work
@@ -72,7 +72,7 @@ aspect LookupTSVariable {
 
 	//class NameDecl
 	abstract class NameDecl {
-		abstract public VariableDeclarator getVariableDecl();
+		abstract public Declarator getVariableDecl();
 		abstract public Modifiers getModifiers();
 		abstract public Access getTypeAccess();
 		abstract public List<Dims> getDimss();
@@ -82,11 +82,11 @@ aspect LookupTSVariable {
 
 	//class VarDecl
 	class VarDecl extends NameDecl {
-		private VariableDeclarator vd;
-		public VarDecl(VariableDeclarator vd) {
+		private Declarator vd;
+		public VarDecl(Declarator vd) {
 			this.vd = vd;
 		}
-		public VariableDeclarator getVariableDecl() { return vd; }
+		public Declarator getVariableDecl() { return vd; }
 		public Modifiers getModifiers() { return vd.getModifiers(); }
 		public Access getTypeAccess() { return vd.getTypeAccess(); }
 		public List<Dims> getDimss() {return vd.getDimss();}
@@ -100,7 +100,7 @@ aspect LookupTSVariable {
 		public ParDecl(ParameterDeclaration pd) {
 			this.pd = pd;
 		}
-		public VariableDeclarator getVariableDecl() { return null; }
+		public Declarator getVariableDecl() { return null; }
 		public Modifiers getModifiers() { return pd.getModifiers(); }
 		public Access getTypeAccess() { return pd.getTypeAccess(); }
 		public List<Dims> getDimss() {return null;}
@@ -110,6 +110,6 @@ aspect LookupTSVariable {
 	}
 
 	syn lazy NameDecl ParameterDeclaration.toNameDecl() = new ParDecl(this);
-	syn lazy NameDecl VariableDeclarator.toNameDecl() = new VarDecl(this);
+	syn lazy NameDecl Declarator.toNameDecl() = new VarDecl(this);
 
 }
