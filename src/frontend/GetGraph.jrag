@@ -125,8 +125,10 @@ aspect GetGraph{
       if(isTypestateClassDeclType()){
           TypestateClassDecl cd = (TypestateClassDecl) this;
           if(cd.existsTypestateDecl()){
-
+              System.out.println("***** " + cd.getTypestateDecl());
               GraphNode r = cd.getTypestateDecl().createTypestate().normalise();
+              System.out.println("***** " + r.toString());
+
               TypestateVar.addTypestate = true; //TODO better implementation here
               getFieldGraph(r);
 //				cd.getFieldGraph(r, new HashMap<GraphNode, Map<Declarator, GraphNode>>());
@@ -134,10 +136,13 @@ aspect GetGraph{
           for(ConstructorDecl c : getConstructorDecls())
               c.getGraph();
 
-          if(getConstructorDecls().isEmpty())
-              for(Declarator vd : getTypestateFields())
-                  if(vd.getTypeAccess().lookupTSType().isTypestateClassDeclType())
+          if(getConstructorDecls().isEmpty()){
+              for(Declarator vd : getTypestateFields()){
+                  if(vd.getTypeAccess().lookupTSType().isTypestateClassDeclType()){
                       vd.typestate.checkError(vd/*, getBodyDeclAncestor()*/);
+                    }
+                  }
+                }
           }
       }
 
@@ -150,8 +155,6 @@ aspect GetGraph{
   }
 
   syn Set<TypestateVar> ClassDecl.getFieldGraph(GraphNode r){
-      System.out.println("Am I here yet? " +  getTypestateFields());
-
       for(Declarator vd : getTypestateFields()){
           if(vd.typestate == null){
               vd.typestate = new TypestateField(/*getMethods()*/);
@@ -212,12 +215,12 @@ aspect GetGraph{
       }
 
       MethodDecl md = null;
-      System.out.println(">>>>>> " + r.getId() + " >>> " + r.getParameters());
+      // System.out.println(">>>>>> " + r.getId() + " >>> " + r.getParameters());
       if(r.getId() != null && r.getParameters() != null)
           md = lookupTSMethod(r.getId(), r.getParameters());
 
       if(md != null){
-          System.out.println("====== " + md.toString() + " === " + md.typestate.current);
+          // System.out.println("====== " + md.toString() + " === " + md.typestate.current);
 
           md.typestate.current = new ReturnNode();    //TODO if the return type is typestate type
           md.getGraph();

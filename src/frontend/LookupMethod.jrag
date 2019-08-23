@@ -4,7 +4,7 @@ aspect LookupTSMethod {
 		TypeDecl[] ParameterAccess = new TypeDecl[getNumArg()];
 		for(int i = 0; i < getNumArg(); i++){
 			ParameterAccess[i] = getArg(i).type();
-			System.out.println("method access: " + getArg(i));
+			// System.out.println("method access: " + getArg(i));
 		}
 		return ParameterAccess;
 	}

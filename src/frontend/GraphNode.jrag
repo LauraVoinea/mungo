@@ -36,7 +36,7 @@ aspect GraphNode {
 
 		private String signature;
 
-/*		public String toString() {
+		public String toString() {
 			if (signature != null)
 				return signature;
 
@@ -54,7 +54,7 @@ aspect GraphNode {
 			}
 			return signature += ")";
 		}
-*/
+
 		protected Access getType() {
 			return type;
 		}
@@ -273,9 +273,11 @@ aspect GraphNode {
 		public GraphNode normalise() {
 			Set<GraphNode> visited = new HashSet<GraphNode>();
 			ArrayList<GraphNode> alist = new ArrayList<GraphNode>();
-			for(GraphNode n: next)
+			for(GraphNode n: next){
+				// System.out.println("%%%%%%" + n.getType());
 				if(!this.equals(n))
 					alist.addAll(n.normalise(visited));
+			}
 			next = alist;
 			return hasLoopNode() ? normalise() : this;
 		}
@@ -559,10 +561,13 @@ aspect GraphNode {
 	public class SwitchNode extends GraphNode {
 		public SwitchNode(ASTNode ss) {
 			super(null, null, null, ss);
+			System.out.println("SWITCH NODE 1 " + ss );
+
 		}
 
 		public SwitchNode() {
 			this(null);
+			System.out.println("SWITCH NODE 2 ");
 		}
 
 		public String toString() {
@@ -598,10 +603,13 @@ aspect GraphNode {
 	public class SwitchCase extends GraphNode {
 		public SwitchCase(String id, ASTNode c) {
 			super(null, id, null, c);
+			// System.out.println("````````" + id);
 		}
 
 		public SwitchCase(String id) {
 			this(id, null);
+			// System.out.println("````````" + id);
+
 		}
 
 		protected boolean includes(GraphNode n, TupleSet ts) {

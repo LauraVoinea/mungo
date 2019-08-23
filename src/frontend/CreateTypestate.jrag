@@ -29,11 +29,14 @@ aspect CreateTypestate {
 
 	eq TypestateSwitch.createTypestate() {
 		SwitchNode n =  new SwitchNode();
+		System.out.println("create typestate switch " + getNumTypestateSwitchCase());
+
 		for(int i = 0; i < getNumTypestateSwitchCase(); i++) {
+			System.out.println("create typestate switch " + i + " " + getTypestateSwitchCase(i).getTypestate());
+
 			SwitchCase c = new SwitchCase(getTypestateSwitchCase(i).getLabel());
 			c.addNext(getTypestateSwitchCase(i).getTypestate().createTypestate());
 			n.addNext(c);
-			System.out.println("create typestate switch " + getTypestateSwitchCase(i).getLabel());
 		}
 		return n;
 	}
