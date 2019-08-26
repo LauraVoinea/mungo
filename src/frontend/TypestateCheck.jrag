@@ -8,8 +8,6 @@ aspect typestateCheck {
 			typestate.reportErrors("Object reference is used uninitialised.");
 			if(getTypeAccess().lookupTSType().getTypestateDecl() != null) {
 				GraphNode t = getTypeAccess().lookupTSType().getTypestateDecl().createTypestate().normalise();
-				System.out.println("AAAAAA 1 " + getTypeAccess().lookupTSType().getTypestateDecl() + " ? " + t.getType()+ " ? " + t.getId());
-
 				typestate.checkTypestate(t, "The typestate of the created object does not match its declared typestate.");
 			}
 		}
@@ -20,7 +18,6 @@ aspect typestateCheck {
 			typestate.reportErrors("Object reference is used uninitialised");
 			if(getTypeAccess().lookupTSType().getTypestateDecl() != null) {
 				GraphNode t = getTypeAccess().lookupTSType().getTypestateDecl().createTypestate().normalise();
-				System.out.println("AAAAAA 2 " + t.getType()+ " ? " + t.getId() + " " +  getTypeAccess().lookupTSType() + " " + getTypeAccess().lookupTSType().isTypestateClassDeclType());
 				typestate.checkTypestate(t, "The typestate of the created object does not match its declared typestate.");
 			}
 		}

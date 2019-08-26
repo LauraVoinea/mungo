@@ -123,9 +123,6 @@ aspect JavaSemanticCheck {
 				for(String s : e.getEnumLabels())
 					if(!getCaseLabels().contains(s))
 					addSemanticError("Enumeration type " + s + " should be a switch case.");
-//				for(String s : getCaseLabels())
-//					if(!e.getEnumLabels().contains(s))
-//						addSemanticError("Case " + s.toString() + " should be an enumeration with type: " + e.getID() +".");
 			}
 		}
 	}

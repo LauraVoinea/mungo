@@ -40,9 +40,6 @@ aspect TypestateTypingEnvironment {
 		}
 
 		protected void addTypestate(Expr e/*, BodyDecl bd*/) {
-//			if(current.isReturned()) {
-			ClassInstanceExpr plm = (ClassInstanceExpr)e;
-			System.out.println("adding typestate 1 " + plm.type() + " " + plm.getTypeDecl());
 			if(current.isReturned()) {
 //				bd.returnGraph.add(current);
 //				bd.returnExpr.add(e);
@@ -59,8 +56,6 @@ aspect TypestateTypingEnvironment {
 			else {
 				startGraph.add(current);
 				startExpr.add(e);
-				System.out.println("adding typestate 2 " + current + " ----- " + e);
-
 			}
 			resetCurrent();
 		}
@@ -105,13 +100,10 @@ aspect TypestateTypingEnvironment {
 			for(int i = startGraph.size() - 1; i >= 0; i--) {
 				GraphNode n = startGraph.get(i);
 				n.normalise();
-				ClassInstanceExpr plm = (ClassInstanceExpr)startExpr.get(i);
-				// System.out.println("adding typestate " + plm.type() + " " + plm.getTypeDecl());
-				System.out.println("-----------------------");
-				System.out.println(n.nextToString() + " <> " + t.nextToString());
-				System.out.println("------------------------");
-				n.printPaths();
-				System.out.println("------------------------");
+				// System.out.println("-----------------------");
+				// System.out.println(startExpr.get(i));
+				// n.printPaths();
+				// System.out.println("------------------------");
 				if(!t.includes(n)) {
 					String filePath = ((CompilationUnit) startExpr.get(i).getCompilationUnitAncestor()).getFilePath();
 					String errorMsg = "Object created at " + filePath + ": " + ASTNode.getLine(startExpr.get(i).getStart());

@@ -23,8 +23,6 @@ aspect typestateSemanticCheck {
 	}
 
 	protected void TTypestate.semanticCheck() {
-		System.out.println("and up here bro " + getAccessNoTransform());
-
 		TypeDecl t = getAccessNoTransform().lookupType(getAccessNoTransform().toString()).iterator().next();
 		if(!t.isTypestateClassDeclType())
 			addSemanticError("Type " + getAccessNoTransform().toString() + " is not a typestate class type.");
@@ -38,7 +36,6 @@ aspect typestateSemanticCheck {
 	protected void TType.semanticCheck() {
 		TypeDecl t = getAccessNoTransform().lookupType(getAccessNoTransform().toString()).iterator().next();
 		if(t.isTypestateDeclType()){
-			System.out.println(getAccessNoTransform().toString() + " is not a proper java type.");
 			addSemanticError(getAccessNoTransform().toString() + " is not a proper java type.");
 		}
 
@@ -51,7 +48,6 @@ aspect typestateSemanticCheck {
 		for(int i = 0; i < getNumTypestateSwitchCase(); i++)
 			for(int j = i + 1; j < getNumTypestateSwitchCase(); j++)
 				if(getTypestateSwitchCase(i).getLabel().equals(getTypestateSwitchCase(j).getLabel())){
-					System.out.println("Duplicate case label: " + getTypestateSwitchCase(i).getLabel() + ".");
 					addSemanticError("Duplicate case label: " + getTypestateSwitchCase(i).getLabel() + ".");
 				}
 	}
@@ -59,10 +55,6 @@ aspect typestateSemanticCheck {
 	protected void TypestateMethod.semanticCheck() {
 		TypeDecl t;
 		if(getTypestate() instanceof TypestateSwitch) {
-			// System.out.println("Right here " + getTType());
-			// System.out.println("Right here * " + getTType().getAccessNoTransform());
-			// System.out.println("Right here * " + getTType().getAccessNoTransform().lookupType(getTType().getAccessNoTransform().toString()));
-
 			t = getTType().getAccessNoTransform().lookupType(getTType().getAccessNoTransform().toString()).iterator().next();
 			if(!t.isEnumDeclType())
 				addSemanticError("Method " + signature() + " should return an enumeration type.");
@@ -70,7 +62,6 @@ aspect typestateSemanticCheck {
 				for(String s : t.getEnumDecl().getEnumLabels()) {
 					if(!((TypestateSwitch) getTypestate()).getLabels().contains(s)){
 						addSemanticError("Label " + s + " defined for the enumeration type " + t.getEnumDecl().getID() + " is not defined as a switch label.");
-						System.out.println("Label " + s + " defined for the enumeration type " + t.getEnumDecl().getID() + " is not defined as a switch label.");
 				}
 			}
 			}

@@ -8,7 +8,6 @@ aspect LookupType {
 	inh TypeDecl TypestateMethod.lookupType(String packageName, String typeName);
 
 	eq Program.getCompilationUnit(int j).getCompilationUnit(String packageName, String typeName) {
-		// System.out.println("I should definetly be here!" + packageName +  typeName);
 		if(new File(packageName +  typeName + Program.fileSuffix()).exists())
 			compile(packageName +  typeName + Program.fileSuffix());
 
@@ -34,14 +33,12 @@ aspect LookupType {
 		String packageName = getPackageString();
 
 		if(localLookupTSType(typeName)){
-			System.out.println("plm 1 "+ this.getTypeDecl(0));
 			return this.getTypeDecl(0);
 		}
 
-		CompilationUnit cu; // = getCompilationUnit(getPackageString(), typeName);
+		CompilationUnit cu;
 
 		if((cu = getCompilationUnit(packageName, typeName)) != null){
-			System.out.println("plm 2 "+ cu.getTypeDecl(0));
 			return cu.getTypeDecl(0);
 		}
 
@@ -51,7 +48,6 @@ aspect LookupType {
       	s = item.name();
 	      if(s != null)
 	        if((cu = getCompilationUnit(typeName, s.replace('.', File.separatorChar))) != null){
-						System.out.println("plm 3 "+ this.getTypeDecl(0));
 	          return cu.getTypeDecl(0);
 					}
       }

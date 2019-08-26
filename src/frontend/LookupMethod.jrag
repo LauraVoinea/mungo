@@ -4,7 +4,6 @@ aspect LookupTSMethod {
 		TypeDecl[] ParameterAccess = new TypeDecl[getNumArg()];
 		for(int i = 0; i < getNumArg(); i++){
 			ParameterAccess[i] = getArg(i).type();
-			// System.out.println("method access: " + getArg(i));
 		}
 		return ParameterAccess;
 	}
@@ -17,13 +16,10 @@ aspect LookupTSMethod {
 	}
 
 	syn lazy MethodDecl MethodAccess.lookupTSMethod(TypeDecl t){
-		// System.out.println("In MethodAccess lookupTSMethod 1 "+ getID() + " " + t.getID());
 		return t != null ? t.lookupTSMethod(getID(), getParameterTypes()) : null;
 	}
 
 	syn lazy MethodDecl TypestateMethod.lookupTSMethod(TypeDecl t) {
-		// System.out.println("In MethodAccess lookupTSMethod 2 " + getID() + " " + t.getID());
-
 		if(t != null) {
 			MethodDecl md = t.lookupTSMethod(getID(), getParameterTypes());
 			TypeDecl td = getTType().getAccess().type();
@@ -35,12 +31,9 @@ aspect LookupTSMethod {
 	}
 
 	syn MethodDecl TypeDecl.lookupTSMethod(String method, TypeDecl[] parameters){
-		// System.out.println("In TypeDecl lookupTSMethod 3 " + method);
 		return null;
 	}
 	eq ClassDecl.lookupTSMethod(String method, TypeDecl[] parameters) {
-		// System.out.println("In ClassDecl lookupTSMethod 4 " + method);
-
 		ArrayList<MethodDecl> a = lookupTSMethodTargets(method, parameters);
 		return (a.size() == 1) ? a.get(0) : null;
 	}
@@ -50,8 +43,6 @@ aspect LookupTSMethod {
 
 
 	syn boolean MethodDecl.isTarget(String method, TypeDecl[] parameters) {
-		// System.out.println("In MethodDecl isTarget 5a " + method);
-
 		if(!getID().equals(method) || getNumParameter() != parameters.length)
 			return false;
 
@@ -69,13 +60,11 @@ aspect LookupTSMethod {
 	}
 
 	syn ArrayList<MethodDecl> TypeDecl.lookupTSMethodTargets(String method, TypeDecl[] parameters) {
-		// System.out.println("In TypeDecl.lookupTSMethodTargets 5 " + method);
 	 	return new ArrayList<MethodDecl>();
  }
 
 	eq ClassDecl.lookupTSMethodTargets(String method, TypeDecl[] parameters) {
 		ArrayList<MethodDecl> a = new ArrayList<MethodDecl>();
-		// System.out.println("In ClassDecl lookupTSMethodTargets 6 " + method);
 
 		for(MethodDecl m : getMethodDecls()){
 			if(m.isTarget(method, parameters)){
@@ -93,8 +82,6 @@ aspect LookupTSMethod {
 	}
 
 	syn lazy ArrayList<MethodDecl> MethodAccess.lookupTSMethodTargets(TypeDecl t) {
-		// System.out.println("In MethodAccess lookupTSMethodTargets 7 " + t.getID());
-		// System.out.println("FML! " + t.lookupTSMethodTargets(getID(), getParameterTypes()));
 		return t != null ? t.lookupTSMethodTargets(getID(), getParameterTypes()) : new ArrayList<MethodDecl>();
 	}
 

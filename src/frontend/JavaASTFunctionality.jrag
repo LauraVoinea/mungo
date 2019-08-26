@@ -53,20 +53,12 @@ aspect javaASTFunctionality {
 	/*	TypestateClassDeclType							*/
 	eq TypestateClassDecl.isTypestateClassDeclType() = true;
 	eq TypestateClassDecl.getTypestateClassDecl() = this;
-	syn lazy boolean TypestateClassDecl.existsTypestateDecl(){
-		// System.out.println("WTF is going on? " + getTypestateDecl());
-		return getTypestateDecl() != null;
-	}
+	syn lazy boolean TypestateClassDecl.existsTypestateDecl() =	getTypestateDecl() != null;
 
 	syn lazy TypestateDecl TypestateClassDecl.getTypestateDecl() {
 		Annotation a = getModifiers().getTypestateAnnotation(packageName());
 		ElementConstantValue ts_v = (ElementConstantValue) a.getElementValuePair(0).getElementValue();
-		Access plm = a.getAccess();
 		CompilationUnit cu = a.getCompilationUnitAncestor();
-
-		// System.out.println("Here I am! " + ts_v.getExpr().toString()
-		// + " ? " + cu.lookupTSType(ts_v.getExpr().toString()).isTypestateDeclType()
-		// + " " + cu.lookupTSType(packageName(), ts_v.getExpr().toString()).getTypestateDecl());
 		return cu.lookupTSType(ts_v.getExpr().toString()).isTypestateDeclType() ?
 		cu.lookupTSType(packageName(), ts_v.getExpr().toString()).getTypestateDecl() : null;
 	}
@@ -88,8 +80,6 @@ aspect javaASTFunctionality {
 	syn lazy TypestateMethod MethodDecl.getTypestateMethod() = getTypestateMethod(getClassDeclAncestor());
 
 	syn TypestateMethod MethodDecl.getTypestateMethod(TypeDecl cd) {
-		// System.out.println("Who am I? :() " + cd);
-		//In the case where the method is declared inside an interface
 		if (cd == null)
 			return null;
 
@@ -150,10 +140,8 @@ aspect javaASTFunctionality {
 	syn lazy boolean MethodAccess.isRecursiveCall() = reachable().contains(getMethodDeclAncestor());
 */
 
-	syn lazy MethodDecl MethodAccess.getTarget(){
-		// System.out.println("and my type is? " + getQualifiedType());
-	  return lookupTSMethod(getQualifiedType());
-	}
+	syn lazy MethodDecl MethodAccess.getTarget() = lookupTSMethod(getQualifiedType());
+
 	syn lazy String MethodAccess.signature() {
 		String s = getID() + "(";
 		for(int i = 0; i < getNumArg(); i++) {
@@ -215,6 +203,7 @@ aspect javaASTFunctionality {
 	syn lazy int Access.countDims() = 0;
 	eq ArrayTypeAccess.countDims() = 1 + getAccess().countDims();
 
+	//check this
 	/*	ParseName							*/
 	ParseName contributes getDeclarator()
 	when getDeclarator() != null && getDeclarator().isField()

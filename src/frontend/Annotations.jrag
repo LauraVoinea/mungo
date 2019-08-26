@@ -48,7 +48,6 @@ aspect Annotation {
               for(int i = 0; i < getNumImplements(); i++) {
                 interfaces.add(getImplements(i));
               }
-              System.out.println("type" + getModifiers().getTypestateAnnotation(packageName()));
               return new TypestateClassDecl(getModifiers(), getID(), new Opt(), interfaces, bodydecls);
             }
         }

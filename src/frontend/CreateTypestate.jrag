@@ -17,7 +17,6 @@ aspect CreateTypestate {
 		GraphNode n = new LoopNode();
 		for(int i = 0; i < getNumTypestateMethod(); i++){
 			n.addNext(getTypestateMethod(i).createTypestate());
-			System.out.println("create typestate loop " + getTypestateMethod(i).getID());
 		}
 		return n;
 	}
@@ -29,11 +28,8 @@ aspect CreateTypestate {
 
 	eq TypestateSwitch.createTypestate() {
 		SwitchNode n =  new SwitchNode();
-		System.out.println("create typestate switch " + getNumTypestateSwitchCase());
 
 		for(int i = 0; i < getNumTypestateSwitchCase(); i++) {
-			System.out.println("create typestate switch " + i + " " + getTypestateSwitchCase(i).getTypestate());
-
 			SwitchCase c = new SwitchCase(getTypestateSwitchCase(i).getLabel());
 			c.addNext(getTypestateSwitchCase(i).getTypestate().createTypestate());
 			n.addNext(c);
@@ -46,10 +42,7 @@ aspect CreateTypestate {
 
 	syn lazy GraphNode TType.createTypestate() = null;
 	eq TTypestate.createTypestate(){
-		System.out.println("create TTypestate loop " + getTypestate());
-
 		return new LoopNode().addNext(getTypestate().createTypestate());
-
 	}
 
 }
