@@ -1,9 +1,7 @@
 package demos.inheritance;
 
-import mungo.lib.Typestate;
-
 @Typestate("LoggedFileProtocol")
-public class LoggedFile /*extends File*/{
+public class LoggedFile extends File{
     private LogService logging;
 
     public LoggedFile () {

@@ -1,4 +1,4 @@
-package demos.alice_bob.threads;
+package demos.file_example;
 
 @interface Typestate {
   	String value();

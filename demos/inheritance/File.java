@@ -1,7 +1,5 @@
 package demos.inheritance;
 
-import mungo.lib.Typestate;
-
 @Typestate("FileProtocol")
 public class File{
     private FileHandle h; // Mungo currently requires 'private' here

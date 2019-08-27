@@ -1,7 +1,5 @@
 package demos.inheritance;
 
-import mungo.lib.Typestate;
-
 @Typestate("LogServiceProtocol")
 public class LogService{
    void start () {

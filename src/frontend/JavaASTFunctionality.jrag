@@ -218,7 +218,19 @@ aspect javaASTFunctionality {
 	}
 
 	inh MethodDecl ParseName.getMethodDeclAncestor();
-
+	// Access contributes getVariableDecl()
+	// when getVariableDecl() != null && (getVariableDecl() instanceof FieldDeclarator)
+	// to MethodDecl.getUsedTypestateFields() for getMethodDeclAncestor();
+	//
+	// syn lazy Declarator Access.getVariableDecl() {
+	// 	if(!type().isTypestateClassDeclType())
+	// 		return null;
+	// 	if(getQualifiedAccess() != null)
+	// 		return lookupTSVariable(getQualifiedType()).getVariableDecl();
+	// 	return lookupTSVariable().getVariableDecl();
+	// }
+	//
+	// inh MethodDecl Access.getMethodDeclAncestor();
 	// ArrayTypeWithSizeAccess inherits ArrayTypeAccess
 	syn lazy boolean Access.hasDims() = countDims() != 0;
 

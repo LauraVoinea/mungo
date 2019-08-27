@@ -3,7 +3,7 @@ package demos.iterator;
 
 typestate StateIteratorProtocol {
 	HasNext	= 	{
-					Boolean hasNext(): <True: Next, False: end>
+					BooleanEnum hasNext(): <TRUE: Next, FALSE: end>
 				}
 
 	Next	=	{
@@ -12,7 +12,7 @@ typestate StateIteratorProtocol {
 
 	Remove	=	{
 					void remove(): HasNext,
-					Boolean hasNext(): <True: NextRemove, False: end>
+					BooleanEnum hasNext(): <TRUE: NextRemove, FALSE: end>
 				}
 
 	NextRemove

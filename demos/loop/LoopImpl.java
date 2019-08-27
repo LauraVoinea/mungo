@@ -1,7 +1,5 @@
 package demos.loop;
 
-import mungo.lib.Typestate;
-
 /**
  * Arguably the loop typestate itself is inhabited (since we can create an object that
  * implements it), but its (informal) dual is uninhabited, in that we cannot define a

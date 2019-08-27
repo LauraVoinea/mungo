@@ -27,9 +27,14 @@ aspect LookupType {
 	}
 
 	syn TypeDecl CompilationUnit.lookupTSType(String typeName) {
-			if(!lookupType(PRIMITIVE_PACKAGE_NAME, typeName).isUnknown()){
-				return lookupType(PRIMITIVE_PACKAGE_NAME, typeName);
-			}
+		// System.out.println("Here we go again ");
+
+		// if(!lookupType(PRIMITIVE_PACKAGE_NAME, typeName).isUnknown()){
+		// 		return lookupType(PRIMITIVE_PACKAGE_NAME, typeName);
+		// }
+		if(lookupType(typeName).iterator().hasNext())
+			return lookupType(typeName).iterator().next();
+			
 		String packageName = getPackageString();
 
 		if(localLookupTSType(typeName)){
@@ -57,8 +62,11 @@ aspect LookupType {
 	}
 
 	syn TypeDecl CompilationUnit.lookupTSType(String Package, String name) {
-		if(Package.equals(""))
+
+		if(Package.equals("")){
+			// System.out.println("---- " + this + " --- " + Package + " --- " +  name);
 			return lookupTSType(name);
+		}
 
 		CompilationUnit cu;
 		// TODO check local Type??
@@ -73,6 +81,9 @@ aspect LookupType {
 
 	inh TypeDecl Access.lookupTSType(String Package, String name);
 	syn lazy TypeDecl Access.lookupTSType(){
+		// if (!(this instanceof ParseName))
+		// 	return null;
+		// System.out.println("---- " + this + " --- " + getLastAccess() + " --- " +  getLastAccess().getQualifiedString());
 		return lookupTSType(getLastAccess().getQualifiedString(), getLastAccess().toString());
 	}
 

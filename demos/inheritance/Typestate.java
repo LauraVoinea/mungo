@@ -1,4 +1,4 @@
-package demos.file_example;
+package demos.inheritance;
 
 @interface Typestate {
   	String value();

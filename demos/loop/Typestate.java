@@ -1,4 +1,4 @@
-package demos.file_example;
+package demos.loop;
 
 @interface Typestate {
   	String value();

@@ -1,7 +1,5 @@
 package demos.iterator;
 
-import mungo.lib.Typestate;
-import mungo.lib.Boolean;
 import java.util.Iterator;
 
 @Typestate(value="StateIteratorProtocol")
@@ -15,10 +13,10 @@ class StateIterator {
 		return iter.next();
 	}
 
-	public Boolean hasNext() {
+	public BooleanEnum hasNext() {
 		if(iter.hasNext())
-			return Boolean.True;
-		return Boolean.False;
+			return BooleanEnum.TRUE;
+		return BooleanEnum.FALSE;
 	}
 
 	public void remove() {
