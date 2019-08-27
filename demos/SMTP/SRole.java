@@ -1,6 +1,5 @@
 package demos.SMTP;
 
-import mungo.lib.Typestate;
 
 import java.io.BufferedReader;
 import java.io.IOException;

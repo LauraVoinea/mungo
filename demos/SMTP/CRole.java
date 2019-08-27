@@ -1,7 +1,5 @@
 package demos.SMTP;
 
-import mungo.lib.Typestate;
-
 import javax.net.ssl.SSLSocket;
 import java.io.BufferedReader;
 import java.io.IOException;

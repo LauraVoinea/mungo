@@ -1,4 +1,4 @@
-package demos.file_example;
+package demos.SMTP;
 
 @interface Typestate {
   	String value();

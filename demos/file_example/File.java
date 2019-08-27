@@ -40,7 +40,7 @@ class File {
 	// passed around as an argument
 
 	public static void main(String[] args) {
-		File myFile;// = new File("file.txt");
+		File myFile = new File("file.txt");
 		File a = myFile;
 		processFile(a);
 	}
