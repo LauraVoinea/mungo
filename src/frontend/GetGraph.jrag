@@ -869,9 +869,10 @@ eq DoStmt.getGraph(Set<TypestateVar> env){
   //TODO implement me
   eq MethodAccess.getGraph(Set<TypestateVar> env){
   	MethodDecl md = getTarget();
-
   	if(md != null){
   		GraphNode[]parameters = new GraphNode[md.getNumParameter()];
+
+    // System.out.println("---------<> " + md + " " + isThisAccess() + " " + isTypestateMethod());
 
   	if(isThisAccess()){
   		if(md.isRec() == true){                                //Condition checks for recursion
@@ -942,8 +943,10 @@ eq DoStmt.getGraph(Set<TypestateVar> env){
   					if(vdt.current.isReturnPlugged())
   						md.addSemanticError("Cannot infer return type for method call.");
   			}
+        System.out.println("---------<> " + md + " " + t );
 
   			if(t != null){
+          System.out.println("---------<>");
   				t.current = new MethodNode(lookupTSMethod(getQualifiedType()).getTypeAccess(), getID(), getParameterTypes(), this).addNext(t.current);
   			}
   		}

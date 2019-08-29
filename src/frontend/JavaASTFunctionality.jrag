@@ -55,14 +55,21 @@ aspect javaASTFunctionality {
 	eq TypestateClassDecl.getTypestateClassDecl() = this;
 	syn lazy boolean TypestateClassDecl.existsTypestateDecl() =	getTypestateDecl() != null;
 
-	syn lazy TypestateDecl TypestateClassDecl.getTypestateDecl() {
+	syn TypestateDecl TypestateClassDecl.getTypestateDecl() {
+		// System.out.println("###### " + packageName() + " " + getModifiers().getTypestateAnnotation(packageName()));
 		Annotation a = getModifiers().getTypestateAnnotation(packageName());
-		ElementConstantValue ts_v = (ElementConstantValue) a.getElementValuePair(0).getElementValue();
-		CompilationUnit cu = a.getCompilationUnitAncestor();
-		System.out.println("My caller " + cu.toString() + " " + ts_v.getExpr().toString()
-		+ " " + cu.lookupTSType(ts_v.getExpr().toString()) );
-		return cu.lookupTSType(ts_v.getExpr().toString()).isTypestateDeclType() ?
-		cu.lookupTSType(packageName(), ts_v.getExpr().toString()).getTypestateDecl() : null;
+		if(a != null){
+
+			ElementConstantValue ts_v = (ElementConstantValue) a.getElementValuePair(0).getElementValue();
+			CompilationUnit cu = a.getCompilationUnitAncestor();
+			TypeDecl t = cu.lookupTSType(ts_v.getExpr().toString());
+			System.out.println("###### " + this + " " + t + " " + t.name() + " " + t.isTypestateDeclType()
+			+ " " + t.getTypestateDecl());
+
+			return cu.lookupTSType(ts_v.getExpr().toString()).isTypestateDeclType() ?
+			cu.lookupTSType(packageName(), ts_v.getExpr().toString()).getTypestateDecl() : null;
+		}
+		return null;
 	}
 
 	/*	InterfaceDeclType							*/
@@ -87,10 +94,14 @@ aspect javaASTFunctionality {
 
 		if(cd.isTypestateClassDeclType()) {
 			TypestateDecl t = ((TypestateClassDecl) cd).getTypestateDecl();
-			if(t != null)
+			System.out.println("======!!!====== " + cd  + " " + ((TypestateClassDecl) cd).getTypestateDecl());
+
+			if(t != null){
+				System.out.println("======!!!====== " + t );
 				for(TypestateMethod m : t.getMethods())
 					if(isTarget(m.getID(), m.getParameterTypes()))
 						return m;
+					}
 		}
 		return null;
 	}
@@ -157,6 +168,7 @@ aspect javaASTFunctionality {
 
 	syn lazy boolean MethodAccess.isTypestateMethod() {
 		MethodDecl md = getTarget();
+		System.out.println("!!~~~~~~~!! " + this + " " + md + " " + getQualifiedType() + " " +  md.getTypestateMethod(getQualifiedType()));
 		return (md != null) ? md.getTypestateMethod(getQualifiedType()) != null : false;
 	}
 

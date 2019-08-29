@@ -152,8 +152,6 @@ aspect Type {
 
 	syn lazy TypeDecl Dot.__getQualifiedType() {
 		if(hasParentDot()){
-			System.out.println("--------- " + this + " " + parentDot() + " -- " +
-			getLeft().lookupType(parentDot().__getQualifiedType().name()) + " ");
 			if(getLeft().lookupType(parentDot().__getQualifiedType().name()).isEmpty())
 				return unknownType();
 			return getLeft().lookupType(parentDot().__getQualifiedType().name()).iterator().next();

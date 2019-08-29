@@ -8,7 +8,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-@Typestate(value="CProtocol")
+@Typestate("CProtocol")
 public class CRole {
 	public BufferedReader socketSIn = null;
 	public PrintWriter socketSOut = null;

@@ -20,12 +20,13 @@ aspect LookupTSMethod {
 	}
 
 	syn lazy MethodDecl TypestateMethod.lookupTSMethod(TypeDecl t) {
+		System.out.println("****** " + t);
 		if(t != null) {
 			MethodDecl md = t.lookupTSMethod(getID(), getParameterTypes());
-			TypeDecl td = getTType().getAccess().type();
-			System.out.println("****** " + md.getTypeAccess().type() + " " + td + " " + (td instanceof NoNameType));
-			if(md != null && (md.getTypeAccess().type().equals(td) || (td instanceof NoNameType)))
-				return md;
+			TypeDecl td = getTType().getAccess().lookupTSType();
+			System.out.println("****** " + md.getTypeAccess().lookupTSType() + " " + td + " " + (td instanceof NoNameType));
+			if(md != null && (md.getTypeAccess().lookupTSType().equals(td) || (td instanceof NoNameType)))
+			return md;
 		}
 
 		return null;

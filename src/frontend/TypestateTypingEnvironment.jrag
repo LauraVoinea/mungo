@@ -19,7 +19,7 @@ aspect TypestateTypingEnvironment {
 
 		TypestateVar() {
 			current = new EndNode();
-
+			// System.out.println("==!!!== " );
 			end = new HashMap<ASTNode, GraphNode>();
 			start = new HashMap<ASTNode, GraphNode>();
 			startGraph = new ArrayList<GraphNode>();
@@ -54,8 +54,11 @@ aspect TypestateTypingEnvironment {
 //				bd.pluggedTypestate.add(this);
 //			}
 			else {
+				// System.out.println("FML " + current);
 				startGraph.add(current);
 				startExpr.add(e);
+				System.out.println("adding typestate 2 " + current + " ----- " + e);
+
 			}
 			resetCurrent();
 		}
@@ -101,7 +104,7 @@ aspect TypestateTypingEnvironment {
 				GraphNode n = startGraph.get(i);
 				n.normalise();
 				// System.out.println("-----------------------");
-				// System.out.println(startExpr.get(i));
+				// System.out.println(((ClassInstanceExpr) startExpr.get(i)).getAccess());
 				// n.printPaths();
 				// System.out.println("------------------------");
 				if(!t.includes(n)) {
@@ -135,6 +138,7 @@ aspect TypestateTypingEnvironment {
 
 		TypestatePar() {
 			super();
+			System.out.println("FML");
 //			parameterNode = new LoopNode();
 		}
 
@@ -158,7 +162,7 @@ aspect TypestateTypingEnvironment {
 
 		TypestateField(/*Set<BodyDecl> bodyDecls*/) {
 			super();
-
+			System.out.println("==!!!== " );
 			connectGraph = new HashMap<BodyDecl, GraphNode>();
 			plugGraph = new HashMap<BodyDecl, GraphNode>();
 //			for(BodyDecl bd: bodyDecls)
@@ -170,6 +174,7 @@ aspect TypestateTypingEnvironment {
 			connectGraph.remove(bd);
 			connectGraph.put(bd, new LoopNode());
 			plugGraph.remove(bd);
+			System.out.println("FML " + current);
 			current = new LoopNode().addNext(current);
 			plugGraph.put(bd, current);
 		}

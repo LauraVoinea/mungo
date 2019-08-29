@@ -5,6 +5,7 @@ aspect CreateTypestate {
 	private GraphNode State.StateNode = null;
 	syn lazy GraphNode State.createTypestate() {
 		StateNode = new LoopNode();
+		// System.out.println("==== " + getTypestate());
 		return StateNode.addNext(getTypestate().createTypestate());
 	}
 
@@ -16,6 +17,7 @@ aspect CreateTypestate {
 	eq TypestateMethodList.createTypestate() {
 		GraphNode n = new LoopNode();
 		for(int i = 0; i < getNumTypestateMethod(); i++){
+			// System.out.println("Add me in " + getTypestateMethod(i).getID() + " " + getTypestateMethod(i).createTypestate());
 			n.addNext(getTypestateMethod(i).createTypestate());
 		}
 		return n;
@@ -23,8 +25,10 @@ aspect CreateTypestate {
 
 	eq EndTypestate.createTypestate() = new EndNode();
 
-	eq TypestateMethod.createTypestate() =
-		new MethodNode(getTType().getAccess(), getID(), getParameterTypes()).addNext(getTypestate().createTypestate());
+	eq TypestateMethod.createTypestate(){
+			System.out.println("Add me in " + getTType().getAccess() + " " + getTypestate());
+			return new MethodNode(getTType().getAccess(), getID(), getParameterTypes()).addNext(getTypestate().createTypestate());
+	}
 
 	eq TypestateSwitch.createTypestate() {
 		SwitchNode n =  new SwitchNode();
