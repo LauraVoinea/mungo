@@ -59,6 +59,8 @@ aspect javaASTFunctionality {
 		Annotation a = getModifiers().getTypestateAnnotation(packageName());
 		ElementConstantValue ts_v = (ElementConstantValue) a.getElementValuePair(0).getElementValue();
 		CompilationUnit cu = a.getCompilationUnitAncestor();
+		System.out.println("My caller " + cu.toString() + " " + ts_v.getExpr().toString()
+		+ " " + cu.lookupTSType(ts_v.getExpr().toString()) );
 		return cu.lookupTSType(ts_v.getExpr().toString()).isTypestateDeclType() ?
 		cu.lookupTSType(packageName(), ts_v.getExpr().toString()).getTypestateDecl() : null;
 	}

@@ -1,4 +1,4 @@
-package demos.Traversal;
+// package demos.Traversal;
 
 typestate BProtocol {
 	ChoiceA			=	{
@@ -20,5 +20,3 @@ typestate BProtocol {
 							Choice choiceFromC(): <DATA: {Node nodeFromC(): ChoiceA}, NO_D: ChoiceA, END: ChoiceA>
 						}
 }
-
-

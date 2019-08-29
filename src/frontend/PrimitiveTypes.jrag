@@ -1,4 +1,3 @@
-/*
 aspect PrimitiveTypes {
 	static protected final String[] CompilationUnit.primitiveTypeString = {
 		"boolean", "byte", "short", "int", "long", "char", "float", "double"
@@ -17,7 +16,7 @@ aspect PrimitiveTypes {
 
 	static private final TypeDecl CompilationUnit.voidType = new VoidType(new Modifiers(), "void", new List());
 	static private final TypeDecl CompilationUnit.nullType = new NullType(new Modifiers(), "null", new List());
-	static private final TypeDecl CompilationUnit.unknownType = new NoNameType(new Modifiers(), "unknown", new List());
+	static private final TypeDecl CompilationUnit.NoNameType = new NoNameType(new Modifiers(), "unknown", new List());
 	static private final TypeDecl CompilationUnit.classType = new ClassType(new Modifiers(), "class", new List());
 	static private final TypeDecl CompilationUnit.ObjectType = new ObjectType(new Modifiers(), "Object", new List());
 
@@ -205,4 +204,3 @@ aspect PrimitiveTypes {
 		return classDecl;
 	}
 }
-*/

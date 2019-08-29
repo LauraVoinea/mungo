@@ -1,4 +1,4 @@
-package demos.Traversal;
+// package demos.Traversal;
 
 typestate CProtocol {
 
@@ -21,5 +21,3 @@ typestate CProtocol {
 							void NO_DToB(): ChoiceA
 						}
 }
-
-

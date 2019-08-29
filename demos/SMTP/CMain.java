@@ -21,7 +21,7 @@ public class CMain {
 		}
 		return readline;
 	}
-	public static void main(String[] args) {
+	public static void main(String args[]) {
 		// Create the current role
 		CRole currentC =  new CRole();
 		// readerC can be used to input strings, and then use them in send method invocation

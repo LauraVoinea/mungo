@@ -1,11 +1,9 @@
 package demos.Traversal;
 
-import mungo.lib.Typestate;
-
 import java.io.IOException;
 import java.net.Socket;
 
-@Typestate("CProtocol")
+@Typestate(value="CProtocol")
 class CRole{
 	SessionSocket a, b;
 
@@ -17,7 +15,7 @@ class CRole{
 		catch(IOException e) {
 			e.printStackTrace();
 			System.exit(-1);
-		}	
+		}
 	}
 
 	void DATAToA() {
@@ -69,5 +67,3 @@ class CRole{
 	}
 
 }
-
-

@@ -3,7 +3,7 @@ package demos.Traversal;
 import java.net.ServerSocket;
 import java.io.IOException;
 
-@mungo.lib.Typestate("AProtocol")
+@Typestate("AProtocol")
 class ARole{
 	SessionSocket b, c;
 
@@ -17,7 +17,7 @@ class ARole{
 		catch(IOException e) {
 			e.printStackTrace();
 			System.exit(-1);
-		}		
+		}
 	}
 
 	void DATAToB() {
@@ -69,5 +69,3 @@ class ARole{
 	}
 
 }
-
-

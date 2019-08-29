@@ -1,7 +1,5 @@
 package demos.Traversal;
 
-import mungo.lib.Typestate;
-
 import java.net.Socket;
 import java.net.ServerSocket;
 import java.io.IOException;
@@ -25,7 +23,7 @@ class BRole{
 		catch(IOException e) {
 			e.printStackTrace();
 			System.exit(-1);
-		}		
+		}
 	}
 
 	void DATAToA() {
@@ -77,5 +75,3 @@ class BRole{
 	}
 
 }
-
-
