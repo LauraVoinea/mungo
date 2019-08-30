@@ -23,8 +23,11 @@ aspect LookupTSMethod {
 		if(t != null) {
 			MethodDecl md = t.lookupTSMethod(getID(), getParameterTypes());
 			TypeDecl td = getTType().getAccess().lookupTSType();
-			if(md != null && (md.getTypeAccess().lookupTSType().equals(td) || td.isUnknown()))
-			return md;
+			// System.out.println(" ---------- " + md + " " + getTType().getAccess() );
+			if(md != null && (md.getTypeAccess().lookupTSType().toString().equals(td.toString()) || td.isUnknown())){
+				// System.out.println(" ---------- " + md + " " + md.getTypeAccess().lookupTSType() + " " + td );
+				return md;
+			}
 		}
 
 		return null;

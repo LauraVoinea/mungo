@@ -4,13 +4,18 @@ aspect javaASTFunctionality {
 //TODO	syn lazy CompilationUnit ASTNode.getCompilationUnitAncestor() {
 	protected CompilationUnit ASTNode.getCompilationUnitAncestor() {
 		ASTNode node = this;
+
 		while(node != null && !(node instanceof CompilationUnit))
 			node = node.getParent();
 		Program p = (Program) node.getParent().getParent();
+		for(int i = 0; i < p.getNumCompilationUnit(); i++){
+			if( ((CompilationUnit) node).getPackageDecl().toString().equals(p.getCompilationUnit(i).getPackageDecl().toString())
+			&&  ((CompilationUnit) node).getTypeDecl(0).toString().equals(p.getCompilationUnit(i).getTypeDecl(0).toString()) )
+				return  p.getCompilationUnit(i);
+		}
+		// System.out.println(" <> " + node + " " + node.getParent().compilationUnit() + " " + node.compilationUnit());
 
-		System.out.println(" <> " + p.getCompilationUnit(0) + " ++++ " + (node.getParent().getParent() instanceof Program));
-
-		return p.getCompilationUnit(0);
+		return this.compilationUnit();
 	}
 
 	protected Program ASTNode.getProgramAncestor() {
@@ -61,7 +66,6 @@ aspect javaASTFunctionality {
 	syn lazy boolean TypestateClassDecl.existsTypestateDecl() =	getTypestateDecl() != null;
 
 	syn TypestateDecl TypestateClassDecl.getTypestateDecl() {
-		// System.out.println("###### " + packageName() + " " + getModifiers().getTypestateAnnotation(packageName()));
 		Annotation a = getModifiers().getTypestateAnnotation(packageName());
 		if(a != null){
 
@@ -99,10 +103,8 @@ aspect javaASTFunctionality {
 
 		if(cd.isTypestateClassDeclType()) {
 			TypestateDecl t = ((TypestateClassDecl) cd).getTypestateDecl();
-			System.out.println("======!!!====== " + cd  + " " + ((TypestateClassDecl) cd).getTypestateDecl());
 
 			if(t != null){
-				System.out.println("======!!!====== " + t );
 				for(TypestateMethod m : t.getMethods())
 					if(isTarget(m.getID(), m.getParameterTypes()))
 						return m;
@@ -173,7 +175,7 @@ aspect javaASTFunctionality {
 
 	syn lazy boolean MethodAccess.isTypestateMethod() {
 		MethodDecl md = getTarget();
-		System.out.println("!!~~~~~~~!! " + this + " " + md + " " + getQualifiedType() + " " +  md.getTypestateMethod(getQualifiedType()));
+		// System.out.println("!!~~~~~~~!! " + this + " " + md + " " + getQualifiedType() + " " +  md.getTypestateMethod(getQualifiedType()));
 		return (md != null) ? md.getTypestateMethod(getQualifiedType()) != null : false;
 	}
 

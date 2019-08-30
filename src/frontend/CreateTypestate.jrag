@@ -26,7 +26,7 @@ aspect CreateTypestate {
 	eq EndTypestate.createTypestate() = new EndNode();
 
 	eq TypestateMethod.createTypestate(){
-			System.out.println("Add me in " + getTType().getAccess() + " " + getTypestate());
+			// System.out.println("Add me in " + getTType().getAccess() + " " + getTypestate());
 			return new MethodNode(getTType().getAccess(), getID(), getParameterTypes()).addNext(getTypestate().createTypestate());
 	}
 

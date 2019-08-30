@@ -2,7 +2,7 @@ package demos.iterator;
 
 import java.util.Iterator;
 
-@Typestate(value="StateIteratorProtocol")
+@Typestate("StateIteratorProtocol")
 class StateIterator {
 	Iterator iter;
 	public StateIterator(Iterator i) {

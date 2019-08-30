@@ -23,7 +23,8 @@ aspect typestateSemanticCheck {
 	}
 
 	protected void TTypestate.semanticCheck() {
-		TypeDecl t = getAccessNoTransform().lookupType(getAccessNoTransform().toString()).iterator().next();
+		TypeDecl t = getAccess().lookupTSType();
+
 		if(!t.isTypestateClassDeclType())
 			addSemanticError("Type " + getAccessNoTransform().toString() + " is not a typestate class type.");
 		else if(t.getTypestateClassDecl().existsTypestateDecl())
@@ -34,7 +35,7 @@ aspect typestateSemanticCheck {
 	}
 
 	protected void TType.semanticCheck() {
-		TypeDecl t = getAccessNoTransform().lookupType(getAccessNoTransform().toString()).iterator().next();
+		TypeDecl t = getAccess().lookupTSType();
 		if(t.isTypestateDeclType()){
 			addSemanticError(getAccessNoTransform().toString() + " is not a proper java type.");
 		}
@@ -55,7 +56,10 @@ aspect typestateSemanticCheck {
 	protected void TypestateMethod.semanticCheck() {
 		TypeDecl t;
 		if(getTypestate() instanceof TypestateSwitch) {
-			t = getTType().getAccessNoTransform().lookupType(getTType().getAccessNoTransform().toString()).iterator().next();
+			t = getTType().getAccess().lookupTSType();
+
+			// System.out.println("---------- " + t.getParent() + " " + getTType().getAccess() + " " + t.isEnumDeclType() + " " + t.isEnumDecl()
+			// +  getTType().getAccess().type().name());
 			if(!t.isEnumDeclType())
 				addSemanticError("Method " + signature() + " should return an enumeration type.");
 			else {

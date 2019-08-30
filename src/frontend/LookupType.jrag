@@ -81,6 +81,8 @@ aspect LookupType {
 
 	inh TypeDecl Access.lookupTSType(String packageName, String typeName);
 	syn lazy TypeDecl Access.lookupTSType(){
+		// System.out.println("+++++ *******" + this + " " + getLastAccess().getQualifiedString() + " " + getLastAccess().toString());
+
 		return lookupTSType(getLastAccess().getQualifiedString(), getLastAccess().toString());
 	}
 
