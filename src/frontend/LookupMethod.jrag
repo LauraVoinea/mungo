@@ -20,12 +20,10 @@ aspect LookupTSMethod {
 	}
 
 	syn lazy MethodDecl TypestateMethod.lookupTSMethod(TypeDecl t) {
-		System.out.println("****** " + t);
 		if(t != null) {
 			MethodDecl md = t.lookupTSMethod(getID(), getParameterTypes());
 			TypeDecl td = getTType().getAccess().lookupTSType();
-			System.out.println("****** " + md.getTypeAccess().lookupTSType() + " " + td + " " + (td instanceof NoNameType));
-			if(md != null && (md.getTypeAccess().lookupTSType().equals(td) || (td instanceof NoNameType)))
+			if(md != null && (md.getTypeAccess().lookupTSType().equals(td) || td.isUnknown()))
 			return md;
 		}
 
@@ -77,7 +75,7 @@ aspect LookupTSMethod {
 		//Implementing super class access
 		if((a.size() == 0) && hasSuperClass()) {
 			//TODO check if lookupType() really exists
-			return getSuperClass().type().lookupTSMethodTargets(method, parameters);
+			return getSuperClass().lookupTSType().lookupTSMethodTargets(method, parameters);
 		}
 
 		return a;

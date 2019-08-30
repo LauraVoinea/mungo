@@ -37,17 +37,17 @@ aspect LookupType {
 		if(localLookupTSType(typeName)){
 			return this.getTypeDecl(0);
 		}
-		System.out.println("+++++ " + this + " " + packageName+ " " + typeName);
+		// System.out.println("+++++ " + this + " " + packageName+ " " + typeName);
 
 		CompilationUnit cu;
-		// try{
+		try{
 					if((cu = getCompilationUnit(packageName, typeName)) != null){
-						System.out.println("+++++ --------" + this + " " + packageName+ " " + typeName);
+						// System.out.println("+++++ --------" + this + " " + packageName+ " " + typeName);
 						return cu.getTypeDecl(0);
 					}
-		// }catch(Exception e){
-		//
-		// }
+		}catch(Exception e){
+			 System.out.println("+++++ " + e + " -- " + this + " -- " + typeName);
+		}
 
 		String s = null;
 		for(int i = 0; i < getNumImportDecl(); i++) {
@@ -59,7 +59,7 @@ aspect LookupType {
 					}
       }
 		}
-		System.out.println("+++++ *******" + this + " " + packageName+ " " + typeName);
+		// System.out.println("+++++ *******" + this + " " + packageName+ " " + typeName);
 
 		return new UnknownTypeDecl(new Modifiers(), typeName, new List<BodyDecl>());
 	}

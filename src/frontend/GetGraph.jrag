@@ -943,10 +943,8 @@ eq DoStmt.getGraph(Set<TypestateVar> env){
   					if(vdt.current.isReturnPlugged())
   						md.addSemanticError("Cannot infer return type for method call.");
   			}
-        System.out.println("---------<> " + md + " " + t );
 
   			if(t != null){
-          System.out.println("---------<>");
   				t.current = new MethodNode(lookupTSMethod(getQualifiedType()).getTypeAccess(), getID(), getParameterTypes(), this).addNext(t.current);
   			}
   		}
