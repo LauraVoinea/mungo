@@ -3,6 +3,7 @@ aspect LookupTSVariable {
 
 	//eq NameDecl Access.lookupTSVariable(String var);
 
+	eq Program.getChild().lookupTSVariable(String var) = null;
 	inh NameDecl Access.lookupTSVariable(String var);
 	syn lazy NameDecl Access.lookupTSVariable() = lookupTSVariable(this.toString());
 	eq CompilationUnit.getImportDecl(int i).lookupTSVariable(String var) = null;

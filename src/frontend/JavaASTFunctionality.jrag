@@ -136,12 +136,26 @@ aspect javaASTFunctionality {
 	MethodAccess contributes this when getTarget() != null && isThisAccess() == true
 	to MethodDecl.selfMethodAccess() for getMethodDeclAncestor();
 
+	inh ClassDecl CompilationUnit.getClassDeclAncestor();
+	// inh ClassDecl EnumDecl.getClassDeclAncestor();
+	// inh ClassDecl MethodDecl.getClassDeclAncestor();
+	// inh ClassDecl Block.getClassDeclAncestor();
+	// inh ClassDecl LocalClassDeclStmt.getClassDeclAncestor();
+	// inh ClassDecl UnknownType.getClassDeclAncestor();
+	// inh ClassDecl ConstructorDecl.getClassDeclAncestor(); --already defined
+	// inh ClassDecl TryWithResources.getClassDeclAncestor();
+	// inh ClassDecl ResourceDeclaration.getClassDeclAncestor();
+
+	eq Program.getChild().getClassDeclAncestor() = null;
+
+	inh ClassDecl ResourceDeclaration.getClassDeclAncestor();
+
 	inh ClassDecl MethodAccess.getClassDeclAncestor();
 	inh MethodDecl MethodAccess.getMethodDeclAncestor();
 	syn Set<Declarator> MethodAccess.getTypestateFields() = getClassDeclAncestor().getTypestateFields();
 
-//	inh ConstructorDecl MethodAccess.getConstructorDeclAncestor();
-//	eq ConstructorDecl.getBlock().getConstructorDeclAncestor() = this;
+	// inh ConstructorDecl MethodAccess.getConstructorDeclAncestor();
+	// eq ConstructorDecl.getBlock().getConstructorDeclAncestor() = this;
 
 
 /*

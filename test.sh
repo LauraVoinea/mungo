@@ -6,3 +6,7 @@ java -jar mungo.jar demos/loop/LoopImpl.java
 java -jar mungo.jar demos/inheritance/File.java
 java -jar mungo.jar demos/SMTP/CMain.java
 java -jar mungo.jar demos/Traversal/CRole.java
+
+
+java -jar mungo.jar demos/alice_bob/threads/*
+java -jar mungo.jar demos/alice_bob/nothreads/*

@@ -1,4 +1,5 @@
-package demos.file_example;
+package demos.alice_bob.nothreads;
+
 
 @interface Typestate {
   	String value();

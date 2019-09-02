@@ -19,7 +19,6 @@ aspect TypestateTypingEnvironment {
 
 		TypestateVar() {
 			current = new EndNode();
-			// System.out.println("==!!!== " );
 			end = new HashMap<ASTNode, GraphNode>();
 			start = new HashMap<ASTNode, GraphNode>();
 			startGraph = new ArrayList<GraphNode>();
@@ -57,7 +56,7 @@ aspect TypestateTypingEnvironment {
 				// System.out.println("FML " + current);
 				startGraph.add(current);
 				startExpr.add(e);
-				System.out.println("adding typestate 2 " + current + " ----- " + e);
+				// System.out.println("adding typestate 2 " + current + " ----- " + e);
 
 			}
 			resetCurrent();

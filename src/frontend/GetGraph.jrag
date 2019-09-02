@@ -8,6 +8,12 @@ aspect GetGraph{
 
   eq LabeledStmt.getStmt().getTargetStmt(String label) = getLabel().equals(label)?this:getTargetStmt(label);
 
+  // inh Stmt CompilationUnit.getTargetStmt();
+  // inh Stmt EnumDecl.getTargetStmt();
+  // inh Stmt MethodDecl.getTargetStmt();
+  // inh Stmt Block.getTargetStmt();
+  eq Program.getChild().getTargetStmt() = null;
+
   inh Stmt ContinueStmt.getTargetStmt();
   inh Stmt BreakStmt.getTargetStmt();
   eq WhileStmt.getStmt().getTargetStmt() = this;
@@ -315,6 +321,7 @@ aspect GetGraph{
 
   ConstructorAccess contributes getTarget() when getTarget() != null to ConstructorDecl.ConstructorSuccessors()for getConstructorDeclAncestor();
 
+  eq Program.getChild().getConstructorDeclAncestor() = null;
   inh ConstructorDecl ConstructorAccess.getConstructorDeclAncestor();
   eq ConstructorDecl.getParsedConstructorInvocation().getConstructorDeclAncestor() = this;
   //	eq CompilationUnit.getImportDecl().getConstructorDeclAncestor() = null;
