@@ -6,49 +6,45 @@ aspect GetGraph{
   inh Stmt BreakStmt.getTargetStmt(String label);
   inh Stmt LabeledStmt.getTargetStmt(String label);
 
-  eq LabeledStmt.getStmt().getTargetStmt(String label)=getLabel().equals(label)?this:getTargetStmt(label);
+  eq LabeledStmt.getStmt().getTargetStmt(String label) = getLabel().equals(label)?this:getTargetStmt(label);
 
   inh Stmt ContinueStmt.getTargetStmt();
   inh Stmt BreakStmt.getTargetStmt();
-  eq WhileStmt.getStmt().getTargetStmt()=this;
-  eq ForStmt.getStmt().getTargetStmt()=this;
-  eq DoStmt.getStmt().getTargetStmt()=this;
-  eq SwitchStmt.getBlock().getTargetStmt()=this;
+  eq WhileStmt.getStmt().getTargetStmt() = this;
+  eq ForStmt.getStmt().getTargetStmt() = this;
+  eq DoStmt.getStmt().getTargetStmt() = this;
+  eq SwitchStmt.getBlock().getTargetStmt() = this;
 
-  eq EnhancedForStmt.getStmt().getTargetStmt()=this;
+  eq EnhancedForStmt.getStmt().getTargetStmt() = this;
 
 
-  eq TypeDecl.getBodyDecl(int i).getTargetStmt(String label)=null;
-  eq TypeDecl.getBodyDecl(int i).getTargetStmt()=null;
+  eq TypeDecl.getBodyDecl(int i).getTargetStmt(String label) = null;
+  eq TypeDecl.getBodyDecl(int i).getTargetStmt() = null;
 
 /*****************************************************************************************************/
   //TODO implement
   syn lazy TypestateVar Expr.getTypestateVar();
 
   //Not used
-  // eq VarAccess.getTypestateVar()=null;
-  // eq SuperAccess.getTypestateVar()=null;
-  // eq PackageAccess.getTypestateVar()=null;
+  eq Binary.getTypestateVar() = null;                                //Binary results in PrimitiveType
+  eq Unary.getTypestateVar() = null;                                //Unary results in PrimitiveTypes
+  eq Literal.getTypestateVar() = null;                            //Literals are also non typestate
+  eq InstanceOfExpr.getTypestateVar() = null;                        //Boolean type
+  eq ClassInstanceExpr.getTypestateVar() = null;                    //ClassInstanceoOfExpr should give null
+  eq CastExpr.getTypestateVar() = getExpr().getTypestateVar();    //expect CastExpr not to have typestate type
+  eq ArrayInit.getTypestateVar() = null;                            //Typestate types are not arrays
+  eq ArrayCreationExpr.getTypestateVar() = null;                    //Typestate types are not arrays
+  eq ParExpr.getTypestateVar() = getExpr().getTypestateVar();
+  eq AssignExpr.getTypestateVar() = getDest().getTypestateVar();    //TODO is this ok?
 
-  eq Binary.getTypestateVar()=null;                                //Binary results in PrimitiveType
-  eq Unary.getTypestateVar()=null;                                //Unary results in PrimitiveTypes
-  eq Literal.getTypestateVar()=null;                            //Literals are also non typestate
-  eq InstanceOfExpr.getTypestateVar()=null;                        //Boolean type
-  eq ClassInstanceExpr.getTypestateVar()=null;                    //ClassInstanceoOfExpr should give null
-  eq CastExpr.getTypestateVar()=getExpr().getTypestateVar();    //expect CastExpr not to have typestate type
-  eq ArrayInit.getTypestateVar()=null;                            //Typestate types are not arrays
-  eq ArrayCreationExpr.getTypestateVar()=null;                    //Typestate types are not arrays
-  eq ParExpr.getTypestateVar()=getExpr().getTypestateVar();
-  eq AssignExpr.getTypestateVar()=getDest().getTypestateVar();    //TODO is this ok?
-
-  eq ConditionalExpr.getTypestateVar()=null;                    //TODO This is actually a problem... Maybe need to be dealt
+  eq ConditionalExpr.getTypestateVar() = null;                    //TODO This is actually a problem... Maybe need to be dealt
   //TODO as a case when assignment takes place.
 
-  eq ConstructorAccess.getTypestateVar()=null;
+  eq ConstructorAccess.getTypestateVar() = null;
   // eq TypeAccess.getTypestateVar()=null;                //Expected to be null
-  eq ClassAccess.getTypestateVar()=null;
+  eq ClassAccess.getTypestateVar() = null;
 
-  eq Dot.getTypestateVar()=getRight().getTypestateVar();
+  eq Dot.getTypestateVar() = getRight().getTypestateVar();
 
   eq ThisAccess.getTypestateVar(){
       if(isAbstractDotParent())                //Qualified "this" is not supposed to be used as a right child of the Dot
@@ -157,6 +153,8 @@ aspect GetGraph{
   }
 
   syn Set<TypestateVar> ClassDecl.getFieldGraph(GraphNode r){
+    // System.out.println("=======XXX========= ");
+
       for(Declarator vd : getTypestateFields()){
           if(vd.typestate == null){
               vd.typestate = new TypestateField(/*getMethods()*/);

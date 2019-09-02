@@ -32,44 +32,54 @@ aspect LookupType {
 
 	syn TypeDecl CompilationUnit.lookupTSType(String typeName) {
 		if(!(lookupType(PRIMITIVE_PACKAGE_NAME, typeName).isUnknown())){
+			// System.out.println("1 *******" + packageName() + " " + typeName + " " + lookupType(PRIMITIVE_PACKAGE_NAME, typeName));
 			return lookupType(PRIMITIVE_PACKAGE_NAME, typeName);
 		}
 
 		TypeDecl defaultType = lookupType("java.lang", typeName);
 		if (defaultType.accessibleFromPackage(packageName())) {
+			// System.out.println("2 *******" + packageName() + " " + typeName + " " + defaultType);
 			return defaultType;
 		}
 
 		String packageName = getPackageString();
 
-		System.out.println("*******" + this + " " + packageName+ " " + typeName + " " + localLookupType(typeName)
-		+ " " + lookupType(packageName(), typeName));
+		// System.out.println("*******" + this + " " + packageName+ " " + typeName + " " + localLookupType(typeName)
+		// + " " + lookupType(packageName(), typeName).singletonValue());
 
-		// if(!localLookupType(typeName).isEmpty() && localLookupType(typeName).isSingleton()){
-		// 	return localLookupType(typeName).singletonValue();
-		// }
-		if(!lookupType(typeName).isEmpty() && lookupType(typeName).isSingleton()){
-			return lookupType(typeName).singletonValue();
+		if(!localLookupType(typeName).isEmpty() && localLookupType(typeName).isSingleton()){
+			// System.out.println("3 *******" + packageName+ " " + typeName + " " +localLookupType(typeName).singletonValue());
+			return localLookupType(typeName).singletonValue();
 		}
+		// if((!lookupType(packageName(), typeName).isEmpty()) && lookupType(packageName(), typeName).isSingleton()
+		// && (!lookupType(packageName(), typeName).singletonValue().isUnknown())){
+		// 	System.out.println("3 *******" + packageName+ " " + typeName + " " + lookupType(packageName(), typeName));
+		// 	return lookupType(packageName(), typeName).singletonValue();
+		// }
 
 		// System.out.println("*******" + this + " " + packageName+ " " + typeName + " " + localLookupType(typeName)
 		// + " " + lookupType(packageName(), typeName));
 
 		CompilationUnit cu;
-		if((cu = getCompilationUnit(packageName, typeName)) != null){
-			return cu.localLookupType(typeName).singletonValue();
+		try{
+			if((cu = getCompilationUnit(packageName, typeName)) != null){
+				// System.out.println("4 *******" + packageName+ " " + typeName + " " + cu.getTypeDecl(0));
+				return cu.getTypeDecl(0);
+			}
+		}catch(Exception e){
+			 System.out.println(" ----- " + this + " " + packageName+ " " + typeName);
 		}
-
 		String s = null;
 		if(!importedTypes(typeName).isEmpty()){
 			for (TypeDecl item : importedTypes(typeName)) {
 				s = item.name();
 					if((cu = getCompilationUnit(packageName, s.replace('.', File.separatorChar))) != null){
+						// System.out.println("5 *******" + packageName+ " " + typeName + " " + lookupType(packageName(), typeName));
 						return cu.localLookupType(typeName).singletonValue();
 					}
 			}
 		}
-
+		// System.out.println("6 *******" + packageName+ " " + typeName + " " + lookupType(packageName(), typeName));
 		return new UnknownType();
 	}
 
@@ -96,6 +106,9 @@ aspect LookupType {
 				typeName = str[str.length-1];
 		}
 		typeName = typeName.replace("[]", "");
+
+		// System.out.println("*******" + lastAccess() + " " + getLastAccess());
+		// System.out.println("*******" + packageName() + " " + typeName + " " + lookupType(packageName(), typeName));
 
 		return lookupTSType(packageName, typeName);
 	}
