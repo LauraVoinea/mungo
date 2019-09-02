@@ -39,7 +39,7 @@ aspect LookupConstructor {
 			//noname type should be matched with any type
 			//t can never be instanceof NullType
 			//overriden equals(Object o) method
-			if(!parameters[i].equals(t) && !(t instanceof NoNameType))
+			if(!parameters[i].equals(t) && !(t instanceof UnknownType))
 				return false;
 		}
 

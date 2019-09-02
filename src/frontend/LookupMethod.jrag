@@ -24,7 +24,7 @@ aspect LookupTSMethod {
 			MethodDecl md = t.lookupTSMethod(getID(), getParameterTypes());
 			TypeDecl td = getTType().getAccess().lookupTSType();
 			// System.out.println(" ---------- " + md + " " + getTType().getAccess() );
-			if(md != null && (md.getTypeAccess().lookupTSType().toString().equals(td.toString()) || td.isUnknown())){
+			if(md != null && (md.getTypeAccess().lookupTSType().toString().equals(td.toString()) || (td instanceof UnknownType))){
 				// System.out.println(" ---------- " + md + " " + md.getTypeAccess().lookupTSType() + " " + td );
 				return md;
 			}
@@ -55,7 +55,7 @@ aspect LookupTSMethod {
 			//noname type should be matched with any type
 			//t can never be instanceof NullType
 			//overriden equals(Object o) method
-			if(!parameters[i].equals(t) && !(t instanceof NoNameType))
+			if(!parameters[i].equals(t) && !(t instanceof UnknownType))
 				return false;
 		}
 
@@ -78,7 +78,12 @@ aspect LookupTSMethod {
 		//Implementing super class access
 		if((a.size() == 0) && hasSuperClass()) {
 			//TODO check if lookupType() really exists
+			if(!getSuperClass().lookupTSType().isUnknown()){
+			System.out.println(" ---------- " + this + " " + getSuperClass() + " " +
+			getSuperClass().lookupTSType() );
+
 			return getSuperClass().lookupTSType().lookupTSMethodTargets(method, parameters);
+		}
 		}
 
 		return a;

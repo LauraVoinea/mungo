@@ -278,7 +278,7 @@ BodyDecl class_member_declaration
 BodyDecl field_declaration	=
 					modifiers.m? type.t variable_declarators.v SEMICOLON
 					{:
-						return new Declarator(new Modifiers(m), t, v);
+						return new FieldDecl(new Modifiers(m), t, v);
 					:}
 				;
 

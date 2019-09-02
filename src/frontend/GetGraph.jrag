@@ -58,7 +58,7 @@ aspect GetGraph{
   }
 
   eq ArrayAccess.getTypestateVar() = null;            //Typestate types are not arrays
-  eq MethodAccess.getTypestateVar() = type().isTypestateClassDeclType()?getTarget().typestate:null;    //TODO is that it?
+  eq MethodAccess.getTypestateVar() = type().isTypestateClassDeclType() ? getTarget().typestate : null;    //TODO is that it?
 
   eq Access.getTypestateVar(){
       if(!type().isTypestateClassDeclType())
@@ -113,10 +113,11 @@ aspect GetGraph{
   syn lazy Set<Declarator> ClassDecl.getTypestateFields(){
       Set<Declarator> s = new HashSet<Declarator>();
       for (BodyDecl decl : getBodyDeclList())
-        if (decl instanceof FieldDecl)
+        if (decl instanceof FieldDecl){
              if(((FieldDecl) decl).getTypeAccess().lookupTSType().isTypestateClassDeclType())
                for(Declarator d : ((FieldDecl) decl).getDeclaratorList())
                 s.add(d);
+              }
       return s;
   }
 
@@ -290,12 +291,12 @@ aspect GetGraph{
         if(getBlock() != null)
             getBlock().getGraph(env);
 
-        for(int i = 0; i < getNumParameter(); i++)
+        for(int i = 0; i < getNumParameter(); i++){
             if(getParameter(i).getTypeAccess().lookupTSType().isTypestateClassDeclType()){
                 getParameter(i).typestate.connectGraph(null);
                 env.remove(getParameter(i).typestate);
             }
-
+          }
         for(TypestateVar tv : env)
             tv.connectGraph(this);
 
@@ -339,15 +340,15 @@ aspect GetGraph{
   		env.add(vd.typestate);
   	}
 
-  	for(int i=0;i<getNumParameter();i++)
+  	for(int i = 0;i < getNumParameter(); i++){
   		if(getParameter(i).getTypeAccess().lookupTSType().isTypestateClassDeclType()){
-  			if(getParameter(i).typestate==null)
-  				getParameter(i).typestate=new TypestatePar();
+  			if(getParameter(i).typestate == null)
+  				getParameter(i).typestate = new TypestatePar();
 
   			getParameter(i).typestate.resetConnectionGraph(null);
   			env.add(getParameter(i).typestate);
   		}
-
+    }
   	getBlock().getGraph(env);
   	if(hasConstructorInvocation())
   	getConstructorInvocation().getGraph(env);
@@ -361,11 +362,11 @@ aspect GetGraph{
   	for(TypestateVar tv : env)
   		tv.connectGraph(this);
 
-  	for(Declarator vd:getTypestateFields())
+  	for(Declarator vd : getTypestateFields())
   		if(vd.getTypeAccess().lookupTSType().isTypestateClassDeclType())
   			vd.typestate.checkError(vd/*, getBodyDeclAncestor()*/);
 
-  	isRec=false;
+  	isRec = false;
   	checkGraphCounter++;
   	return true;
   }
@@ -670,13 +671,13 @@ eq DoStmt.getGraph(Set<TypestateVar> env){
   		return true;
 
   	TypestateVar t = getResult().getTypestateVar();
-  	if(t != null)
+  	if(t != null){
   		if(getMethodDeclAncestor().getTypeAccess().lookupTSType().isTypestateClassDeclType()){
   			t.checkError(getResult()/*, getBodyDeclAncestor()*/);
   	//				t.current = new ReturnNode(getMethodDeclAncestor().typestate);
-  			t.current=new ReturnPlug().addNext(getMethodDeclAncestor().typestate.current);
+  			t.current = new ReturnPlug().addNext(getMethodDeclAncestor().typestate.current);
   		}
-
+    }
   	getResult().getGraph(env);
 
   	return true;
@@ -690,7 +691,7 @@ eq DoStmt.getGraph(Set<TypestateVar> env){
 
   //TODO implement me
   syn boolean Declarator.getGraph(Set<TypestateVar> env){
-  	boolean isTypestate=getTypeAccess().lookupTSType().isTypestateClassDeclType();
+  	boolean isTypestate = getTypeAccess().lookupTSType().isTypestateClassDeclType();
 
   	if(isTypestate)
   		env.remove(typestate);
@@ -705,7 +706,7 @@ eq DoStmt.getGraph(Set<TypestateVar> env){
   			typestate.addTypestate(getInit()/*, getBodyDeclAncestor()*/);
   		}else if((t = getInit().getTypestateVar()) != null){
   			t.checkError(getInit()/*, getBodyDeclAncestor()*/);
-  			t.current=typestate.current;
+  			t.current = typestate.current;
   			//Typestate should be reset
   			typestate.resetCurrent();
   		}
@@ -837,7 +838,7 @@ eq DoStmt.getGraph(Set<TypestateVar> env){
   		GraphNode[]parameters = new GraphNode[cd.getNumParameter()];
   		for(int i = cd.getNumParameter()-1; i >= 0; i--)
   			if(cd.getParameter(i).typestate != null)
-  				parameters[i]=cd.getParameterTypestate(i);//.plugGraph();
+  				parameters[i] = cd.getParameterTypestate(i);//.plugGraph();
 
   	//			cd.plugMethodGraph();
   		cd.getGraph();
@@ -870,7 +871,7 @@ eq DoStmt.getGraph(Set<TypestateVar> env){
   eq MethodAccess.getGraph(Set<TypestateVar> env){
   	MethodDecl md = getTarget();
   	if(md != null){
-  		GraphNode[]parameters = new GraphNode[md.getNumParameter()];
+  		GraphNode[] parameters = new GraphNode[md.getNumParameter()];
 
     // System.out.println("---------<> " + md + " " + isThisAccess() + " " + isTypestateMethod());
 

@@ -28,7 +28,7 @@ jastadd {
         include "src/frontend/Annotations.jrag"
         include "src/frontend/Compilation.jrag"
         include "src/frontend/CreateTypestate.jrag"
-        // include "src/frontend/PrimitiveTypes.jrag"
+        include "src/frontend/PrimitiveTypes.jrag"
         include "src/frontend/Debug.jrag"
         include "src/frontend/GetGraph.jrag"
         include "src/frontend/Errors.jrag"

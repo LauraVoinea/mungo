@@ -4,6 +4,7 @@ aspect javaASTFunctionality {
 //TODO	syn lazy CompilationUnit ASTNode.getCompilationUnitAncestor() {
 	protected CompilationUnit ASTNode.getCompilationUnitAncestor() {
 		ASTNode node = this;
+		// System.out.println(" <> " + node + " " + node.getParent().compilationUnit() + " " + node.compilationUnit());
 
 		while(node != null && !(node instanceof CompilationUnit))
 			node = node.getParent();
@@ -13,14 +14,14 @@ aspect javaASTFunctionality {
 			&&  ((CompilationUnit) node).getTypeDecl(0).toString().equals(p.getCompilationUnit(i).getTypeDecl(0).toString()) )
 				return  p.getCompilationUnit(i);
 		}
-		// System.out.println(" <> " + node + " " + node.getParent().compilationUnit() + " " + node.compilationUnit());
 
 		return this.compilationUnit();
 	}
 
 	protected Program ASTNode.getProgramAncestor() {
-		System.out.println(getCompilationUnitAncestor().getParent().getParent());
-		return (Program) getCompilationUnitAncestor().getParent().getParent();
+		// System.out.println(getCompilationUnitAncestor().getParent().getParent());
+		// return (Program) getCompilationUnitAncestor().getParent().getParent();
+		return this.program();
 	}
 
 	/*	CompilationUnit								*/
@@ -72,8 +73,8 @@ aspect javaASTFunctionality {
 			ElementConstantValue ts_v = (ElementConstantValue) a.getElementValuePair(0).getElementValue();
 			CompilationUnit cu = a.getCompilationUnitAncestor();
 			TypeDecl t = cu.lookupTSType(ts_v.getExpr().toString());
-			System.out.println("###### " + this + " " + cu + " " + t + " " + t.name() + " " + t.isTypestateDeclType()
-			+ " " + t.getTypestateDecl());
+			// System.out.println("###### " + this + " " + cu + " " + t + " " + t.name() + " " + t.isTypestateDeclType()
+			// + " " + t.getTypestateDecl());
 
 			return cu.lookupTSType(ts_v.getExpr().toString()).isTypestateDeclType() ?
 			cu.lookupTSType(packageName(), ts_v.getExpr().toString()).getTypestateDecl() : null;
@@ -175,7 +176,6 @@ aspect javaASTFunctionality {
 
 	syn lazy boolean MethodAccess.isTypestateMethod() {
 		MethodDecl md = getTarget();
-		// System.out.println("!!~~~~~~~!! " + this + " " + md + " " + getQualifiedType() + " " +  md.getTypestateMethod(getQualifiedType()));
 		return (md != null) ? md.getTypestateMethod(getQualifiedType()) != null : false;
 	}
 
@@ -203,8 +203,8 @@ aspect javaASTFunctionality {
 
 	syn lazy Access Access.getLastAccess() {
 		Access a;
-		for(a = this;a.isAbstractDot(); a = ((Dot) a).getRight());
-		return a;
+		for(a = this; a.isAbstractDot(); a = ((Dot) a).getRight());
+			return a;
 	}
 
 	eq ArrayTypeAccess.getLastAccess() = getAccess().getLastAccess();

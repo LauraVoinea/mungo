@@ -17,8 +17,11 @@ aspect LookupType {
 		}
 
 		for(int i = 0; i < getNumCompilationUnit(); i++){
-			if(getCompilationUnit(i).localLookupTSType(typeName))
+			if(!getCompilationUnit(i).localLookupType(typeName).isEmpty()){
+				// System.out.println("======= " + this + " " + packageName
+				// + " " + typeName + " " + getCompilationUnit(i));
 				return getCompilationUnit(i);
+			}
 			}
 		return null;
 	}
@@ -28,40 +31,46 @@ aspect LookupType {
 	}
 
 	syn TypeDecl CompilationUnit.lookupTSType(String typeName) {
-		// System.out.println("+++++ " + this + " " + typeName);
-		if(!lookupType(PRIMITIVE_PACKAGE_NAME, typeName).isUnknown()){
-				return lookupType(PRIMITIVE_PACKAGE_NAME, typeName);
-			}
+		if(!(lookupType(PRIMITIVE_PACKAGE_NAME, typeName).isUnknown())){
+			return lookupType(PRIMITIVE_PACKAGE_NAME, typeName);
+		}
+
+		TypeDecl defaultType = lookupType("java.lang", typeName);
+		if (defaultType.accessibleFromPackage(packageName())) {
+			return defaultType;
+		}
+
 		String packageName = getPackageString();
 
-		if(localLookupTSType(typeName)){
-			return this.getTypeDecl(0);
+		System.out.println("*******" + this + " " + packageName+ " " + typeName + " " + localLookupType(typeName)
+		+ " " + lookupType(packageName(), typeName));
+
+		// if(!localLookupType(typeName).isEmpty() && localLookupType(typeName).isSingleton()){
+		// 	return localLookupType(typeName).singletonValue();
+		// }
+		if(!lookupType(typeName).isEmpty() && lookupType(typeName).isSingleton()){
+			return lookupType(typeName).singletonValue();
 		}
-		// System.out.println("+++++ " + this + " " + packageName+ " " + typeName);
+
+		// System.out.println("*******" + this + " " + packageName+ " " + typeName + " " + localLookupType(typeName)
+		// + " " + lookupType(packageName(), typeName));
 
 		CompilationUnit cu;
-		try{
-					if((cu = getCompilationUnit(packageName, typeName)) != null){
-						// System.out.println("+++++ --------" + this + " " + packageName+ " " + typeName);
-						return cu.getTypeDecl(0);
-					}
-		}catch(Exception e){
-			 System.out.println("+++++ " + e + " -- " + this + " -- " + typeName);
+		if((cu = getCompilationUnit(packageName, typeName)) != null){
+			return cu.localLookupType(typeName).singletonValue();
 		}
 
 		String s = null;
-		for(int i = 0; i < getNumImportDecl(); i++) {
-			for (TypeDecl item : getImportDecl(i).importedTypes(typeName)) {
-      	s = item.name();
-	      if(s != null)
-	        if((cu = getCompilationUnit(typeName, s.replace('.', File.separatorChar))) != null){
-	          return cu.getTypeDecl(0);
+		if(!importedTypes(typeName).isEmpty()){
+			for (TypeDecl item : importedTypes(typeName)) {
+				s = item.name();
+					if((cu = getCompilationUnit(packageName, s.replace('.', File.separatorChar))) != null){
+						return cu.localLookupType(typeName).singletonValue();
 					}
-      }
+			}
 		}
-		// System.out.println("+++++ *******" + this + " " + packageName+ " " + typeName);
 
-		return new UnknownTypeDecl(new Modifiers(), typeName, new List<BodyDecl>());
+		return new UnknownType();
 	}
 
 	syn TypeDecl CompilationUnit.lookupTSType(String packageName, String typeName) {
@@ -69,11 +78,10 @@ aspect LookupType {
 			return lookupTSType(typeName);
 
 		CompilationUnit cu;
-		// TODO check local Type??
 		String type = (packageName + "." + typeName).replace('.', File.separatorChar);
 		if((cu = getCompilationUnit(packageName, typeName)) != null)
-			return cu.getTypeDecl(0);
-		return new UnknownTypeDecl(new Modifiers(), type, new List<BodyDecl>());
+			return cu.localLookupType(typeName).singletonValue();
+		return new UnknownType();
 	}
 
 	eq CompilationUnit.getTypeDecl().lookupTSType(String packageName, String typeName) = lookupTSType(packageName, typeName);
@@ -81,9 +89,15 @@ aspect LookupType {
 
 	inh TypeDecl Access.lookupTSType(String packageName, String typeName);
 	syn lazy TypeDecl Access.lookupTSType(){
-		// System.out.println("+++++ *******" + this + " " + getLastAccess().getQualifiedString() + " " + getLastAccess().toString());
+		String packageName = lastAccess().getQualifiedString();
+		String typeName = lastAccess().toString();
+		if(typeName.contains(".")){
+			String[] str = typeName.split("\\.");
+				typeName = str[str.length-1];
+		}
+		typeName = typeName.replace("[]", "");
 
-		return lookupTSType(getLastAccess().getQualifiedString(), getLastAccess().toString());
+		return lookupTSType(packageName, typeName);
 	}
 
 
