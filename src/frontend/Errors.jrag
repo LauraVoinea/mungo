@@ -48,12 +48,12 @@ aspect Errors {
 				this.file = file;
 		}
 
-/*
+
 		public String toString() {
 			return	file + ": " + ASTNode.getLine(start) + "-" + ASTNode.getColumn(start) + ": " + errorType +
 				"\n\t\t" + msg;
 		}
-*/
+
 
 		protected void print() {
 			print(System.err);
