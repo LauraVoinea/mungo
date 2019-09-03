@@ -19,6 +19,8 @@ aspect LookupTSVariable {
 
 	inh ClassDecl Declarator.getClassDeclAncestor();
 
+
+	eq Program.getChild().getBlockAncestor() = null;
 	inh Block Declarator.getBlockAncestor();
 	eq Block.getStmt(int i).getBlockAncestor() = this;
 	eq TypeDecl.getBodyDecl().getBlockAncestor() = null;

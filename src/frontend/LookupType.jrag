@@ -3,8 +3,14 @@ aspect LookupType {
 	syn boolean CompilationUnit.localLookupTSType(String typeName) {
 		return getTypeDecl(0).toString().equals(typeName);
 	}
+	//TODO:
+	eq Program.getChild().getCompilationUnit(String packageName, String typeName) = null;
+	
+	// inh CompilationUnit PrimitiveCompilationUnit.getCompilationUnit(String packageName, String typeName);
+	// inh CompilationUnit WildcardsCompilationUnit.getCompilationUnit(String packageName, String typeName);
 
 	inh CompilationUnit CompilationUnit.getCompilationUnit(String packageName, String typeName);
+
 	inh TypeDecl TypestateMethod.lookupTSType(String packageName, String typeName);
 
 	eq Program.getCompilationUnit(int j).getCompilationUnit(String packageName, String typeName) {
@@ -17,9 +23,10 @@ aspect LookupType {
 		}
 
 		for(int i = 0; i < getNumCompilationUnit(); i++){
+			// System.out.println("===()==== " + typeName + " " +
+			// getCompilationUnit(i).localLookupType(typeName) + " " +
+			// getCompilationUnit(i).localLookupTSType(typeName));
 			if(!getCompilationUnit(i).localLookupType(typeName).isEmpty()){
-				// System.out.println("======= " + this + " " + packageName
-				// + " " + typeName + " " + getCompilationUnit(i));
 				return getCompilationUnit(i);
 			}
 			}
@@ -67,7 +74,9 @@ aspect LookupType {
 				return cu.getTypeDecl(0);
 			}
 		}catch(Exception e){
-			 System.out.println(" ----- " + this + " " + packageName+ " " + typeName);
+			System.out.println("*******" + this + " " + packageName+ " " + typeName + " " + localLookupType(typeName)
+			+ " " + lookupType(packageName(), typeName));
+			 // System.out.println(" ----- " + this + " " + packageName+ " " + typeName);
 		}
 		String s = null;
 		if(!importedTypes(typeName).isEmpty()){
@@ -117,13 +126,13 @@ aspect LookupType {
 
 	eq Program.getChild().lookupTSType(String packageName, String typeName) = null;
 
-	// inh TypeDecl ClassDecl.lookupTSType(String packageName, String typeName);
+	inh TypeDecl ClassDecl.lookupTSType(String packageName, String typeName);
 	// inh TypeDecl ConstructorDeclSubstituted.lookupTSType(String packageName, String typeName);
 	// inh TypeDecl ForStmt.lookupTSType(String packageName, String typeName);
 	// inh TypeDecl DoStmt.lookupTSType(String packageName, String typeName);
 	// inh TypeDecl WhileStmt.lookupTSType(String packageName, String typeName);
 	// inh TypeDecl IfStmt.lookupTSType(String packageName, String typeName);
-	// inh TypeDecl PrimitiveCompilationUnit.lookupTSType(String packageName, String typeName);
+	inh TypeDecl PrimitiveCompilationUnit.lookupTSType(String packageName, String typeName);
 	// inh TypeDecl MemberClassDecl.lookupTSType(String packageName, String typeName);
 
 }

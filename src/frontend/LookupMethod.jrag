@@ -79,8 +79,8 @@ aspect LookupTSMethod {
 		if((a.size() == 0) && hasSuperClass()) {
 			//TODO check if lookupType() really exists
 			if(!getSuperClass().lookupTSType().isUnknown()){
-			System.out.println(" ---------- " + this + " " + getSuperClass() + " " +
-			getSuperClass().lookupTSType() );
+			// System.out.println(" ---------- " + this + " " + getSuperClass() + " " +
+			// getSuperClass().lookupTSType() );
 
 			return getSuperClass().lookupTSType().lookupTSMethodTargets(method, parameters);
 		}

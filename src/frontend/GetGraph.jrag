@@ -1,18 +1,17 @@
 aspect GetGraph{
 
         //Attributes for handling recursion using break, continue and labels
+  eq Program.getChild().getTargetStmt() = null;
+  eq Program.getChild().getTargetStmt(String label) = null;
+
+  inh Stmt NTAFinallyBlock.getTargetStmt();
+  inh Stmt NTAFinallyBlock.getTargetStmt(String label);
 
   inh Stmt ContinueStmt.getTargetStmt(String label);
   inh Stmt BreakStmt.getTargetStmt(String label);
   inh Stmt LabeledStmt.getTargetStmt(String label);
 
-  eq LabeledStmt.getStmt().getTargetStmt(String label) = getLabel().equals(label)?this:getTargetStmt(label);
-
-  // inh Stmt CompilationUnit.getTargetStmt();
-  // inh Stmt EnumDecl.getTargetStmt();
-  // inh Stmt MethodDecl.getTargetStmt();
-  // inh Stmt Block.getTargetStmt();
-  eq Program.getChild().getTargetStmt() = null;
+  eq LabeledStmt.getStmt().getTargetStmt(String label) = getLabel().equals(label) ? this : getTargetStmt(label);
 
   inh Stmt ContinueStmt.getTargetStmt();
   inh Stmt BreakStmt.getTargetStmt();

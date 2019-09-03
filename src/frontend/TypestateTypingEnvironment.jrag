@@ -98,13 +98,23 @@ aspect TypestateTypingEnvironment {
 				errorExpr.get(i).addSemanticError(errorMessage);
 		}
 
+		public String classInstanceExprtoString(ClassInstanceExpr e){
+				StringBuilder str = new StringBuilder("new ");
+				str.append(e.getAccess());
+				str.append("(");
+				for(Expr expr : e.getArgList())
+					str.append(expr.toString());
+				str.append(")");
+				return str.toString();
+		}
+
 		protected void checkTypestate(GraphNode t, String errorMessage) {
 			System.out.println("AM I HERE?");
 			for(int i = startGraph.size() - 1; i >= 0; i--) {
 				GraphNode n = startGraph.get(i);
 				n.normalise();
 				System.out.println("-----------------------");
-				System.out.println(((ClassInstanceExpr) startExpr.get(i)).getAccess());
+				System.out.println(classInstanceExprtoString((ClassInstanceExpr) startExpr.get(i)));
 				n.printPaths();
 				System.out.println("------------------------");
 				if(!t.includes(n)) {
@@ -138,7 +148,6 @@ aspect TypestateTypingEnvironment {
 
 		TypestatePar() {
 			super();
-			System.out.println("FML");
 //			parameterNode = new LoopNode();
 		}
 

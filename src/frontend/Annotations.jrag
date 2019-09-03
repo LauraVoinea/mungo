@@ -34,6 +34,7 @@ aspect Annotation {
         rewrite ClassDecl{
             when (!(this instanceof TypestateClassDecl) && getModifiers().hasTypestateAnnotation(packageName())) to TypestateClassDecl {
               if(hasSuperClass()) {
+                System.out.println("========= " + this.getID() + " " + getSuperClass() );
                 Access a = getSuperClass();
                 if (a.type().isTypestateClassDeclType())
                   addSemanticError("Class " + this.getID() + " cannot extend a class with a typestate.");

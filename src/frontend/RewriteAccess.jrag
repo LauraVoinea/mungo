@@ -43,6 +43,8 @@ aspect RewriteAccess {
 
 	syn String Dot.getLeftName() = getLeft() instanceof ParseName ? ((ParseName) getLeft()).getName(): "";
 
+	eq Program.getChild().isPackage(String Package) = false;
+
 	inh boolean ParseName.isPackage(String Package);
 
 	eq CompilationUnit.getImportDecl(int i).isPackage(String Package) = false;

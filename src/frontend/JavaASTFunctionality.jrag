@@ -147,10 +147,10 @@ aspect javaASTFunctionality {
 	// inh ClassDecl ResourceDeclaration.getClassDeclAncestor();
 
 	eq Program.getChild().getClassDeclAncestor() = null;
-
 	inh ClassDecl ResourceDeclaration.getClassDeclAncestor();
-
 	inh ClassDecl MethodAccess.getClassDeclAncestor();
+
+	eq Program.getChild().getMethodDeclAncestor() = null;
 	inh MethodDecl MethodAccess.getMethodDeclAncestor();
 	syn Set<Declarator> MethodAccess.getTypestateFields() = getClassDeclAncestor().getTypestateFields();
 
@@ -292,6 +292,7 @@ aspect javaASTFunctionality {
 	coll Set<String> SwitchStmt.getCaseLabels() [new HashSet<String>()] with add root SwitchStmt;
 	ConstCase contributes getValue().toString() to SwitchStmt.getCaseLabels() for getSwitchStmtAncestor();
 
+	eq Program.getChild().getSwitchStmtAncestor() = null;
 	inh SwitchStmt Case.getSwitchStmtAncestor();
 	eq SwitchStmt.getBlock().getSwitchStmtAncestor() = this;
 
