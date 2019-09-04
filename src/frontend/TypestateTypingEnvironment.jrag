@@ -56,7 +56,7 @@ aspect TypestateTypingEnvironment {
 				// System.out.println("FML " + current);
 				startGraph.add(current);
 				startExpr.add(e);
-				// System.out.println("adding typestate 2 " + current + " ----- " + e);
+				System.out.println("adding typestate 2 " + current + " ----- " + classInstanceExprtoString((ClassInstanceExpr) e));
 
 			}
 			resetCurrent();
@@ -102,14 +102,17 @@ aspect TypestateTypingEnvironment {
 				StringBuilder str = new StringBuilder("new ");
 				str.append(e.getAccess());
 				str.append("(");
-				for(Expr expr : e.getArgList())
+
+				for(Expr expr : e.getArgList()){
 					str.append(expr.toString());
+					str.append(", ");
+				}
+				str.delete(str.length()-2, str.length()-1);
 				str.append(")");
 				return str.toString();
 		}
 
 		protected void checkTypestate(GraphNode t, String errorMessage) {
-			System.out.println("AM I HERE?");
 			for(int i = startGraph.size() - 1; i >= 0; i--) {
 				GraphNode n = startGraph.get(i);
 				n.normalise();
@@ -120,6 +123,7 @@ aspect TypestateTypingEnvironment {
 				if(!t.includes(n)) {
 					String filePath = ((CompilationUnit) startExpr.get(i).getCompilationUnitAncestor()).getFilePath();
 					String errorMsg = "Object created at " + filePath + ": " + ASTNode.getLine(startExpr.get(i).getStart());
+					// System.out.println("====== " + t.getErrorNode().getExpr());
 					errorMsg += ". Typestate mismatch. Found: " + t.getErrorNode().nextToString() + ". Expected: " + t.getExpectedNode().nextToString() + ".";
 					t.getErrorNode().getExpr().addSemanticError(errorMsg);
 				}
@@ -171,7 +175,7 @@ aspect TypestateTypingEnvironment {
 
 		TypestateField(/*Set<BodyDecl> bodyDecls*/) {
 			super();
-			System.out.println("==!!!== " );
+			// System.out.println("==!!!== " );
 			connectGraph = new HashMap<BodyDecl, GraphNode>();
 			plugGraph = new HashMap<BodyDecl, GraphNode>();
 //			for(BodyDecl bd: bodyDecls)
@@ -183,7 +187,7 @@ aspect TypestateTypingEnvironment {
 			connectGraph.remove(bd);
 			connectGraph.put(bd, new LoopNode());
 			plugGraph.remove(bd);
-			System.out.println("FML " + current);
+			// System.out.println("FML " + current);
 			current = new LoopNode().addNext(current);
 			plugGraph.put(bd, current);
 		}

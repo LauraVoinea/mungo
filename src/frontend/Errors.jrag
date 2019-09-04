@@ -82,7 +82,6 @@ aspect Errors {
 	public class TypestateSemanticError extends TypestateError {
 		public TypestateSemanticError(String msg, String file, int start, int end) {
 			super(msg, file, start, end, "Semantic Error");
-			System.out.println(msg + " " + file + " " + start + " " + end + " " + "Semantic Error");
 		}
 	}
 

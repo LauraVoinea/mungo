@@ -196,15 +196,15 @@ aspect GraphNode {
 		//TODO rewrite this (maybe it is a bit of over-engineering)
 		//TODO if next is switch node it returns an empty string.
 		public String nextToString() {
-			String s = "";
-			boolean flag = false;
-			for(GraphNode n : next) {
-				if(flag == true)
-					s += ", ";
-				s += n.toString() + n.id;
-				flag = true;
+			if(next.isEmpty())
+				return "";
+			StringBuilder s = new StringBuilder();
+			s.append(next.get(0).toString());
+			for(int i = 1; i < next.size(); i++){
+				s.append(", ");
+				s.append(next.get(i).toString());
 			}
-			return s;
+			return s.toString();
 		}
 
 		/**************************************************************/

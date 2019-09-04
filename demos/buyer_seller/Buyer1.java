@@ -1,8 +1,6 @@
 package demos.buyer_seller;
 
 
-import mungo.lib.Typestate;
-
 @Typestate("Buyer1Protocol")
 public class Buyer1{
 	private final Socket socketSeller;

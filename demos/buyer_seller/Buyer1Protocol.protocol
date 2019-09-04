@@ -1,5 +1,6 @@
 package demos.buyer_seller;
 
+
 typestate Buyer1Protocol {
 		InitSession = 	{
 							void sendTitleToSeller(String): TitleSent
@@ -11,7 +12,7 @@ typestate Buyer1Protocol {
 		PriceReceived = {
 							void sendQuoteToBuyer2(String): QuoteSent
 						}
-		
+
 		QuoteSent = 	{
 							AgreementLabel receiveLabelFromBuyer2(): <AGREE: TalktoSeller, QUIT: end>
 						}

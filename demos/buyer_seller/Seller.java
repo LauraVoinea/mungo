@@ -1,6 +1,5 @@
 package demos.buyer_seller;
 
-import mungo.lib.Typestate;
 
 @Typestate("SellerProtocol")
 public class Seller{

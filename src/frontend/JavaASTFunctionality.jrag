@@ -4,22 +4,25 @@ aspect javaASTFunctionality {
 //TODO	syn lazy CompilationUnit ASTNode.getCompilationUnitAncestor() {
 	protected CompilationUnit ASTNode.getCompilationUnitAncestor() {
 		ASTNode node = this;
-		// System.out.println(" <> " + node + " " + node.getParent().compilationUnit() + " " + node.compilationUnit());
 
 		while(node != null && !(node instanceof CompilationUnit))
 			node = node.getParent();
 		Program p = (Program) node.getParent().getParent();
 		for(int i = 0; i < p.getNumCompilationUnit(); i++){
 			if( ((CompilationUnit) node).getPackageDecl().toString().equals(p.getCompilationUnit(i).getPackageDecl().toString())
-			&&  ((CompilationUnit) node).getTypeDecl(0).toString().equals(p.getCompilationUnit(i).getTypeDecl(0).toString()) )
+			&&  ((CompilationUnit) node).getTypeDecl(0).toString().equals(p.getCompilationUnit(i).getTypeDecl(0).toString()) ){
+
+				// System.out.println("<1> " + p.getCompilationUnit(i).getTypeDecl(0));
+
 				return  p.getCompilationUnit(i);
+			}
 		}
+		// System.out.println("<2> " + this.compilationUnit().getTypeDecl(0));
 
 		return this.compilationUnit();
 	}
 
 	protected Program ASTNode.getProgramAncestor() {
-		// System.out.println(getCompilationUnitAncestor().getParent().getParent());
 		// return (Program) getCompilationUnitAncestor().getParent().getParent();
 		return this.program();
 	}
@@ -73,7 +76,7 @@ aspect javaASTFunctionality {
 			ElementConstantValue ts_v = (ElementConstantValue) a.getElementValuePair(0).getElementValue();
 			CompilationUnit cu = a.getCompilationUnitAncestor();
 			TypeDecl t = cu.lookupTSType(ts_v.getExpr().toString());
-			// System.out.println("###### " + this + " " + cu + " " + t + " " + t.name() + " " + t.isTypestateDeclType()
+			// System.out.println("###### " + ts_v.getExpr().toString() + " " + cu + " " + t + " " + t.name() + " " + t.isTypestateDeclType()
 			// + " " + t.getTypestateDecl());
 
 			return cu.lookupTSType(ts_v.getExpr().toString()).isTypestateDeclType() ?
@@ -102,6 +105,7 @@ aspect javaASTFunctionality {
 		if (cd == null)
 			return null;
 
+		System.out.println(":::::::: " + this + " " + cd);
 		if(cd.isTypestateClassDeclType()) {
 			TypestateDecl t = ((TypestateClassDecl) cd).getTypestateDecl();
 
@@ -137,14 +141,6 @@ aspect javaASTFunctionality {
 	to MethodDecl.selfMethodAccess() for getMethodDeclAncestor();
 
 	inh ClassDecl CompilationUnit.getClassDeclAncestor();
-	// inh ClassDecl EnumDecl.getClassDeclAncestor();
-	// inh ClassDecl MethodDecl.getClassDeclAncestor();
-	// inh ClassDecl Block.getClassDeclAncestor();
-	// inh ClassDecl LocalClassDeclStmt.getClassDeclAncestor();
-	// inh ClassDecl UnknownType.getClassDeclAncestor();
-	// inh ClassDecl ConstructorDecl.getClassDeclAncestor(); --already defined
-	// inh ClassDecl TryWithResources.getClassDeclAncestor();
-	// inh ClassDecl ResourceDeclaration.getClassDeclAncestor();
 
 	eq Program.getChild().getClassDeclAncestor() = null;
 	inh ClassDecl ResourceDeclaration.getClassDeclAncestor();
@@ -153,9 +149,6 @@ aspect javaASTFunctionality {
 	eq Program.getChild().getMethodDeclAncestor() = null;
 	inh MethodDecl MethodAccess.getMethodDeclAncestor();
 	syn Set<Declarator> MethodAccess.getTypestateFields() = getClassDeclAncestor().getTypestateFields();
-
-	// inh ConstructorDecl MethodAccess.getConstructorDeclAncestor();
-	// eq ConstructorDecl.getBlock().getConstructorDeclAncestor() = this;
 
 
 /*

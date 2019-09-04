@@ -5,7 +5,7 @@ aspect LookupType {
 	}
 	//TODO:
 	eq Program.getChild().getCompilationUnit(String packageName, String typeName) = null;
-	
+
 	// inh CompilationUnit PrimitiveCompilationUnit.getCompilationUnit(String packageName, String typeName);
 	// inh CompilationUnit WildcardsCompilationUnit.getCompilationUnit(String packageName, String typeName);
 
@@ -127,12 +127,6 @@ aspect LookupType {
 	eq Program.getChild().lookupTSType(String packageName, String typeName) = null;
 
 	inh TypeDecl ClassDecl.lookupTSType(String packageName, String typeName);
-	// inh TypeDecl ConstructorDeclSubstituted.lookupTSType(String packageName, String typeName);
-	// inh TypeDecl ForStmt.lookupTSType(String packageName, String typeName);
-	// inh TypeDecl DoStmt.lookupTSType(String packageName, String typeName);
-	// inh TypeDecl WhileStmt.lookupTSType(String packageName, String typeName);
-	// inh TypeDecl IfStmt.lookupTSType(String packageName, String typeName);
 	inh TypeDecl PrimitiveCompilationUnit.lookupTSType(String packageName, String typeName);
-	// inh TypeDecl MemberClassDecl.lookupTSType(String packageName, String typeName);
 
 }
