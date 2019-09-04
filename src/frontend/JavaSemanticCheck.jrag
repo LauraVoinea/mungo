@@ -105,14 +105,6 @@ aspect JavaSemanticCheck {
 		if(getAccessNoTransform() != null)
 			getAccessNoTransform().type();		//Check all new objects created
 	}
-//
-//	protected void ClassInstanceExpr.semanticCheck() {
-//		if(getAccess().type().isMungoEnumDeclType()) {
-//			MungoEnumDecl e = getAccess().type().getMungoEnumDecl();
-//			if(!e.getEnums().contains(getArg(0).toString()) && !(getArg(0) instanceof StringLiteral && e.getEnums().contains(e.getID() + "." + ((StringLiteral) getArg(0)).getLITERAL()  )))
-//				addSemanticError("Argument for enumeration instance creation should have type: " + e.getID() + ".");
-//		}
-//	}
 
 	protected void SwitchStmt.semanticCheck() {
 		//TODO check directly for MethodAccess

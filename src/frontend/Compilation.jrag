@@ -1,7 +1,7 @@
 import beaver.*;
 import java.io.*;
-//import org.extendj.parser.JavaParser;
 import org.extendj.scanner.OriginalScanner;
+
 
 aspect Compilation {
 
@@ -52,7 +52,6 @@ aspect Compilation {
 	}
 
 	protected static String Program.fileSuffix() {
-		//return ".mungo";
 		return javaFileSuffix();
 	}
 
@@ -79,17 +78,7 @@ aspect Compilation {
 		catch(Exception e) {
 			return null;
 		}
-		/*
-		catch(FileNotFoundException e) {
-			return null;
-		}
-		catch(IOException e) {
-			return null;
-		}*/
-//		catch(ParserFailException e) {
-//			errors.addAll(e.getErrors());
-//			return null;
-//		}
+		
 
 		if(verbose)
 			outStream().println("Loading file " + path);

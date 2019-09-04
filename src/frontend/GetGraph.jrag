@@ -116,7 +116,6 @@ aspect GetGraph{
              if(((FieldDecl) decl).getTypeAccess().lookupTSType().isTypestateClassDeclType())
                for(Declarator d : ((FieldDecl) decl).getDeclaratorList()){
                 s.add(d);
-                System.out.println("&*&*&* " + d);
               }
               }
       return s;
@@ -675,7 +674,6 @@ eq DoStmt.getGraph(Set<TypestateVar> env){
   	if(t != null){
   		if(getMethodDeclAncestor().getTypeAccess().lookupTSType().isTypestateClassDeclType()){
   			t.checkError(getResult()/*, getBodyDeclAncestor()*/);
-  	//				t.current = new ReturnNode(getMethodDeclAncestor().typestate);
   			t.current = new ReturnPlug().addNext(getMethodDeclAncestor().typestate.current);
   		}
     }
@@ -695,7 +693,7 @@ eq DoStmt.getGraph(Set<TypestateVar> env){
   	boolean isTypestate = getTypeAccess().lookupTSType().isTypestateClassDeclType();
 
   	if(isTypestate)
-  		env.remove(typestate);
+    	env.remove(typestate);
 
   	if(!hasInit())
   		return true;
@@ -704,12 +702,10 @@ eq DoStmt.getGraph(Set<TypestateVar> env){
   	TypestateVar t;
   	if(isTypestate){
   		if(getInit() instanceof ClassInstanceExpr){
-        System.out.println("3 " + this + " " +  ((ClassInstanceExpr) getInit()).getAccess()
-        +  " " + typestate.current);
   			typestate.current = new InitNode(getInit()).addNext(typestate.current);
-  			typestate.addTypestate(getInit()/*, getBodyDeclAncestor()*/);
+  			typestate.addTypestate(getInit());
   		}else if((t = getInit().getTypestateVar()) != null){
-  			t.checkError(getInit()/*, getBodyDeclAncestor()*/);
+  			t.checkError(getInit());
   			t.current = typestate.current;
   			//Typestate should be reset
   			typestate.resetCurrent();
@@ -731,7 +727,6 @@ eq DoStmt.getGraph(Set<TypestateVar> env){
 
 //TODO implement me
   eq AssignExpr.getGraph(Set<TypestateVar> env){
-    System.out.println("1 " + getDest() + " " + getSource());
     getDest().getGraph(env);
     TypestateVar d = getDest().getTypestateVar();
     TypestateVar s;
@@ -898,20 +893,21 @@ eq DoStmt.getGraph(Set<TypestateVar> env){
   	//TODO better implementation here
   		Boolean sessionParameter = false;
   		for(int i = md.getNumParameter()-1; i >= 0; i--)
-  			if(md.getParameter(i).typestate!=null){
-  				sessionParameter=true;
+  			if(md.getParameter(i).typestate != null){
+  				sessionParameter = true;
   				break;
   			}
-  		if(md.getTypeAccess().lookupTSType().isTypestateClassDeclType() || sessionParameter == true)
+
+      if(md.getTypeAccess().lookupTSType().isTypestateClassDeclType() || sessionParameter == true)
   			md.addSemanticError("Cannot infer return type for recursive method call.");
   		}else{
   				md.getGraph();
   				for(int i = md.getNumParameter()-1; i>= 0; i--)
-  				if(md.getParameter(i).typestate != null)
-  				parameters[i] = md.getParameterTypestate(i);
+    			   if(md.getParameter(i).typestate != null)
+    				    parameters[i] = md.getParameterTypestate(i);
 
   				for(Declarator vd : getTypestateFields())
-  				vd.typestate.current = vd.typestate.getConnectionGraph(md);
+  				   vd.typestate.current = vd.typestate.getConnectionGraph(md);
   			}
   	}else if(getQualifiedType().isTypestateClassDeclType()){
   		TypestateVar t = getQualifiedTypestateVar();
@@ -920,7 +916,6 @@ eq DoStmt.getGraph(Set<TypestateVar> env){
   		//only call c.getFieldGraph when return type or parameter type is a session typestate.
   		Boolean sessionParameter = false;
   		for(int i = md.getNumParameter()-1; i >= 0; i--){
-  			//					if(md.getParameter(i).typestate != null) {
   			if(md.getParameter(i).getTypeAccess().lookupTSType().isTypestateClassDeclType()){
   				sessionParameter = true;
   				break;
@@ -934,10 +929,9 @@ eq DoStmt.getGraph(Set<TypestateVar> env){
   			if(md.getTypeAccess().lookupTSType().isTypestateClassDeclType() || sessionParameter == true){
   				ClassDecl c = ((ClassDecl) getQualifiedType());
   				GraphNode tmp = md.typestate.current;
-  				//md.typestate.current = new EndNode();
   				boolean addTypestate = TypestateVar.addTypestate;    //TODO better implementation here
   				TypestateVar.addTypestate = true;            //TODO better implementation here
-  				Set<TypestateVar> typestateEnvironment = c.getFieldGraph(t.current/*.normalise()*/);
+  				Set<TypestateVar> typestateEnvironment = c.getFieldGraph(t.current);
   				TypestateVar.addTypestate = addTypestate;        //TODO better implementation here
 
   				md.typestate.current = tmp;
@@ -956,11 +950,11 @@ eq DoStmt.getGraph(Set<TypestateVar> env){
 
   		for(int i = md.getNumParameter()-1; i >= 0; i--)
   			if(md.getParameter(i).typestate != null)
-  				parameters[i] = md.getParameterTypestate(i);//.plugGraph();
+  				parameters[i] = md.getParameterTypestate(i);
   	}
   	else{
   		//TODO there is something reduntand or missing here
-  		if(md.getTypeAccess().lookupTSType().isTypestateClassDeclType() /*|| sessionParameter == true*/){
+  		if(md.getTypeAccess().lookupTSType().isTypestateClassDeclType()){
   			md.getGraph();
   		}
   	}
@@ -971,9 +965,9 @@ eq DoStmt.getGraph(Set<TypestateVar> env){
   		if(dest != null){
   			if(getArg(i) instanceof ClassInstanceExpr){
   				dest.current=new InitNode(getArg(i)).addNext(parameters[i]);
-  				dest.addTypestate(getArg(i)/*, getBodyDeclAncestor()*/);
+  				dest.addTypestate(getArg(i));
   			}else if((source=getArg(i).getTypestateVar()) != null){
-  				source.checkError(getArg(i)/*, getBodyDeclAncestor()*/);
+  				source.checkError(getArg(i));
   				source.current=parameters[i];
   			}
   		}

@@ -1,4 +1,4 @@
-package demos.file_example;
+package demos.buyer_seller.direct;
 
 @interface Typestate {
   	String value();

@@ -1,4 +1,4 @@
-TypestateClassDecl	:	ClassDecl; //	::=	 Annotation; //TypestateArg: Access;//
+TypestateClassDecl	:	ClassDecl;
 
 TypestateDecl		:	TypeDecl	::=	InitState State*;
 

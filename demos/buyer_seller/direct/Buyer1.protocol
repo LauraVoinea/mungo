@@ -1,13 +1,12 @@
 package demos.buyer_seller.direct;
 
 typestate Buyer1 {
-	session
-		Init = {
-			void init(): AwaitingPrice
-		}
-	where
+		InitSession = {
+				void init(): AwaitingPrice
+				}
+
 		AwaitingPrice = {
 			void price_response(int): end,
 			void outOfStock(): end
-		}
+			}
 }

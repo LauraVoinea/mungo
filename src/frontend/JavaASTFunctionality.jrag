@@ -105,7 +105,7 @@ aspect javaASTFunctionality {
 		if (cd == null)
 			return null;
 
-		System.out.println(":::::::: " + this + " " + cd);
+		// System.out.println(":::::::: " + this + " " + cd);
 		if(cd.isTypestateClassDeclType()) {
 			TypestateDecl t = ((TypestateClassDecl) cd).getTypestateDecl();
 

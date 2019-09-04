@@ -1,5 +1,4 @@
 package demos.buyer_seller.socket;
-import mungo.lib.Typestate;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,6 +7,7 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
+
 
 @Typestate("Buyer2Protocol")
 public class Buyer2Role{

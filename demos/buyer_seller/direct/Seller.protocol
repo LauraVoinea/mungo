@@ -1,14 +1,9 @@
 package demos.buyer_seller.direct;
 
 typestate Seller {
-	session
-		Init = {
-			Exit_price_request price_request(String): <
-				PRICE_RESPONSE: WaitingForAgreement, 
-				OUT_OF_STOCK: end
-			>
+		InitSession = {
+			Exit_price_request price_request(String): <PRICE_RESPONSE: WaitingForAgreement, OUT_OF_STOCK: end>
 		}
-	where
 		WaitingForAgreement = {
 			void agree (): end,
 			void quit (): end

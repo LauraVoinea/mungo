@@ -1,5 +1,5 @@
 package demos.buyer_seller.socket;
-import mungo.lib.Typestate;
+
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -91,7 +91,7 @@ public class SellerRole{
         try {
             fromBuyer1 = this.socketBuyer1In.readLine();
             fromBuyer2 = this.socketBuyer2In.readLine();
-        } catch (IOException e) {        
+        } catch (IOException e) {
             System.out.println("Input/Output error, unable to get money from buyers");
             System.exit(-1);
         }

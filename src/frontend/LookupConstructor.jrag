@@ -35,10 +35,6 @@ aspect LookupConstructor {
 
 		for(int i = 0; i < getNumParameter(); i++) {
 			TypeDecl t = getParameter(i).getTypeAccess().type();
-			//null type should not be matched with primitive type
-			//noname type should be matched with any type
-			//t can never be instanceof NullType
-			//overriden equals(Object o) method
 			if(!parameters[i].equals(t) && !(t instanceof UnknownType))
 				return false;
 		}

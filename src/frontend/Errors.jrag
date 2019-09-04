@@ -17,15 +17,6 @@ aspect Errors {
 			getChild(i).collectTypestate();
 	}
 
-/*
-	public void ASTNode.setStart(int s) {
-		start = s;
-	}
-
-	public void ASTNode.setEnd(int e) {
-		end = e;
-	}
-*/
 
 	public abstract class TypestateError {
 		private final String msg;

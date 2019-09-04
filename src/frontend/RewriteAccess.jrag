@@ -15,15 +15,6 @@ aspect RewriteAccess {
 	syn lazy boolean Dot.isDotPackage() =
 		!isAbstractDotParent() && !(getParent() instanceof ImportDecl) && isPackageAccess();
 
-/*
-	syn boolean Dot.isPackageAccess() {
-		if(getRight() instanceof ParseName)
-			return getLeft().isPackage();
-		else if(getRight() instanceof Dot)
-			return getLeft().isPackageAccess((Dot) getRight());
-		return false;
-	}
-*/
 	syn boolean Expr.isPackage() = false;
 	eq ParseName.isPackage() = isPackage(getName());
 

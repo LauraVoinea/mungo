@@ -1,55 +1,34 @@
 aspect Annotation {
+  syn boolean Modifiers.hasTypestateAnnotation(String packageName) = hasAnnotation(packageName, "Typestate");
 
-        // syn Access Modifiers.getTypestateAnnotation() {
-        //     for (int i = 0; i < getNumModifier(); i++) {
-        //         if (getModifier(i) instanceof Annotation) {
-        //             Annotation a = (Annotation) getModifier(i);
-        //             if(a.getAccess().toString().equals("Typestate")){
-        //               if(a.getElementValuePair(0).getElementValue() instanceof ElementConstantValue){
-        //                 ElementConstantValue x = (ElementConstantValue) a.getElementValuePair(0).getElementValue();
-        //                 return new TypeAccess(a.type().packageName(), x.getExpr().toString().replace("\"", ""));
-        //
-        //               }
-        //             }
-        //         }
-        //     }
-        //     return null;
-        // }
-        // syn boolean Modifiers.hasTypestateAnnotation() {
-        //     return getTypestateAnnotation() != null;
-        // }
+  syn Annotation Modifiers.getTypestateAnnotation(String packageName) {
+    for (int i = 0; i < getNumModifier(); i++) {
+      if (getModifier(i).isAnnotation(packageName, "Typestate")) {
+        return (Annotation) getModifier(i);
+      }
+    }
+    return null;
+  }
 
-        syn boolean Modifiers.hasTypestateAnnotation(String packageName) = hasAnnotation(packageName, "Typestate");
 
-        syn Annotation Modifiers.getTypestateAnnotation(String packageName) {
-          for (int i = 0; i < getNumModifier(); i++) {
-            if (getModifier(i).isAnnotation(packageName, "Typestate")) {
-              return (Annotation) getModifier(i);
-            }
-          }
-          return null;
+  rewrite ClassDecl{
+      when (!(this instanceof TypestateClassDecl) && getModifiers().hasTypestateAnnotation(packageName())) to TypestateClassDecl {
+        if(hasSuperClass()) {
+          Access a = getSuperClass();
+          if (a.type().isTypestateClassDeclType())
+            addSemanticError("Class " + this.getID() + " cannot extend a class with a typestate.");
+        }
+        List<BodyDecl> bodydecls = new List<BodyDecl>();
+        List<Access> interfaces = new List<Access>();
+
+        for(int i = 0; i < getNumBodyDecl(); i++){
+            bodydecls.add(getBodyDecl(i));
         }
 
-
-        rewrite ClassDecl{
-            when (!(this instanceof TypestateClassDecl) && getModifiers().hasTypestateAnnotation(packageName())) to TypestateClassDecl {
-              if(hasSuperClass()) {
-                System.out.println("========= " + this.getID() + " " + getSuperClass() );
-                Access a = getSuperClass();
-                if (a.type().isTypestateClassDeclType())
-                  addSemanticError("Class " + this.getID() + " cannot extend a class with a typestate.");
-              }
-              List<BodyDecl> bodydecls = new List<BodyDecl>();
-              List<Access> interfaces = new List<Access>();
-
-              for(int i = 0; i < getNumBodyDecl(); i++){
-                  bodydecls.add(getBodyDecl(i));
-              }
-
-              for(int i = 0; i < getNumImplements(); i++) {
-                interfaces.add(getImplements(i));
-              }
-              return new TypestateClassDecl(getModifiers(), getID(), new Opt(), interfaces, bodydecls);
+        for(int i = 0; i < getNumImplements(); i++) {
+          interfaces.add(getImplements(i));
+        }
+        return new TypestateClassDecl(getModifiers(), getID(), new Opt(), interfaces, bodydecls);
             }
         }
         }

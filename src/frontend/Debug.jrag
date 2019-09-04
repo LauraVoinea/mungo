@@ -14,23 +14,4 @@ aspect debug {
 			System.out.println("\n\n");
 		}
 	}
-/*
-	void GraphNode.print() {
-		printPaths();
-		GraphNode n = normalise();
-		System.out.println("\n\n");
-		n.printPaths();
-	}
-
-	void GraphNode.debugCompare(GraphNode n) {
-		this.normalise();
-		n.normalise();
-		this.printPaths();
-		System.out.println("\n");
-		n.printPaths();
-		System.out.println("\n");
-		System.out.println(this.includes(n));
-	}
-
-*/
 }

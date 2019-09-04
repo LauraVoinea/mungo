@@ -38,7 +38,7 @@ aspect TypestateTypingEnvironment {
 			resetCurrent();
 		}
 
-		protected void addTypestate(Expr e/*, BodyDecl bd*/) {
+		protected void addTypestate(Expr e) {
 			if(current.isReturned()) {
 //				bd.returnGraph.add(current);
 //				bd.returnExpr.add(e);
@@ -53,11 +53,8 @@ aspect TypestateTypingEnvironment {
 //				bd.pluggedTypestate.add(this);
 //			}
 			else {
-				// System.out.println("FML " + current);
 				startGraph.add(current);
 				startExpr.add(e);
-				System.out.println("adding typestate 2 " + current + " ----- " + classInstanceExprtoString((ClassInstanceExpr) e));
-
 			}
 			resetCurrent();
 		}
@@ -68,16 +65,6 @@ aspect TypestateTypingEnvironment {
 				addErrorGraph(e);
 		}
 
-/*		protected void checkError(ASTNode e, BodyDecl bd) {
-			int c = current.onlyEndNodes();
-			//has more than EndNodes/LoopNodes
-			if(c == -1)
-				addErrorGraph(e);
-			//has only LoopNodes/PlugNodes
-			else if(c == 0)
-				addTypestate((Expr) e, bd);
-		}
-*/
 		protected void connectGraph(BodyDecl bd) {
 		}
 
@@ -99,16 +86,18 @@ aspect TypestateTypingEnvironment {
 		}
 
 		public String classInstanceExprtoString(ClassInstanceExpr e){
-				StringBuilder str = new StringBuilder("new ");
-				str.append(e.getAccess());
-				str.append("(");
+				String str = "new ";
+				str += e.getAccess();
+				str += "(";
 
 				for(Expr expr : e.getArgList()){
-					str.append(expr.toString());
-					str.append(", ");
+					str += expr.toString();
+					str += ", ";
 				}
-				str.delete(str.length()-2, str.length()-1);
-				str.append(")");
+				str = str.trim();
+				if(str.contains(","))
+					str = str.substring(0, str.lastIndexOf(","));
+				str += ")";
 				return str.toString();
 		}
 
@@ -123,26 +112,13 @@ aspect TypestateTypingEnvironment {
 				if(!t.includes(n)) {
 					String filePath = ((CompilationUnit) startExpr.get(i).getCompilationUnitAncestor()).getFilePath();
 					String errorMsg = "Object created at " + filePath + ": " + ASTNode.getLine(startExpr.get(i).getStart());
-					// System.out.println("====== " + t.getErrorNode().getExpr());
 					errorMsg += ". Typestate mismatch. Found: " + t.getErrorNode().nextToString() + ". Expected: " + t.getExpectedNode().nextToString() + ".";
 					t.getErrorNode().getExpr().addSemanticError(errorMsg);
 				}
-//				{
-//					//TODO Recheck here... Maybe you can engineer this part somehow.
-//					for(GraphNode m: t.getErrorNode().next) {
-//						String filePath = ((CompilationUnit) startExpr.get(i).getCompilationUnitAncestor()).getFilePath();
-//						String errorMsg = "Object created at " + filePath + ": " + ASTNode.getLine(startExpr.get(i).getStart());
-//						errorMsg += ". Typestate mismatch. Found: " + m.toString() + ". Expected: " + t.getExpectedNode().nextToString() + ".";
-//						t.getErrorNode().getExpr().addSemanticError(errorMsg);
-////						m.getExpr().addSemanticError("Typestate mismatch. Found: " + m.toString() + ". Expected: " + t.getExpectedNode().nextToString() + ".");
-//					}
-////					startExpr.get(i).addSemanticError(errorMessage);
-//				}
 
-				if(startExpr.get(i).getProgramAncestor().printInference() == true)
+				if(startExpr.get(i).getProgramAncestor().printInference())
 					//TODO have a proper format for the n.stringState() string
 					startExpr.get(i).addInfo(n.stringState());
-					//n.printState(getProgramAncestor().outStream());
 			}
 		}
 	}
@@ -152,7 +128,6 @@ aspect TypestateTypingEnvironment {
 
 		TypestatePar() {
 			super();
-//			parameterNode = new LoopNode();
 		}
 
 		protected void resetConnectionGraph(BodyDecl bd) {
@@ -173,28 +148,23 @@ aspect TypestateTypingEnvironment {
 		private Map<BodyDecl, GraphNode> connectGraph;
 		private Map<BodyDecl, GraphNode> plugGraph;
 
-		TypestateField(/*Set<BodyDecl> bodyDecls*/) {
+		TypestateField() {
 			super();
-			// System.out.println("==!!!== " );
+
 			connectGraph = new HashMap<BodyDecl, GraphNode>();
 			plugGraph = new HashMap<BodyDecl, GraphNode>();
-//			for(BodyDecl bd: bodyDecls)
-//				connectGraph.put(bd, new LoopNode());
-
-			current = new EndNode();//new PlugNode(this).addNext(new EndNode());
+			current = new EndNode();
 		}
 		protected void resetConnectionGraph(BodyDecl bd) {
 			connectGraph.remove(bd);
 			connectGraph.put(bd, new LoopNode());
 			plugGraph.remove(bd);
-			// System.out.println("FML " + current);
 			current = new LoopNode().addNext(current);
 			plugGraph.put(bd, current);
 		}
 
 		protected void connectGraph(BodyDecl bd) {
 			connectGraph.get(bd).addNext(current);
-//			current = new PlugNode(this).addNext(current);
 		}
 
 		protected GraphNode getConnectionGraph(BodyDecl bd) {

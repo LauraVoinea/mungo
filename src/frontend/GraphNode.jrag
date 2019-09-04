@@ -9,7 +9,7 @@ aspect GraphNode {
 	 * - SwithNode:		represents a state where a method call must be done and depending
 	 *			on the method call return value the state proceeds accordingly.
 	 * - InitNode:		It is the initial node
-	 * - EnodNode:		Used as the final state
+	 * - EndNode:		Used as the final state
 	 * **
 	 * The class is equipped with methods for:
 	 * - Traversing a graph:
