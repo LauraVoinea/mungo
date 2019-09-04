@@ -20,6 +20,7 @@ jastadd {
 
       jastadd {
         include "src/frontend/*.jrag"
+        include "src/frontend/*.jadd"
         include "src/grammar/*.ast"
       }
 

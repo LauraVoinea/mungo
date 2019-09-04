@@ -1,6 +1,5 @@
 package demos.redis;
 
-import mungo.lib.Typestate;
 
 @Typestate("RedisServer")
 public class Redis{
@@ -14,7 +13,7 @@ public class Redis{
 	String LPOP(String key) {
        throw new RuntimeException();
 	}
-	
+
 	void MULTI () {
 	}
 
@@ -23,8 +22,8 @@ public class Redis{
 
     void DISCARD () {
     }
-    
+
     Result EXEC () {
        return null;
-    } 
+    }
 }

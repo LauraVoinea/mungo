@@ -7,8 +7,8 @@ public class Test1 {
 	   redis.MULTI();
 	   redis.SET("name", "Alan");
 	   // Nested MULTI is not allowed
-	   redis.MULTI();   
 	   redis.SET("address", "Milton Keynes");
+		 // redis.MULTI();
 	   // Adding watches after MULTI is not allowed
        // redis.WATCH(new String[]{ "address" });
 	   switch (redis.EXEC()) {

@@ -31,4 +31,20 @@ aspect Annotation {
         return new TypestateClassDecl(getModifiers(), getID(), new Opt(), interfaces, bodydecls);
             }
         }
-        }
+
+  // ClassDecl contributes
+  //     errorf("Semantic Error: Class %s cannot extend a class with a typestate.",
+  //         this.getID())
+  //     when getModifiers().hasTypestateAnnotation(packageName())
+  //         && hasSuperClass()
+  //         && getSuperClass().type().isTypestateClassDeclType()
+  //     to CompilationUnit.problems();
+
+  ClassDecl contributes
+      errorf("Semantic Error: Class %s cannot extend a class with a typestate.",
+          this.getID())
+      when getModifiers().hasTypestateAnnotation(packageName())
+          && hasSuperclass()
+           to CompilationUnit.problems();
+
+}
