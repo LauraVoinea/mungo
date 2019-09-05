@@ -27,6 +27,20 @@ aspect javaASTFunctionality {
 		return this.program();
 	}
 
+	syn boolean TypestateClassDecl.hasSuperclass(){
+		return !isObject();
+	}
+
+	syn TypeDecl TypestateClassDecl.superclass(){
+		if (isObject()) {
+			return unknownType();
+		} else if (hasSuperClass()) {
+			return getSuperClass().type();
+		} else {
+			return typeObject();
+		}
+	}
+
 	/*	CompilationUnit								*/
 	// The next two atrributes are defined for consistency of the ast classes definition.
 	eq Program.getCompilationUnit().getClassDeclAncestor() = null;
@@ -67,7 +81,8 @@ aspect javaASTFunctionality {
 	/*	TypestateClassDeclType							*/
 	eq TypestateClassDecl.isTypestateClassDeclType() = true;
 	eq TypestateClassDecl.getTypestateClassDecl() = this;
-	syn lazy boolean TypestateClassDecl.existsTypestateDecl() =	getTypestateDecl() != null;
+  syn lazy boolean TypestateClassDecl.existsTypestateDecl() =	getTypestateDecl() != null;
+
 
 	syn TypestateDecl TypestateClassDecl.getTypestateDecl() {
 		Annotation a = getModifiers().getTypestateAnnotation(packageName());
@@ -76,8 +91,8 @@ aspect javaASTFunctionality {
 			ElementConstantValue ts_v = (ElementConstantValue) a.getElementValuePair(0).getElementValue();
 			CompilationUnit cu = a.getCompilationUnitAncestor();
 			TypeDecl t = cu.lookupTSType(ts_v.getExpr().toString());
-			// System.out.println("###### " + ts_v.getExpr().toString() + " " + cu + " " + t + " " + t.name() + " " + t.isTypestateDeclType()
-			// + " " + t.getTypestateDecl());
+			System.out.println("###### " + ts_v.getExpr().toString() + " " + cu + " " + t + " " + t.name() + " " + t.isTypestateDeclType()
+			+ " " + t.getTypestateDecl());
 
 			return cu.lookupTSType(ts_v.getExpr().toString()).isTypestateDeclType() ?
 			cu.lookupTSType(packageName(), ts_v.getExpr().toString()).getTypestateDecl() : null;

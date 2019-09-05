@@ -11,35 +11,86 @@ aspect JavaSemanticCheck {
 	protected void EnumDecl.semanticCheck() {}
 
 	//TODO check for no linear expressions in the throw and try stmts??
+	TypestateClassDecl contributes each typeProblems() to CompilationUnit.problems();
 
-	protected void TypestateClassDecl.semanticCheck() {
+	syn Collection<Problem> TypestateClassDecl.typeProblems() {
+		Collection<Problem> problems = new LinkedList<Problem>();
+		Annotation a = getModifiers().getTypestateAnnotation(packageName());
+		ElementConstantValue ts_v = (ElementConstantValue) a.getElementValuePair(0).getElementValue();
+
+		System.out.println(this + " " + existsTypestateDecl() + " " + ts_v.getExpr().toString()
+		+ lookupType(packageName(), ts_v.getExpr().toString()));
 		if(!existsTypestateDecl()){
-			Annotation a = getModifiers().getTypestateAnnotation(packageName());
-			ElementConstantValue ts_v = (ElementConstantValue) a.getElementValuePair(0).getElementValue();
-			addSemanticError("Cannot find typestate " + ts_v.getExpr().toString() + " defined for class " + getID() + ".");
+			// Annotation a = getModifiers().getTypestateAnnotation(packageName());
+			// ElementConstantValue ts_v = (ElementConstantValue) a.getElementValuePair(0).getElementValue();
+			problems.add(new Problem(sourceFile(), "Cannot find typestate " +
+			ts_v.getExpr().toString() + " defined for class " + getID() + ".",
+			a.lineNumber(), Problem.Severity.WARNING, Problem.Kind.SEMANTIC));
 		}
 		//TODO maybe put the next check as a warning
 		//TODO The next is a problem. Parameters and return types expect methods to
 		//TODO be in a different file.
 		else
 			for(TypestateMethod m : getTypestateDecl().getMethods()) {
-				if(m.lookupTSMethod(this) == null)
-					addSemanticError("Method with signature " + m.signature() + " defined in typestate " + getTypestateDecl().getID() + " is not implemented in class " + getID() + ".");
+				if(m.lookupTSMethod(this) == null){
+					problems.add(new Problem(sourceFile(), "Method with signature " +
+					m.signature() + " defined in typestate " + getTypestateDecl().getID()
+					+ " is not implemented in class " + getID() + ".",
+					m.lineNumber(), Problem.Severity.WARNING, Problem.Kind.SEMANTIC));
+				}
 			}
+    return problems;
+
 	}
 
-	protected void Declarator.semanticCheck() {
-		if(getTypeAccess().type().isTypestateClassDeclType()) {
-			if(isField() && !getClassDeclAncestor().isTypestateClassDeclType())
-				addSemanticError("Field " + getID() + " with typestate type " + getTypeAccess().toString() + " is declared in non-typestate class " + getClassDeclAncestor().getID() + "." );
-			if(isField() && !getModifiers().isPrivate())
-				addSemanticError("Field " + getID() + " with typestate type " + getTypeAccess().toString() + " should be private");
-			if(isField() && getModifiers().isStatic())
-				addSemanticError("Field " + getID() + " with typestate type " + getTypeAccess().toString() + " should not be static.");
-			if(getNumDims() > 0 || getTypeAccess().hasDims())
-				addSemanticError((isField() ? "Field ": "Variable ") + getID() + " with typestate type " + getTypeAccess().toString() + " should not be an array.");
-			}
-	}
+
+	// protected void TypestateClassDecl.semanticCheck() {
+	// 	if(!existsTypestateDecl()){
+	// 		Annotation a = getModifiers().getTypestateAnnotation(packageName());
+	// 		ElementConstantValue ts_v = (ElementConstantValue) a.getElementValuePair(0).getElementValue();
+	// 		addSemanticError("Cannot find typestate " + ts_v.getExpr().toString() + " defined for class " + getID() + ".");
+	// 		System.out.println("Cannot find typestate " + ts_v.getExpr().toString() + " defined for class " + getID() + ".");
+	// 	}
+	// 	//TODO maybe put the next check as a warning
+	// 	//TODO The next is a problem. Parameters and return types expect methods to
+	// 	//TODO be in a different file.
+	// 	else
+	// 		for(TypestateMethod m : getTypestateDecl().getMethods()) {
+	// 			if(m.lookupTSMethod(this) == null){
+	// 				addSemanticError("Method with signature " + m.signature() + " defined in typestate " + getTypestateDecl().getID() + " is not implemented in class " + getID() + ".");
+	// 				errorf("Method with signature " + m.signature() + " defined in typestate " + getTypestateDecl().getID() + " is not implemented in class " + getID() + ".");
+	// 			}
+	// 		}
+	// }
+
+	// syn Collection<Problem> Declarator.typeProblems() {
+	// 	Collection<Problem> problems = new LinkedList<Problem>();
+	// 	if(getTypeAccess().type().isTypestateClassDeclType()) {
+	// 		if(isField() && !getClassDeclAncestor().isTypestateClassDeclType())
+	// 			addSemanticError("Field " + getID() + " with typestate type " + getTypeAccess().toString() + " is declared in non-typestate class " + getClassDeclAncestor().getID() + "." );
+	// 		if(isField() && !getModifiers().isPrivate())
+	// 			addSemanticError("Field " + getID() + " with typestate type " + getTypeAccess().toString() + " should be private");
+	// 		if(isField() && getModifiers().isStatic())
+	// 			addSemanticError("Field " + getID() + " with typestate type " + getTypeAccess().toString() + " should not be static.");
+	// 		if(getNumDims() > 0 || getTypeAccess().hasDims())
+	// 			addSemanticError((isField() ? "Field ": "Variable ") + getID() + " with typestate type " + getTypeAccess().toString() + " should not be an array.");
+	// 		}
+	//
+	// 	}
+
+
+	// protected void Declarator.semanticCheck() {
+	// 	if(getTypeAccess().type().isTypestateClassDeclType()) {
+	// 		if(isField() && !getClassDeclAncestor().isTypestateClassDeclType())
+	// 			addSemanticError("Field " + getID() + " with typestate type " + getTypeAccess().toString() + " is declared in non-typestate class " + getClassDeclAncestor().getID() + "." );
+	// 		if(isField() && !getModifiers().isPrivate())
+	// 			addSemanticError("Field " + getID() + " with typestate type " + getTypeAccess().toString() + " should be private");
+	// 		if(isField() && getModifiers().isStatic())
+	// 			addSemanticError("Field " + getID() + " with typestate type " + getTypeAccess().toString() + " should not be static.");
+	// 		if(getNumDims() > 0 || getTypeAccess().hasDims())
+	// 			addSemanticError((isField() ? "Field ": "Variable ") + getID() + " with typestate type " + getTypeAccess().toString() + " should not be an array.");
+	// 		}
+	// }
 
 	protected void MethodDecl.semanticCheck() {
 		//TODO What if Method is a typestate method and static
