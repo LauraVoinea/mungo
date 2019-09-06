@@ -90,7 +90,7 @@ aspect javaASTFunctionality {
 
 			ElementConstantValue ts_v = (ElementConstantValue) a.getElementValuePair(0).getElementValue();
 			CompilationUnit cu = a.getCompilationUnitAncestor();
-			TypeDecl t = cu.lookupTSType(ts_v.getExpr().toString());
+			TypeDecl t = emptyCompilationUnit().lookupTSType(ts_v.getExpr().toString());
 			System.out.println("###### " + ts_v.getExpr().toString() + " " + cu + " " + t + " " + t.name() + " " + t.isTypestateDeclType()
 			+ " " + t.getTypestateDecl());
 
