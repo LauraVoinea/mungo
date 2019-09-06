@@ -11,16 +11,22 @@ aspect LookupType {
 	inh TypeDecl TypestateMethod.lookupTSType(String packageName, String typeName);
 
 	eq Program.getCompilationUnit(int j).getCompilationUnit(String packageName, String typeName) {
+		// System.out.println("==== " +  this);
+
 		if(new File(packageName +  typeName + Program.fileSuffix()).exists()){
-			compile(packageName +  typeName + Program.fileSuffix());
+			((TypestateChecker)this).compile(packageName +  typeName + Program.fileSuffix());
+			// System.out.println("==== java " + compile(packageName +  typeName + Program.fileSuffix()) + " " + this);
 		}
 
 		if(new File(packageName +  typeName + Program.protocolSuffix()).exists()){
-			compile(packageName +  typeName + Program.protocolSuffix());
+			((TypestateChecker)this).compile(packageName +  typeName + Program.protocolSuffix());
+			// System.out.println("==== protocol " + packageName +  typeName + Program.protocolSuffix()
+			// + " " + ((TypestateChecker)this).compile(packageName +  typeName + Program.protocolSuffix()) + " " +
+			// this );
 		}
 
 		for(int i = 0; i < getNumCompilationUnit(); i++){
-			// System.out.println(" --1-- " + i + " " + packageName + typeName + " " + getNumCompilationUnit());
+			System.out.println(" --1-- " + i + " " + packageName + typeName + " " + getNumCompilationUnit());
 
 			if(!getCompilationUnit(i).localLookupType(typeName).isEmpty()){
 				return getCompilationUnit(i);
@@ -34,7 +40,6 @@ aspect LookupType {
 	}
 
 	syn TypeDecl CompilationUnit.lookupTSType(String typeName) {
-		// System.out.println(" --2-- " + program().getCompilationUnit(getPackageString(), typeName));
 
 		if(!(lookupType(PRIMITIVE_PACKAGE_NAME, typeName).isUnknown())){
 			return lookupType(PRIMITIVE_PACKAGE_NAME, typeName);
@@ -53,13 +58,12 @@ aspect LookupType {
 
 		CompilationUnit cu;
 		try{
+			// System.out.println(" --2-- " + typeName + " " + program().getCompilationUnit(0).getCompilationUnit(packageName, typeName));
 			if((cu = getCompilationUnit(packageName, typeName)) != null){
-				System.out.println(" <!> " + this);
 				return cu.getTypeDecl(0);
-			}else{
-							System.out.println(" <?> " + this);
 			}
 		}catch(Exception e){
+			System.out.println(" ? " + this);
 			}
 		String s = null;
 		if(!importedTypes(typeName).isEmpty()){
@@ -84,7 +88,7 @@ aspect LookupType {
 		return new UnknownType();
 	}
 
-	eq CompilationUnit.getTypeDecl().lookupTSType(String packageName, String typeName) = lookupTSType(packageName, typeName);
+	eq CompilationUnit.getTypeDecl(int i).lookupTSType(String packageName, String typeName) = lookupTSType(packageName, typeName);
 	eq CompilationUnit.getImportDecl().lookupTSType(String packageName, String typeName) = null;
 
 	inh TypeDecl Access.lookupTSType(String packageName, String typeName);
@@ -99,6 +103,11 @@ aspect LookupType {
 
 		return lookupTSType(packageName, typeName);
 	}
+
+	// syn lazy TypeDecl Expr.lookupTSType(){
+	// 	return lookupTSType(this.toString());
+	// }
+
 
 	eq Program.getChild().lookupTSType(String packageName, String typeName) = null;
 

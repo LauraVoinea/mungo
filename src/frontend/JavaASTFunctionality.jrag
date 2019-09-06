@@ -23,8 +23,7 @@ aspect javaASTFunctionality {
 	}
 
 	protected Program ASTNode.getProgramAncestor() {
-		// return (Program) getCompilationUnitAncestor().getParent().getParent();
-		return this.program();
+		return (Program) getCompilationUnitAncestor().getParent().getParent();
 	}
 
 	syn boolean TypestateClassDecl.hasSuperclass(){
@@ -89,13 +88,11 @@ aspect javaASTFunctionality {
 		if(a != null){
 
 			ElementConstantValue ts_v = (ElementConstantValue) a.getElementValuePair(0).getElementValue();
-			CompilationUnit cu = a.getCompilationUnitAncestor();
-			TypeDecl t = emptyCompilationUnit().lookupTSType(ts_v.getExpr().toString());
-			System.out.println("###### " + ts_v.getExpr().toString() + " " + cu + " " + t + " " + t.name() + " " + t.isTypestateDeclType()
-			+ " " + t.getTypestateDecl());
+			CompilationUnit cu = this.getCompilationUnitAncestor();
+			// System.out.println("==== " +  a.getAccess().lookupTSType(packageName().replace('.', File.separatorChar) + File.separatorChar, ts_v.getExpr().toString()));
 
 			return cu.lookupTSType(ts_v.getExpr().toString()).isTypestateDeclType() ?
-			cu.lookupTSType(packageName(), ts_v.getExpr().toString()).getTypestateDecl() : null;
+			cu.lookupTSType(ts_v.getExpr().toString()).getTypestateDecl() : null;
 		}
 		return null;
 	}
@@ -120,7 +117,6 @@ aspect javaASTFunctionality {
 		if (cd == null)
 			return null;
 
-		// System.out.println(":::::::: " + this + " " + cd);
 		if(cd.isTypestateClassDeclType()) {
 			TypestateDecl t = ((TypestateClassDecl) cd).getTypestateDecl();
 
