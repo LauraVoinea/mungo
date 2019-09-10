@@ -1,0 +1,14 @@
+package demos.aliasing;
+
+
+typestate LoggedFileProtocol {
+    Init = {
+        void open (): Open
+    }
+
+    Open = {
+       byte read (): Open,
+       void close (): end,
+       void clearLog (): Open
+    }
+}

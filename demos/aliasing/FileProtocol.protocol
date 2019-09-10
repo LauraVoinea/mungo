@@ -1,0 +1,12 @@
+package demos.aliasing;
+
+typestate FileProtocol {
+    Init = {
+        void open (): Open
+    }
+
+    Open = {
+       byte read (): Open,
+       void close (): end
+    }
+}
