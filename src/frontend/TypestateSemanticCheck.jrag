@@ -6,30 +6,30 @@ aspect typestateSemanticCheck {
 //		createTypestate().normalise().printPaths();
 //	}
 
-	State contributes
-		errorf("Duplicate State: " + getID() + ".")
-		when isDuplicate()
-	 	to CompilationUnit.problems();
-
-
-	State contributes
-		new Problem(sourceFile(),
-          "Circular-referenced state definition: " + getCircularPath() + ".", 0,
-          0,
-          Problem.Severity.WARNING, Problem.Kind.LEXICAL)
-		when (getCircularPath() != null)
-	 	to CompilationUnit.problems();
-
-	// protected void State.semanticCheck() {
-	// 	if(isDuplicate())
-	// 		addSemanticError("Duplicate State: " + getID() + ".");
-	// 	if(!isReachable())
-	// 		addWarning("State not reachable: " + getID() + ".");
+	// State contributes
+	// 	errorf("Duplicate State: " + getID() + ".")
+	// 	when isDuplicate()
+	//  	to CompilationUnit.problems();
 	//
-	// 	String path;
-	// 	if((path = getCircularPath()) != null)
-	// 		addWarning("Circular-referenced state definition: " + path + ".");
-	// }
+	//
+	// State contributes
+	// 	new Problem(sourceFile(),
+  //         "Circular-referenced state definition: " + getCircularPath() + ".", 0,
+  //         0,
+  //         Problem.Severity.WARNING, Problem.Kind.LEXICAL)
+	// 	when (getCircularPath() != null)
+	//  	to CompilationUnit.problems();
+
+	protected void State.semanticCheck() {
+		if(isDuplicate())
+			addSemanticError("Duplicate State: " + getID() + ".");
+		if(!isReachable())
+			addWarning("State not reachable: " + getID() + ".");
+
+		String path;
+		if((path = getCircularPath()) != null)
+			addWarning("Circular-referenced state definition: " + path + ".");
+	}
 
 	protected void TypestateLabel.semanticCheck() {
 		if(getTarget() == null)

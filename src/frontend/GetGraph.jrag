@@ -363,8 +363,10 @@ aspect GetGraph{
   		tv.connectGraph(this);
 
   	for(Declarator vd : getTypestateFields())
-  		if(vd.getTypeAccess().lookupTSType().isTypestateClassDeclType())
+  		if(vd.getTypeAccess().lookupTSType().isTypestateClassDeclType()){
+        System.out.println("Here we go again " + vd.getTypeAccess());
   			vd.typestate.checkError(vd);
+      }
 
   	isRec = false;
   	checkGraphCounter++;

@@ -1,4 +1,6 @@
 package demos.file_example;
+
+
 typestate FileProtocol {
 		Init =	{
 				Status open(): <OK: Open, ERROR: end>
@@ -7,6 +9,10 @@ typestate FileProtocol {
 		Open =	{
 				BooleanEnum hasNext(): <TRUE: Read, FALSE: Close>,
 				void close(): end
+			}
+
+		Read =	{
+				void read(): Open
 			}
 
 		Read =	{

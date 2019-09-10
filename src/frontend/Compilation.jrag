@@ -78,7 +78,7 @@ aspect Compilation {
 		catch(Exception e) {
 			return null;
 		}
-		
+
 
 		if(verbose)
 			outStream().println("Loading file " + path);

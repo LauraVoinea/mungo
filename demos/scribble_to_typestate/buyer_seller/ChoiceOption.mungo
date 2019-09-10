@@ -1,5 +1,0 @@
-package demos.scribble_to_typestate.buyer_seller;
-
-enum ChoiceOption {
-	AGREE, QUIT;
-}

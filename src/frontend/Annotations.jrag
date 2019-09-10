@@ -15,7 +15,6 @@ aspect Annotation {
       when (!(this instanceof TypestateClassDecl) && getModifiers().hasTypestateAnnotation(packageName())) to TypestateClassDecl {
         List<BodyDecl> bodydecls = new List<BodyDecl>();
         List<Access> interfaces = new List<Access>();
-        System.out.println("jsdhfdskhfskfk " + this.getProgramAncestor());
 
         for(int i = 0; i < getNumBodyDecl(); i++){
             bodydecls.add(getBodyDecl(i));

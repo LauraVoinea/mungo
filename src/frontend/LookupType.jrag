@@ -11,23 +11,18 @@ aspect LookupType {
 	inh TypeDecl TypestateMethod.lookupTSType(String packageName, String typeName);
 
 	eq Program.getCompilationUnit(int j).getCompilationUnit(String packageName, String typeName) {
-		// System.out.println("==== " +  this);
+		// System.out.println("==== " +  (TypestateChecker)this);
 
 		if(new File(packageName +  typeName + Program.fileSuffix()).exists()){
 			((TypestateChecker)this).compile(packageName +  typeName + Program.fileSuffix());
-			// System.out.println("==== java " + compile(packageName +  typeName + Program.fileSuffix()) + " " + this);
 		}
 
 		if(new File(packageName +  typeName + Program.protocolSuffix()).exists()){
 			((TypestateChecker)this).compile(packageName +  typeName + Program.protocolSuffix());
-			// System.out.println("==== protocol " + packageName +  typeName + Program.protocolSuffix()
-			// + " " + ((TypestateChecker)this).compile(packageName +  typeName + Program.protocolSuffix()) + " " +
-			// this );
 		}
 
 		for(int i = 0; i < getNumCompilationUnit(); i++){
-			System.out.println(" --1-- " + i + " " + packageName + typeName + " " + getNumCompilationUnit());
-
+			// System.out.println(" --1-- " + i + " " + packageName + typeName + " " + getNumCompilationUnit());
 			if(!getCompilationUnit(i).localLookupType(typeName).isEmpty()){
 				return getCompilationUnit(i);
 				}
@@ -104,8 +99,8 @@ aspect LookupType {
 		return lookupTSType(packageName, typeName);
 	}
 
-	// syn lazy TypeDecl Expr.lookupTSType(){
-	// 	return lookupTSType(this.toString());
+	// syn lazy TypeDecl Annotation.lookupTSType(String packageName, String typeName){
+	// 	return lookupTSType(packageName, typeName);
 	// }
 
 
