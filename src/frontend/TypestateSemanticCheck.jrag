@@ -6,20 +6,6 @@ aspect typestateSemanticCheck {
 //		createTypestate().normalise().printPaths();
 //	}
 
-	// State contributes
-	// 	errorf("Duplicate State: " + getID() + ".")
-	// 	when isDuplicate()
-	//  	to CompilationUnit.problems();
-	//
-	//
-	// State contributes
-	// 	new Problem(sourceFile(),
-  //         "Circular-referenced state definition: " + getCircularPath() + ".", 0,
-  //         0,
-  //         Problem.Severity.WARNING, Problem.Kind.LEXICAL)
-	// 	when (getCircularPath() != null)
-	//  	to CompilationUnit.problems();
-
 	protected void State.semanticCheck() {
 		if(isDuplicate())
 			addSemanticError("Duplicate State: " + getID() + ".");
@@ -72,8 +58,8 @@ aspect typestateSemanticCheck {
 		if(getTypestate() instanceof TypestateSwitch) {
 			t = getTType().getAccess().lookupTSType();
 
-			// System.out.println("---------- " + t.getParent() + " " + getTType().getAccess() + " " + t.isEnumDeclType() + " " + t.isEnumDecl()
-			// +  getTType().getAccess().type().name());
+			System.out.println("---------- " + t.getParent() + " " + getTType().getAccess() + " " + t.isEnumDeclType() + " " + t.isEnumDecl()
+			+  getTType().getAccess().type().name());
 			if(!t.isEnumDeclType())
 				addSemanticError("Method " + signature() + " should return an enumeration type.");
 			else {

@@ -11,18 +11,15 @@ aspect LookupType {
 	inh TypeDecl TypestateMethod.lookupTSType(String packageName, String typeName);
 
 	eq Program.getCompilationUnit(int j).getCompilationUnit(String packageName, String typeName) {
-		// System.out.println("==== " +  (TypestateChecker)this);
-
 		if(new File(packageName +  typeName + Program.fileSuffix()).exists()){
-			((TypestateChecker)this).compile(packageName +  typeName + Program.fileSuffix());
+			compile(packageName +  typeName + Program.fileSuffix());
 		}
 
 		if(new File(packageName +  typeName + Program.protocolSuffix()).exists()){
-			((TypestateChecker)this).compile(packageName +  typeName + Program.protocolSuffix());
+			compile(packageName +  typeName + Program.protocolSuffix());
 		}
 
 		for(int i = 0; i < getNumCompilationUnit(); i++){
-			// System.out.println(" --1-- " + i + " " + packageName + typeName + " " + getNumCompilationUnit());
 			if(!getCompilationUnit(i).localLookupType(typeName).isEmpty()){
 				return getCompilationUnit(i);
 				}
@@ -35,15 +32,15 @@ aspect LookupType {
 	}
 
 	syn TypeDecl CompilationUnit.lookupTSType(String typeName) {
-
+		System.out.println("==== " +   typeName);
 		if(!(lookupType(PRIMITIVE_PACKAGE_NAME, typeName).isUnknown())){
 			return lookupType(PRIMITIVE_PACKAGE_NAME, typeName);
 		}
 
-		TypeDecl defaultType = lookupType("java.lang", typeName);
-		if (defaultType.accessibleFromPackage(packageName())) {
-			return defaultType;
-		}
+		// TypeDecl defaultType = lookupType("java.lang", typeName);
+		// if (defaultType.accessibleFromPackage(packageName())) {
+		// 	return defaultType;
+		// }
 
 		String packageName = getPackageString();
 
@@ -98,11 +95,6 @@ aspect LookupType {
 
 		return lookupTSType(packageName, typeName);
 	}
-
-	// syn lazy TypeDecl Annotation.lookupTSType(String packageName, String typeName){
-	// 	return lookupTSType(packageName, typeName);
-	// }
-
 
 	eq Program.getChild().lookupTSType(String packageName, String typeName) = null;
 

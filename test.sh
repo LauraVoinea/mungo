@@ -53,4 +53,8 @@ java -jar mungo.jar demos/SMTP/CMain.java
 echo
 echo "============================Traversal Run=========================="
 echo
-java -jar mungo.jar demos/Traversal/Run.java
+java -jar mungo.jar demos/Traversal/A.java
+echo
+java -jar mungo.jar demos/Traversal/B.java
+echo
+java -jar mungo.jar demos/Traversal/C.java
