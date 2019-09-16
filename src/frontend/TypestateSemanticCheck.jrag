@@ -23,6 +23,8 @@ aspect typestateSemanticCheck {
 	}
 
 	protected void TTypestate.semanticCheck() {
+		System.out.println("Maiu1" + this);
+
 		TypeDecl t = getAccess().lookupTSType();
 
 		if(!t.isTypestateClassDeclType())

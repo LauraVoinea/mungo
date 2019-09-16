@@ -114,6 +114,7 @@ aspect javaASTFunctionality {
 	syn lazy TypestateMethod MethodDecl.getTypestateMethod() = getTypestateMethod(getClassDeclAncestor());
 
 	syn TypestateMethod MethodDecl.getTypestateMethod(TypeDecl cd) {
+		System.out.println("AAAAAA " + cd);
 		if (cd == null)
 			return null;
 
@@ -193,6 +194,8 @@ aspect javaASTFunctionality {
 	}
 
 	syn lazy boolean MethodAccess.isTypestateMethod() {
+		System.out.println("AAAAAA2 " + getTarget());
+
 		MethodDecl md = getTarget();
 		return (md != null) ? md.getTypestateMethod(getQualifiedType()) != null : false;
 	}
@@ -244,24 +247,12 @@ aspect javaASTFunctionality {
 
 	//check this
 	/*	ParseName							*/
-	ParseName contributes getDeclarator()
-	when getDeclarator() != null && getDeclarator().isField()
-	to MethodDecl.getUsedTypestateFields() for getMethodDeclAncestor();
-
-	syn lazy Declarator ParseName.getDeclarator() {
-		if(!type().isTypestateClassDeclType())
-			return null;
-		if(getQualifiedAccess() != null)
-			return lookupTSVariable(getQualifiedType()).getVariableDecl();
-		return lookupTSVariable().getVariableDecl();
-	}
-
-	inh MethodDecl ParseName.getMethodDeclAncestor();
-	// Access contributes getVariableDecl()
-	// when getVariableDecl() != null && (getVariableDecl() instanceof FieldDeclarator)
+	// ParseName contributes getDeclarator()
+	// when getDeclarator() != null && getDeclarator().isField()
 	// to MethodDecl.getUsedTypestateFields() for getMethodDeclAncestor();
-	//
-	// syn lazy Declarator Access.getVariableDecl() {
+
+	// syn lazy Declarator ParseName.getDeclarator() {
+	// 	System.out.println("Maiu1" + type());
 	// 	if(!type().isTypestateClassDeclType())
 	// 		return null;
 	// 	if(getQualifiedAccess() != null)
@@ -269,7 +260,29 @@ aspect javaASTFunctionality {
 	// 	return lookupTSVariable().getVariableDecl();
 	// }
 	//
-	// inh MethodDecl Access.getMethodDeclAncestor();
+	// inh MethodDecl ParseName.getMethodDeclAncestor();
+
+
+	Access contributes getDeclarator()
+	when getDeclarator() != null && (getDeclarator() instanceof FieldDeclarator)
+	to MethodDecl.getUsedTypestateFields() for getMethodDeclAncestor();
+
+	syn lazy Declarator Access.getDeclarator() {
+		if(!type().isTypestateClassDeclType())
+			return null;
+		if(getQualifiedAccess() != null){
+			System.out.println("---------------:dxjkfod---------------- " +
+			getQualifiedType() + " " + lookupTSVariable(getQualifiedType()) + lookupTSVariable(getQualifiedType()).getVariableDecl());
+			return lookupTSVariable(getQualifiedType()).getVariableDecl();
+		}
+		System.out.println("%%%££ " + this);
+		System.out.println("%%%^^ " + lookupTSVariable());
+		if(lookupTSVariable() != null)
+			return lookupTSVariable().getVariableDecl();
+		else return null;
+	}
+
+	inh MethodDecl Access.getMethodDeclAncestor();
 	// ArrayTypeWithSizeAccess inherits ArrayTypeAccess
 	syn lazy boolean Access.hasDims() = countDims() != 0;
 
@@ -277,21 +290,21 @@ aspect javaASTFunctionality {
 	 *	Declarator
 	 *	VarDeclStmt							*/
 
-	/*
+
 	inh boolean Declarator.isField();
-	eq Declarator.getDeclarator(int i).isField() = true;
+	eq FieldDecl.getDeclarator(int i).isField() = true;
 	eq VarDeclStmt.getDeclarator(int i).isField() = false;
 
-	inh Modifiers Declarator.getModifiers();
-	eq Declarator.getDeclarator(int i).getModifiers() = getModifiers();
-	eq VarDeclStmt.getDeclarator(int i).getModifiers() = getModifiers();
+	// inh Modifiers Declarator.getModifiers();
+	// eq FieldDecl.getDeclarator(int i).getModifiers() = getModifiers();
+	// eq VarDeclStmt.getDeclarator(int i).getModifiers() = getModifiers();
 
-	inh Access Declarator.getTypeAccess();
-	eq Declarator.getDeclarator(int i).getTypeAccess() = getTypeAccess();
-	eq VarDeclStmt.getDeclarator(int i).getTypeAccess() = getTypeAccess();
+	// inh Access Declarator.getTypeAccess();
+	// eq FieldDecl.getDeclarator(int i).getTypeAccess() = getTypeAccess();
+	// eq VarDeclStmt.getDeclarator(int i).getTypeAccess() = getTypeAccess();
 
-	inh ClassDecl Declarator.getClassDeclAncestor();
-	*/
+	// inh ClassDecl Declarator.getClassDeclAncestor();
+
 	/*	SwitchStmt							*/
 	coll Set<String> SwitchStmt.getCaseLabels() [new HashSet<String>()] with add root SwitchStmt;
 	ConstCase contributes getValue().toString() to SwitchStmt.getCaseLabels() for getSwitchStmtAncestor();
@@ -302,6 +315,7 @@ aspect javaASTFunctionality {
 
 	/*	Modifiers							*/
 	private boolean Modifiers.isModifier(String mod) {
+		System.out.println("<>" + mod);
 		for(int i = 0; i < getNumModifier(); i++)
 			if(getModifier(i).getID().equals(mod))
 				return true;

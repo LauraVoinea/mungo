@@ -18,8 +18,10 @@ aspect LookupType {
 		if(new File(packageName +  typeName + Program.protocolSuffix()).exists()){
 			compile(packageName +  typeName + Program.protocolSuffix());
 		}
+		System.out.println("============================================ ");
 
 		for(int i = 0; i < getNumCompilationUnit(); i++){
+			System.out.println("==== " +  getCompilationUnit(i).getTypeDecl(0));
 			if(!getCompilationUnit(i).localLookupType(typeName).isEmpty()){
 				return getCompilationUnit(i);
 				}
@@ -32,11 +34,11 @@ aspect LookupType {
 	}
 
 	syn TypeDecl CompilationUnit.lookupTSType(String typeName) {
-		System.out.println("==== " +   typeName);
+		// System.out.println("==== " +   typeName);
 		if(!(lookupType(PRIMITIVE_PACKAGE_NAME, typeName).isUnknown())){
 			return lookupType(PRIMITIVE_PACKAGE_NAME, typeName);
 		}
-
+		// 
 		// TypeDecl defaultType = lookupType("java.lang", typeName);
 		// if (defaultType.accessibleFromPackage(packageName())) {
 		// 	return defaultType;
@@ -50,7 +52,6 @@ aspect LookupType {
 
 		CompilationUnit cu;
 		try{
-			// System.out.println(" --2-- " + typeName + " " + program().getCompilationUnit(0).getCompilationUnit(packageName, typeName));
 			if((cu = getCompilationUnit(packageName, typeName)) != null){
 				return cu.getTypeDecl(0);
 			}
@@ -66,10 +67,15 @@ aspect LookupType {
 					}
 			}
 		}
+		System.out.println(" --UnknownType1-- " + typeName);
+		// return new UnknownTypeDecl(new Modifiers(), typeName, new List<BodyDecl>());
+
 		return new UnknownType();
 	}
 
 	syn TypeDecl CompilationUnit.lookupTSType(String packageName, String typeName) {
+		System.out.println(" --3-- " + typeName);
+
 		if(packageName.equals(""))
 			return lookupTSType(typeName);
 
@@ -77,6 +83,9 @@ aspect LookupType {
 		String type = (packageName + "." + typeName).replace('.', File.separatorChar);
 		if((cu = getCompilationUnit(packageName, typeName)) != null)
 			return cu.localLookupType(typeName).singletonValue();
+		System.out.println(" --UnknownType2-- " + typeName);
+		// return new UnknownTypeDecl(new Modifiers(), typeName, new List<BodyDecl>());
+
 		return new UnknownType();
 	}
 
