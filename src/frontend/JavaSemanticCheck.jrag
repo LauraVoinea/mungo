@@ -16,6 +16,7 @@ aspect JavaSemanticCheck {
 		//TODO be in a different file.
 		else
 			for(TypestateMethod m : getTypestateDecl().getMethods()) {
+				System.out.println("derp " + m + m.lookupTSMethod(this));
 				if(m.lookupTSMethod(this) == null){
 					addSemanticError("Method with signature " + m.signature() + " defined in typestate " + getTypestateDecl().getID() + " is not implemented in class " + getID() + ".");
 				}

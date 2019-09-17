@@ -26,7 +26,7 @@ aspect LookupTSVariable {
 	inh NameDecl Block.lookupTSVariable(String var);
 
 	eq Block.getStmt(int j).lookupTSVariable(String var) {
-		System.out.println("Derp" + getVariableDecls());
+		// System.out.println("Derp" + getVariableDecls());
 		for(Declarator vd : getVariableDecls())
 			if(vd.getID().equals(var))
 				return vd.toNameDecl();
@@ -64,7 +64,7 @@ aspect LookupTSVariable {
 
 	syn NameDecl TypeDecl.lookupTSVariable(String var) = null;
 	syn NameDecl ClassDecl.lookupTSVariable(String var) {
-		System.out.println("Derp" + getFieldDecls());
+		// System.out.println("Derp" + getFieldDecls());
 		for(Declarator vd : getFieldDecls()){
 			if(vd.getID().equals(var))
 				return vd.toNameDecl();
@@ -95,7 +95,7 @@ aspect LookupTSVariable {
 		private Declarator vd;
 		public VarDecl(Declarator vd) {
 			this.vd = vd;
-			System.out.println("Derp" + vd);
+			// System.out.println("Derp" + vd);
 
 		}
 		public Declarator getVariableDecl() { return vd; }
@@ -111,7 +111,7 @@ aspect LookupTSVariable {
 		private ParameterDeclaration pd;
 		public ParDecl(ParameterDeclaration pd) {
 			this.pd = pd;
-			System.out.println("Derp**" + pd);
+			// System.out.println("Derp**" + pd);
 		}
 		public Declarator getVariableDecl() { return null; }
 		public Modifiers getModifiers() { return pd.getModifiers(); }

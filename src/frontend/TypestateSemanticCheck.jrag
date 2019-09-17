@@ -23,7 +23,7 @@ aspect typestateSemanticCheck {
 	}
 
 	protected void TTypestate.semanticCheck() {
-		System.out.println("Maiu1" + this);
+		// System.out.println("Maiu1" + this);
 
 		TypeDecl t = getAccess().lookupTSType();
 
@@ -60,8 +60,8 @@ aspect typestateSemanticCheck {
 		if(getTypestate() instanceof TypestateSwitch) {
 			t = getTType().getAccess().lookupTSType();
 
-			System.out.println("---------- " + t.getParent() + " " + getTType().getAccess() + " " + t.isEnumDeclType() + " " + t.isEnumDecl()
-			+  getTType().getAccess().type().name());
+			// System.out.println("---------- " + t.getParent() + " " + getTType().getAccess() + " " + t.isEnumDeclType() + " " + t.isEnumDecl()
+			// +  getTType().getAccess().type().name());
 			if(!t.isEnumDeclType())
 				addSemanticError("Method " + signature() + " should return an enumeration type.");
 			else {

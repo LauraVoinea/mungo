@@ -36,9 +36,9 @@ aspect Type {
 
 	syn lazy TypeDecl Expr.getTypeNoQualified() = getCompilationUnitAncestor().getTypeDecl(0);
 
-	eq ParseName.getTypeNoQualified() =
-		lookupVariable(name()) != null ?
-			lookupVariable(name()).iterator().next().type() :
+	eq VarAccess.getTypeNoQualified() =
+		lookupTSVariable() != null ?
+			lookupTSVariable(name()).getTypeAccess().lookupTSType() :
 			unknownType();
 
 	eq PackageParseName.getTypeNoQualified() = lookupType(getPackage(), getID());

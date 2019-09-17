@@ -520,6 +520,8 @@ aspect GraphNode {
 				//t can never be instanceof NullType
 				//overriden equals(Object o) method
 //				if(!getParameters()[i].equals(t) && !(t instanceof NoNameType))
+				// System.out.println("==================== " + n.getId()
+				// + " " + t + " <> " + getParameters()[i]);
 				if(!t.equals(getParameters()[i]) && !(getParameters()[i] instanceof UnknownType))
 					return false;
 			}

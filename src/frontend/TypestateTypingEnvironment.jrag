@@ -61,6 +61,8 @@ aspect TypestateTypingEnvironment {
 
 		protected void checkError(ASTNode e) {
 			//has more than EndNodes/LoopNodes
+			System.out.println("()" + this + " <> " + this.current + " <> " + e);
+
 			if(current.onlyEndNodes() == -1)
 				addErrorGraph(e);
 		}

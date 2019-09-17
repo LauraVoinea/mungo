@@ -89,7 +89,7 @@ aspect javaASTFunctionality {
 
 			ElementConstantValue ts_v = (ElementConstantValue) a.getElementValuePair(0).getElementValue();
 			CompilationUnit cu = this.getCompilationUnitAncestor();
-			System.out.println("------------ " +   ts_v.getExpr());
+			// System.out.println("------------ " +   ts_v.getExpr());
 
 			return cu.lookupTSType(ts_v.getExpr().toString()).isTypestateDeclType() ?
 			cu.lookupTSType(ts_v.getExpr().toString()).getTypestateDecl() : null;
@@ -114,7 +114,7 @@ aspect javaASTFunctionality {
 	syn lazy TypestateMethod MethodDecl.getTypestateMethod() = getTypestateMethod(getClassDeclAncestor());
 
 	syn TypestateMethod MethodDecl.getTypestateMethod(TypeDecl cd) {
-		System.out.println("AAAAAA " + cd);
+		// System.out.println("AAAAAA " + cd);
 		if (cd == null)
 			return null;
 
@@ -194,7 +194,7 @@ aspect javaASTFunctionality {
 	}
 
 	syn lazy boolean MethodAccess.isTypestateMethod() {
-		System.out.println("AAAAAA2 " + getTarget());
+		// System.out.println("AAAAAA2 " + getTarget());
 
 		MethodDecl md = getTarget();
 		return (md != null) ? md.getTypestateMethod(getQualifiedType()) != null : false;
@@ -263,26 +263,24 @@ aspect javaASTFunctionality {
 	// inh MethodDecl ParseName.getMethodDeclAncestor();
 
 
-	Access contributes getDeclarator()
+	VarAccess contributes getDeclarator()
 	when getDeclarator() != null && (getDeclarator() instanceof FieldDeclarator)
 	to MethodDecl.getUsedTypestateFields() for getMethodDeclAncestor();
 
-	syn lazy Declarator Access.getDeclarator() {
+	syn lazy Declarator VarAccess.getDeclarator() {
 		if(!type().isTypestateClassDeclType())
 			return null;
-		if(getQualifiedAccess() != null){
-			System.out.println("---------------:dxjkfod---------------- " +
-			getQualifiedType() + " " + lookupTSVariable(getQualifiedType()) + lookupTSVariable(getQualifiedType()).getVariableDecl());
-			return lookupTSVariable(getQualifiedType()).getVariableDecl();
+		if(getQualifiedAccess() != null && getQualifiedType().isTypestateClassDeclType()){
+			// System.out.println("~~~~~~~~~~ " + this + " " + getQualifiedAccess() + " " +
+			// getQualifiedType() + " " + lookupTSVariable(getQualifiedType()));
+			if(lookupTSVariable(getQualifiedType()) != null)
+				return lookupTSVariable(getQualifiedType()).getVariableDecl();
 		}
-		System.out.println("%%%££ " + this);
-		System.out.println("%%%^^ " + lookupTSVariable());
-		if(lookupTSVariable() != null)
-			return lookupTSVariable().getVariableDecl();
-		else return null;
+		// System.out.println("~~~~~~~~~~ " + this + " " + lookupTSVariable() );
+		return lookupTSVariable().getVariableDecl();
 	}
 
-	inh MethodDecl Access.getMethodDeclAncestor();
+	inh MethodDecl VarAccess.getMethodDeclAncestor();
 	// ArrayTypeWithSizeAccess inherits ArrayTypeAccess
 	syn lazy boolean Access.hasDims() = countDims() != 0;
 
@@ -315,7 +313,7 @@ aspect javaASTFunctionality {
 
 	/*	Modifiers							*/
 	private boolean Modifiers.isModifier(String mod) {
-		System.out.println("<>" + mod);
+		// System.out.println("<>" + mod);
 		for(int i = 0; i < getNumModifier(); i++)
 			if(getModifier(i).getID().equals(mod))
 				return true;

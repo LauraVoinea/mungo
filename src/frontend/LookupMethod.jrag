@@ -21,7 +21,7 @@ aspect LookupTSMethod {
 
 	syn lazy MethodDecl TypestateMethod.lookupTSMethod(TypeDecl t) {
 		if(t != null) {
-			System.out.println("Maiu1" + t);
+			// System.out.println("Maiu1" + t);
 			MethodDecl md = t.lookupTSMethod(getID(), getParameterTypes());
 			TypeDecl td = getTType().getAccess().lookupTSType();
 			if(md != null && (md.getTypeAccess().lookupTSType().toString().equals(td.toString()) || (td instanceof UnknownType))){

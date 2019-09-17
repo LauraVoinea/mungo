@@ -13,29 +13,20 @@ aspect Annotation {
 
   rewrite ClassDecl{
       when (!(this instanceof TypestateClassDecl) && getModifiers().hasTypestateAnnotation(packageName())) to TypestateClassDecl {
-        List<BodyDecl> bodydecls = new List<BodyDecl>();
-        List<Access> interfaces = new List<Access>();
-
-        for(int i = 0; i < getNumBodyDecl(); i++){
-            bodydecls.add(getBodyDecl(i));
-        }
-
-        for(int i = 0; i < getNumImplements(); i++) {
-          interfaces.add(getImplements(i));
-        }
-        if(hasSuperClass())
-          return new TypestateClassDecl(getModifiers(), getID(), new Opt(getSuperClass()), interfaces, bodydecls);
-
-        return new TypestateClassDecl(getModifiers(), getID(), new Opt(), interfaces, bodydecls);
+        return new TypestateClassDecl(getModifiers().treeCopyNoTransform(),
+                getID(),
+                getSuperClassOpt().treeCopyNoTransform(),
+                getImplementsList().treeCopyNoTransform(),
+                getBodyDeclList());
 
             }
         }
 
-  TypestateClassDecl contributes
-     errorf("Semantic Error: Class %s cannot extend a class with a typestate.",
-         this.getID())
-     when hasSuperclass()
-         && superclass().isTypestateClassDeclType()
-          to CompilationUnit.problems();
+  // TypestateClassDecl contributes
+  //    errorf("Semantic Error: Class %s cannot extend a class with a typestate.",
+  //        this.getID())
+  //    when hasSuperclass()
+  //        && superclass().isTypestateClassDeclType()
+  //         to CompilationUnit.problems();
 
 }
