@@ -27,12 +27,14 @@ aspect JavaSemanticCheck {
 		if(getTypeAccess().type().isTypestateClassDeclType()) {
 			if(isField() && !getClassDeclAncestor().isTypestateClassDeclType())
 				addSemanticError("Field " + getID() + " with typestate type " + getTypeAccess().toString() + " is declared in non-typestate class " + getClassDeclAncestor().getID() + "." );
-			if(isField() && !getModifiers().isPrivate())
-				addSemanticError("Field " + getID() + " with typestate type " + getTypeAccess().toString() + " should be private");
+			if(isField() &&!getModifiers().isPrivate() && !getModifiers().isProtected())
+				addSemanticError("Field " + getID() + " with typestate type " + getTypeAccess().toString() + " should be private or protected ");
 			if(isField() && getModifiers().isStatic())
 				addSemanticError("Field " + getID() + " with typestate type " + getTypeAccess().toString() + " should not be static.");
 			if(getNumDims() > 0 || getTypeAccess().hasDims())
 				addSemanticError((isField() ? "Field ": "Variable ") + getID() + " with typestate type " + getTypeAccess().toString() + " should not be an array.");
+
+
 			}
 	}
 

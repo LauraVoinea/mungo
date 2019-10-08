@@ -13,7 +13,7 @@ aspect LookupConstructor {
 	//For future work
 	syn ConstructorDecl SuperConstructorAccess.getTarget() {
 		if(getClassDeclAncestor().hasSuperClass())
-			return getClassDeclAncestor().getSuperClass().type().lookupConstructor(getParameterTypes());
+			return getClassDeclAncestor().getSuperClass().lookupTSType().lookupConstructor(getParameterTypes());
 		return null;
 	}
 

@@ -7,7 +7,6 @@ typestate FileProtocol {
 
     Open = {
        byte read (): Open,
-       void miau (): Open,
        void close (): end
     }
 }

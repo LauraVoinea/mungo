@@ -59,20 +59,56 @@ aspect GetGraph{
   }
 
   eq ArrayAccess.getTypestateVar() = null;            //Typestate types are not arrays
-  eq MethodAccess.getTypestateVar() = type().isTypestateClassDeclType() ? getTarget().typestate : null;    //TODO is that it?
+  eq MethodAccess.getTypestateVar(){
+    System.out.println("=====##method##======= " + this + " > " + type().isTypestateClassDeclType() + " > " + getTarget()
+    + " ? " );
+    return  type().isTypestateClassDeclType() ? getTarget().typestate : null;    //TODO is that it?
+  }
 
-  eq Access.getTypestateVar(){
+  eq SuperAccess.getTypestateVar() {
+    System.out.println("=====##super##======= " + this + " > " + toString()  + " > "
+    + " ? " + type());
+
+    return type().isTypestateClassDeclType() ? null : null;
+  }
+
+  eq PackageAccess.getTypestateVar() {
+    System.out.println("=====##package##======= " + this);
+    return null;
+  }
+
+  eq ParseName.getTypestateVar() {
+    System.out.println("=====##ParseName##======= " + this);
+    return null;
+  }
+
+  eq VarAccess.getTypestateVar(){
       if(!type().isTypestateClassDeclType())
           return null;
+      System.out.println("=====##VarAcess##======= " + this + " > " + lookupTSVariable() + " > "
+              + getQualifiedAccess());
       if(getQualifiedAccess() != null){
           return lookupTSVariable(getQualifiedType()).getTypestateVar();
         }
+      if(lookupTSVariable()==null)
+        return null;
       return lookupTSVariable().getTypestateVar();
   }
 
-  syn lazy TypestateVar Access.getQualifiedTypestateVar() =
-    getQualifiedAccess() != null ?
-      getQualifiedAccess().getLeft().getTypestateVar() : null;                            //TODO this means that the caller object is this
+
+  //TODO this means that the caller object is this
+  syn lazy TypestateVar Access.getQualifiedTypestateVar() {
+    // System.out.println("=====1======= " + this + " > " + (this instanceof SuperAccess));
+    // if(getQualifiedAccess() != null)
+      // System.out.println("=====2======= " + this + " > " + getQualifiedAccess() + " > " + getQualifiedAccess().getLeft() +
+      // " > " + (getQualifiedAccess().getLeft() instanceof SuperAccess));
+    if(getQualifiedAccess().getLeft() instanceof SuperAccess)
+      return getQualifiedAccess().getRight().getTypestateVar();
+        // type().isTypestateClassDeclType() ? getTarget().typestate : null
+    return getQualifiedAccess() != null ?
+      getQualifiedAccess().getLeft().getTypestateVar() : null;
+
+    }
 
 //TODO:
   eq ParTypeAccess.getTypestateVar() = null;
@@ -116,7 +152,7 @@ aspect GetGraph{
              if(((FieldDecl) decl).getTypeAccess().lookupTSType().isTypestateClassDeclType())
                for(Declarator d : ((FieldDecl) decl).getDeclaratorList()){
                  s.add(d);
-                 System.out.println("********** " + d);
+                 System.out.println("********** " + this + " ! " + d);
               }
               }
       return s;
@@ -137,7 +173,7 @@ aspect GetGraph{
 
           if(getConstructorDecls().isEmpty()){
               for(Declarator vd : getTypestateFields()){
-                System.out.println("********** " + vd.getTypeAccess());
+                System.out.println("********** " + this + "> " + vd.getTypeAccess());
                   if(vd.getTypeAccess().lookupTSType().isTypestateClassDeclType()){
                       vd.typestate.checkError(vd);
                     }
@@ -322,7 +358,7 @@ aspect GetGraph{
 
   coll Set<ConstructorDecl> ConstructorDecl.ConstructorSuccessors()[new HashSet<ConstructorDecl>()] with add root ConstructorDecl;
 
-  ConstructorAccess contributes getTarget() when getTarget() != null to ConstructorDecl.ConstructorSuccessors()for getConstructorDeclAncestor();
+  ConstructorAccess contributes getTarget() when getTarget() != null to ConstructorDecl.ConstructorSuccessors() for getConstructorDeclAncestor();
 
   eq Program.getChild().getConstructorDeclAncestor() = null;
   inh ConstructorDecl ConstructorAccess.getConstructorDeclAncestor();
@@ -342,8 +378,8 @@ aspect GetGraph{
   	Set<TypestateVar> env = new HashSet<TypestateVar>();
 
   	for(Declarator vd : getTypestateFields()){
-  	//			if(vd.typestate == null)
-  	//				vd.typestate = new TypestateField(/*getMethods()*/);
+  				if(vd.typestate == null)
+  					vd.typestate = new TypestateField(/*getMethods()*/);
   		vd.typestate.resetConnectionGraph(this);
   		env.add(vd.typestate);
   	}
@@ -409,8 +445,7 @@ aspect GetGraph{
   //TODO bug. Does not add variables declared in switch statements.
   eq Block.getGraph(Set<TypestateVar> env){
   	for(Declarator v : getVariableDecls()){
-      // System.out.println("Here I am " + v.getTypeAccess() + " <> "
-      // +((ClassInstanceExpr)((ClassInstanceExpr) v.getInit()).getArg(0)).getAccess());
+      System.out.println("Here I am " + v.getTypeAccess() + " <> ");
       // if()
   		if(v.getTypeAccess().lookupTSType().isTypestateClassDeclType()){
   			if(v.typestate == null)
@@ -903,6 +938,7 @@ eq DoStmt.getGraph(Set<TypestateVar> env){
 
   //TODO implement me
   eq MethodAccess.getGraph(Set<TypestateVar> env){
+    System.out.println("????????????????? " + this);
   	MethodDecl md = getTarget();
   	if(md != null){
   		GraphNode[] parameters = new GraphNode[md.getNumParameter()];
@@ -1000,9 +1036,9 @@ eq DoStmt.getGraph(Set<TypestateVar> env){
   			if(getArg(i) instanceof ClassInstanceExpr){
   				dest.current = new InitNode(getArg(i)).addNext(parameters[i]);
   				dest.addTypestate(getArg(i));
-  			}else if((source=getArg(i).getTypestateVar()) != null){
+  			}else if((source = getArg(i).getTypestateVar()) != null){
   				source.checkError(getArg(i));
-  				source.current=parameters[i];
+  				source.current = parameters[i];
   			}
   		}
   	}

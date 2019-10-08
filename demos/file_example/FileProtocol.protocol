@@ -14,11 +14,11 @@ typestate FileProtocol {
 		Read =	{
 				void read(): Open
 			}
-
+/*
 		Read =	{
 				void read(): Open
 			}
-
+*/
 		Close =	{
 				void close(): end
 			}

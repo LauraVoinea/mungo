@@ -212,6 +212,7 @@ aspect GraphNode {
 		/**************************************************************/
 
 		protected boolean isNodeVisited(Set<GraphNode> visited) {
+			// System.out.println("()" + this + " <> " + visited + " <> ");
 			if(visited.contains(this))
 				return true;
 			visited.add(this);
@@ -258,7 +259,7 @@ aspect GraphNode {
 		protected ArrayList<GraphNode> normalise(Set<GraphNode> visited) {
 			if(isNodeVisited(visited))
 				return nextArrayList();
-
+			// System.out.println("()" + visited + " <> " + isNodeVisited(visited) + " <> " + next.size());
 			ArrayList<GraphNode> tmpNext = new ArrayList<GraphNode>();
 			for(int i = 0; i < next.size(); i++)
 				for(GraphNode n : computeNextArrayList(i, visited))

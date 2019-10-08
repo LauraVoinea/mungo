@@ -61,9 +61,18 @@ aspect TypestateTypingEnvironment {
 
 		protected void checkError(ASTNode e) {
 			//has more than EndNodes/LoopNodes
-			System.out.println("()" + this + " <> " + this.current + " <> " + e);
+			// System.out.println("()" + this.startExpr + " <> " + this.current + " <> " + e);
 
-			if(current.onlyEndNodes() == -1)
+			// System.out.println("(*)" + this.end + " <> " + this.start + " <> " + this.startGraph);
+
+			// end = new HashMap<ASTNode, GraphNode>();
+			// start = new HashMap<ASTNode, GraphNode>();
+			// startGraph = new ArrayList<GraphNode>();
+			// startExpr = new ArrayList<Expr>();
+			//
+			// errorGraph = new ArrayList<GraphNode>();
+			// errorExpr
+			if(current!= null && current.onlyEndNodes() == -1)
 				addErrorGraph(e);
 		}
 

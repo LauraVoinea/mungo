@@ -1,6 +1,6 @@
 aspect typestateCheck {
 	protected void ClassDecl.typestateCheck() {
-		// System.out.println("~~~~~~~~~~0~~~~~~~~~~~~~~~~" + this);
+		System.out.println("~~~~~~~~~~0~~~~~~~~~~~~~~~~" + this);
 		getGraph();
 	}
 

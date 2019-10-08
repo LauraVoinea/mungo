@@ -2,7 +2,7 @@ package demos.file_example;
 
 @Typestate("FileProtocol")
 class File {
-	private MyBufferedReader reader;
+	protected MyBufferedReader reader;
 	private String file;
 	private char[] readBuffer;
 	private int i;

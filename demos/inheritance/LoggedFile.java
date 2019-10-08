@@ -11,16 +11,18 @@ public class LoggedFile extends File{
     // It should be an error to call super.open() before logging.start(), because
     // super.open() will call my override of read(), which will write to the log.
     public void open () {
-//      super.open();
+     // super.open();
         logging.start();
         logging.log("Opening file");
+        // super.open();
     }
 
     public byte read () {
         byte ch = 0;
-//      ch = super.read();
+        ch = super.read();
         logging.log("Reading " + ch);
         return ch;
+        // return super.read();
     }
 
     public void close () {

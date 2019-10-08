@@ -64,17 +64,28 @@ aspect LookupTSVariable {
 
 	syn NameDecl TypeDecl.lookupTSVariable(String var) = null;
 	syn NameDecl ClassDecl.lookupTSVariable(String var) {
-		// System.out.println("Derp" + getFieldDecls());
+		System.out.println("Derp 0 I'm right here " + this + " " + getFieldDecls());
 		for(Declarator vd : getFieldDecls()){
 			if(vd.getID().equals(var))
 				return vd.toNameDecl();
 			}
 		//for possible future work
 		if(hasSuperClass()){
-			// System.out.println("Derp11" + this + this.hasSuperclass() + " " + this.hasSuperClass());
-			// System.out.println("Derp11" + this.superclass() + " " + this.getSuperClass());
 
-			return getSuperClass().type().lookupTSVariable(var);
+			Iterator<Variable> iter = superclass().fieldsIterator();
+			while (iter.hasNext()) {
+				Variable decl = iter.next();
+				System.out.println("Derp1 " + decl.name() + " " + getFieldDecls());
+				if (!decl.isPrivate() && decl.accessibleFrom(this)
+						&& decl.name().equals(var)) {
+							System.out.println("Derp2 " + decl + " " + getFieldDecls());
+
+			// 		putSimpleSetElement(map, decl.name(), decl);
+				}
+			}
+			System.out.println("Derp3 " + this + " " + getFieldDecls());
+
+			return getSuperClass().lookupTSType().lookupTSVariable(var);
 		}
 		return null;
 	}
