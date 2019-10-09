@@ -4,7 +4,6 @@ aspect JavaSemanticCheck {
 
 	//TODO check for no linear expressions in the throw and try stmts??
 
-
 	protected void TypestateClassDecl.semanticCheck() {
 		if(!existsTypestateDecl()){
 			Annotation a = getModifiers().getTypestateAnnotation(packageName());

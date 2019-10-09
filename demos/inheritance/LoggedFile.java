@@ -19,7 +19,7 @@ public class LoggedFile extends File{
 
     public byte read () {
         byte ch = 0;
-        ch = super.read();
+        // ch = super.read();
         logging.log("Reading " + ch);
         return ch;
         // return super.read();

@@ -378,8 +378,8 @@ aspect GetGraph{
   	Set<TypestateVar> env = new HashSet<TypestateVar>();
 
   	for(Declarator vd : getTypestateFields()){
-  				if(vd.typestate == null)
-  					vd.typestate = new TypestateField(/*getMethods()*/);
+  				// if(vd.typestate == null)
+  				// 	vd.typestate = new TypestateField(/*getMethods()*/);
   		vd.typestate.resetConnectionGraph(this);
   		env.add(vd.typestate);
   	}

@@ -9,16 +9,16 @@ public class File{
     }
 
     // Calls read() internally, which may be overridden.
-    public final void open () {
+    public void open () {
         h.acquire();
         byte header = read(); // suppose every file starts with a header byte
     }
 
-    public synchronized byte read () {
+    public byte read () {
         return 0;
     }
 
-    public synchronized void close () {  
+    public void close () {
         h.release();
     }
 }

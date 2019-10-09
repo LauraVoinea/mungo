@@ -79,8 +79,6 @@ aspect LookupTSVariable {
 				if (!decl.isPrivate() && decl.accessibleFrom(this)
 						&& decl.name().equals(var)) {
 							System.out.println("Derp2 " + decl + " " + getFieldDecls());
-
-			// 		putSimpleSetElement(map, decl.name(), decl);
 				}
 			}
 			System.out.println("Derp3 " + this + " " + getFieldDecls());

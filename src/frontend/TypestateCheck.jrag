@@ -2,6 +2,24 @@ aspect typestateCheck {
 	protected void ClassDecl.typestateCheck() {
 		System.out.println("~~~~~~~~~~0~~~~~~~~~~~~~~~~" + this);
 		getGraph();
+
+		if(hasSuperclass() && this.superclass().isTypestateClassDeclType()){
+			System.out.println("~~~~~~~~~~X~~~~~~~~~~~~~~~~" + this);
+
+			GraphNode t_1 = superclass().getTypestateDecl().createTypestate().normalise();
+			GraphNode t_2 = getTypestateDecl().createTypestate().normalise();
+			if(!t_2.includes(t_1)) {
+				System.out.println("~~~~~~~~~~FML~~~~~~~~~~~~~~~~" + this);
+				// String errorMsg = "Object created at " + filePath + ": " + ASTNode.getLine(startExpr.get(i).getStart());
+				// errorMsg += ". Typestate mismatch. Found: " + t.getErrorNode().nextToString() + ". Expected: " + t.getExpectedNode().nextToString() + ".";
+
+				addSemanticError("The typestate of a subclass should be a subtype of the superclass typestate");
+				// String filePath = ((CompilationUnit) startExpr.get(i).getCompilationUnitAncestor()).getFilePath();
+				// String errorMsg = "Object created at " + filePath + ": " + ASTNode.getLine(startExpr.get(i).getStart());
+				// errorMsg += ". Typestate mismatch. Found: " + t.getErrorNode().nextToString() + ". Expected: " + t.getExpectedNode().nextToString() + ".";
+				// t.getErrorNode().getExpr().addSemanticError(errorMsg);
+			}
+	}
 	}
 
 	protected void Declarator.typestateCheck() {
