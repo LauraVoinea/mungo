@@ -43,9 +43,11 @@ aspect TypestateTypingEnvironment {
 //				bd.returnGraph.add(current);
 //				bd.returnExpr.add(e);
 //				bd.returnTypestate.add(this);
+				// System.out.println("*** 1 *** " + e.toString());
 			}
 			//TODO better implementation here
 			else if(addTypestate == false && !current.isPlugged()){
+				// System.out.println("*** 2 *** " + e.toString());
 			}
 //			else if(current.isPlugged()) {
 //				bd.pluggedGraph.add(current);
@@ -53,6 +55,8 @@ aspect TypestateTypingEnvironment {
 //				bd.pluggedTypestate.add(this);
 //			}
 			else {
+				// System.out.println("*** 3 *** " + e.toString());
+
 				startGraph.add(current);
 				startExpr.add(e);
 			}
@@ -112,22 +116,24 @@ aspect TypestateTypingEnvironment {
 				return str.toString();
 		}
 
-		protected void checkTypestate(GraphNode t, String errorMessage) {
+		protected void checkTypestate(GraphNode t, String errorMessage){
+			// System.out.println("----------*****------------- " + errorMessage);
+
 			for(int i = startGraph.size() - 1; i >= 0; i--) {
 				GraphNode n = startGraph.get(i);
 				n.normalise();
-				System.out.println("-----------------------");
+				System.out.println("----------------------- " + i);
 				System.out.println(classInstanceExprtoString((ClassInstanceExpr) startExpr.get(i)));
 				n.printPaths();
-				System.out.println("------------------------");
+				System.out.println("------------------------" );
 				if(!t.includes(n)) {
-					String filePath = ((CompilationUnit) startExpr.get(i).getCompilationUnitAncestor()).getFilePath();
+					String filePath = ((CompilationUnit) startExpr.get(i).getCompilationUnitAncestor()).pathName();
 					String errorMsg = "Object created at " + filePath + ": " + ASTNode.getLine(startExpr.get(i).getStart());
 					errorMsg += ". Typestate mismatch. Found: " + t.getErrorNode().nextToString() + ". Expected: " + t.getExpectedNode().nextToString() + ".";
 					t.getErrorNode().getExpr().addSemanticError(errorMsg);
 				}
 
-				if(startExpr.get(i).getProgramAncestor().printInference())
+				if(startExpr.get(i).getCompilationUnitAncestor().program().options().hasOption("-pi"))
 					//TODO have a proper format for the n.stringState() string
 					startExpr.get(i).addInfo(n.stringState());
 			}
@@ -161,7 +167,7 @@ aspect TypestateTypingEnvironment {
 
 		TypestateField() {
 			super();
-
+			// System.out.println("****************************** " + this );
 			connectGraph = new HashMap<BodyDecl, GraphNode>();
 			plugGraph = new HashMap<BodyDecl, GraphNode>();
 			current = new EndNode();

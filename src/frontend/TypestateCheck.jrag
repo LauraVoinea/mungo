@@ -1,23 +1,17 @@
 aspect typestateCheck {
 	protected void ClassDecl.typestateCheck() {
-		System.out.println("~~~~~~~~~~0~~~~~~~~~~~~~~~~" + this);
+		// System.out.println("~~~~~~~~~~0~~~~~~~~~~~~~~~~ " + this + " " +
+		// (this instanceof TypestateClassDecl) );
 		getGraph();
 
 		if(hasSuperclass() && this.superclass().isTypestateClassDeclType()){
-			System.out.println("~~~~~~~~~~X~~~~~~~~~~~~~~~~" + this);
+			// System.out.println("~~~~~~~~~~X~~~~~~~~~~~~~~~~" + this + getSuperClass().lookupTSType().getTypestateDecl()
+			// );
 
-			GraphNode t_1 = superclass().getTypestateDecl().createTypestate().normalise();
+			GraphNode t_1 = getSuperClass().lookupTSType().getTypestateDecl().createTypestate().normalise();
 			GraphNode t_2 = getTypestateDecl().createTypestate().normalise();
 			if(!t_2.includes(t_1)) {
-				System.out.println("~~~~~~~~~~FML~~~~~~~~~~~~~~~~" + this);
-				// String errorMsg = "Object created at " + filePath + ": " + ASTNode.getLine(startExpr.get(i).getStart());
-				// errorMsg += ". Typestate mismatch. Found: " + t.getErrorNode().nextToString() + ". Expected: " + t.getExpectedNode().nextToString() + ".";
-
 				addSemanticError("The typestate of a subclass should be a subtype of the superclass typestate");
-				// String filePath = ((CompilationUnit) startExpr.get(i).getCompilationUnitAncestor()).getFilePath();
-				// String errorMsg = "Object created at " + filePath + ": " + ASTNode.getLine(startExpr.get(i).getStart());
-				// errorMsg += ". Typestate mismatch. Found: " + t.getErrorNode().nextToString() + ". Expected: " + t.getExpectedNode().nextToString() + ".";
-				// t.getErrorNode().getExpr().addSemanticError(errorMsg);
 			}
 	}
 	}
@@ -26,7 +20,7 @@ aspect typestateCheck {
 		if(getTypeAccess().lookupTSType() != null && getTypeAccess().lookupTSType().isTypestateClassDeclType()) {
 			typestate.reportErrors("Object reference is used uninitialised.");
 			if(getTypeAccess().lookupTSType().getTypestateDecl() != null) {
-				System.out.println("~~~~~~~~~~1~~~~~~~~~~~~~~~~ " + this + " " + getTypeAccess() + " " + getTypeAccess().lookupTSType().getTypestateDecl());
+				// System.out.println("~~~~~~~~~~1~~~~~~~~~~~~~~~~ " + this + " " + getTypeAccess() + " " + getTypeAccess().lookupTSType().getTypestateDecl());
 				GraphNode t = getTypeAccess().lookupTSType().getTypestateDecl().createTypestate().normalise();
 				typestate.checkTypestate(t, "The typestate of the created object does not match its declared typestate.");
 			}

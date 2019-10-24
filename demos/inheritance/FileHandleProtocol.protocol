@@ -5,7 +5,7 @@ typestate FileHandleProtocol {
        void acquire (): Acquired
     }
 
-    Acquired = {
-       void release (): end
+    Acquired =; {
+       void release (): end,
     }
 }

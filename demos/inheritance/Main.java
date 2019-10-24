@@ -6,8 +6,8 @@ class Main {
         f.open();
         f.read();
         f.clearLog();
-        LoggedFile g = f; // TODO: make this File
-        // File g = f; // TODO: make this File
+        // LoggedFile g = f; // TODO: make this File
+        File g = f; // TODO: make this File
         g.close();
     }
 }

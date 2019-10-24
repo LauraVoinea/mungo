@@ -25,17 +25,16 @@ jastadd {
       }
 
       scanner {
-        // basedir "src/scanner/"
-        // include "**/*.flex"
-        include "src/scanner/Keywords.flex"
+        basedir "src/scanner/"
+        include "**/*.flex"
+        // include "src/scanner/Keywords.flex"
       }
 
       parser {
-        // basedir "src/parser/"
-        // include "**/*.parser"
+        basedir "src/parser/"
+        include "**/*.parser"
         // include "src/parser/Java14.parser"
-        include "src/parser/Typestate.parser"
-        // include "src/parser/Annotations.parser"
+        // include "src/parser/Typestate.parser"
 
       }
     }
@@ -62,8 +61,9 @@ sourceSets.main {
 }
 
 // Use JavaCompiler if you need bytecode generation.
-jar.manifest.attributes 'Main-Class': 'TypestateMain'
+// jar.manifest.attributes 'Main-Class': 'TypestateMain'
 // jar.manifest.attributes 'Main-Class': 'org.extendj.JavaChecker'
+jar.manifest.attributes 'Main-Class': 'org.extendj.TypestateChecker'
 //jar.manifest.attributes 'Main-Class': 'org.extendj.JavaCompiler'
 jar.destinationDir = projectDir
 

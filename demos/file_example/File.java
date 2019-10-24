@@ -61,6 +61,7 @@ class File {
 
 					}
 				}
+				// myFile = new File("file.txt");
 				myFile.close();
 				break;
 			case ERROR:

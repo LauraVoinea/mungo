@@ -2,7 +2,7 @@ package demos.inheritance;
 
 @Typestate("FileProtocol")
 public class File{
-    protected FileHandle h; // Mungo currently requires 'private' here
+    private FileHandle h; // Mungo currently requires 'private' here
 
     public File () {
         h = new FileHandle();

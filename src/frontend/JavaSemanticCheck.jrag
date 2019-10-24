@@ -15,13 +15,14 @@ aspect JavaSemanticCheck {
 		//TODO be in a different file.
 		else
 			for(TypestateMethod m : getTypestateDecl().getMethods()) {
-				System.out.println("derp " + m + m.lookupTSMethod(this));
+				// System.out.println("derp " + this + " " + m.lookupTSMethod(this));
 				if(m.lookupTSMethod(this) == null){
 					addSemanticError("Method with signature " + m.signature() + " defined in typestate " + getTypestateDecl().getID() + " is not implemented in class " + getID() + ".");
 				}
 			}
 	}
 
+	//TODO: VarDeclarator and Field Declarator separate checks
 	protected void Declarator.semanticCheck() {
 		if(getTypeAccess().type().isTypestateClassDeclType()) {
 			if(isField() && !getClassDeclAncestor().isTypestateClassDeclType())
@@ -74,6 +75,7 @@ aspect JavaSemanticCheck {
 
 	protected void MethodAccess.semanticCheck() {
 		if(getQualifiedType().isTypestateClassDeclType()) {
+			// System.err.println("======= " + getQualifiedType() + " " +  lookupTSMethodTargets(getQualifiedType()));
 			ArrayList<MethodDecl> a = lookupTSMethodTargets(getQualifiedType());
 			if(a.size() == 0)
 				addSemanticError("Method call " + signature() + " has no target.");

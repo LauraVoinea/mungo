@@ -7,13 +7,13 @@ aspect javaASTFunctionality {
 
 		while(node != null && !(node instanceof CompilationUnit))
 			node = node.getParent();
-		Program p = (Program) node.getParent().getParent();
+		Program p = (Program) node.program();
 		for(int i = 0; i < p.getNumCompilationUnit(); i++){
 			if( ((CompilationUnit) node).getPackageDecl().toString().equals(p.getCompilationUnit(i).getPackageDecl().toString())
 			&&  ((CompilationUnit) node).getTypeDecl(0).toString().equals(p.getCompilationUnit(i).getTypeDecl(0).toString()) ){
-
-				// System.out.println("<1> " + p.getCompilationUnit(i).getTypeDecl(0));
-
+				// System.out.println("<1> " + this.toString() + " " +
+				// (p.getCompilationUnit(i) == compilationUnit())
+				// + " " + p.getCompilationUnit(i) + " " + compilationUnit());
 				return  p.getCompilationUnit(i);
 			}
 		}
@@ -23,7 +23,10 @@ aspect javaASTFunctionality {
 	}
 
 	protected Program ASTNode.getProgramAncestor() {
-		return (Program) getCompilationUnitAncestor().getParent().getParent();
+		// System.out.println("<2> " + getCompilationUnitAncestor().getParent().getParent()
+		// + " " + program());
+
+		return (Program)getCompilationUnitAncestor().getParent().getParent();
 	}
 
 	syn boolean TypestateClassDecl.hasSuperclass(){
@@ -83,16 +86,14 @@ aspect javaASTFunctionality {
   syn lazy boolean TypestateClassDecl.existsTypestateDecl() =	getTypestateDecl() != null;
 
 
-	syn TypestateDecl TypestateClassDecl.getTypestateDecl() {
+	syn lazy TypestateDecl TypestateClassDecl.getTypestateDecl() {
 		Annotation a = getModifiers().getTypestateAnnotation(packageName());
 		if(a != null){
-
 			ElementConstantValue ts_v = (ElementConstantValue) a.getElementValuePair(0).getElementValue();
 			CompilationUnit cu = this.getCompilationUnitAncestor();
-			// System.out.println("------------ " +   ts_v.getExpr());
-
-			return cu.lookupTSType(ts_v.getExpr().toString()).isTypestateDeclType() ?
-			cu.lookupTSType(ts_v.getExpr().toString()).getTypestateDecl() : null;
+			// System.out.println("------xxx------ " +   ts_v.getExpr());
+			TypeDecl t = cu.lookupTSType(ts_v.getExpr().toString());
+			return t.isTypestateDeclType() ? t.getTypestateDecl() : null;
 		}
 		return null;
 	}
@@ -194,8 +195,6 @@ aspect javaASTFunctionality {
 	}
 
 	syn lazy boolean MethodAccess.isTypestateMethod() {
-		// System.out.println("AAAAAA2 " + getTarget());
-
 		MethodDecl md = getTarget();
 		return (md != null) ? md.getTypestateMethod(getQualifiedType()) != null : false;
 	}
@@ -231,52 +230,27 @@ aspect javaASTFunctionality {
 	eq ArrayTypeAccess.getLastAccess() = getAccess().getLastAccess();
 
 	syn lazy String Access.getQualifiedString() =
-		(isAbstractDotParent()) ?
-			((Access) getParent()).getQualifiedString() :
-			"";
+		(isAbstractDotParent()) ? ((Access) getParent()).getQualifiedString() :	"";
 
 	eq Dot.getQualifiedString() =
-		(isAbstractDotParent() ?
-			((Access) getParent()).getQualifiedString() + ".":
-			""
-		) +
-		getLeft().toString();
+		(isAbstractDotParent() ? ((Access) getParent()).getQualifiedString() + ".":
+		"") + getLeft().toString();
 
 	syn lazy int Access.countDims() = 0;
 	eq ArrayTypeAccess.countDims() = 1 + getAccess().countDims();
-
-	//check this
-	/*	ParseName							*/
-	// ParseName contributes getDeclarator()
-	// when getDeclarator() != null && getDeclarator().isField()
-	// to MethodDecl.getUsedTypestateFields() for getMethodDeclAncestor();
-
-	// syn lazy Declarator ParseName.getDeclarator() {
-	// 	System.out.println("Maiu1" + type());
-	// 	if(!type().isTypestateClassDeclType())
-	// 		return null;
-	// 	if(getQualifiedAccess() != null)
-	// 		return lookupTSVariable(getQualifiedType()).getVariableDecl();
-	// 	return lookupTSVariable().getVariableDecl();
-	// }
-	//
-	// inh MethodDecl ParseName.getMethodDeclAncestor();
-
 
 	VarAccess contributes getDeclarator()
 	when getDeclarator() != null && (getDeclarator() instanceof FieldDeclarator)
 	to MethodDecl.getUsedTypestateFields() for getMethodDeclAncestor();
 
 	syn lazy Declarator VarAccess.getDeclarator() {
+		// System.out.println("------------- " + this);
 		if(!type().isTypestateClassDeclType())
 			return null;
 		if(getQualifiedAccess() != null && getQualifiedType().isTypestateClassDeclType()){
-			// System.out.println("~~~~~~~~~~ " + this + " " + getQualifiedAccess() + " " +
-			// getQualifiedType() + " " + lookupTSVariable(getQualifiedType()));
 			if(lookupTSVariable(getQualifiedType()) != null)
 				return lookupTSVariable(getQualifiedType()).getVariableDecl();
 		}
-		// System.out.println("~~~~~~~~~~ " + this + " " + lookupTSVariable() );
 		return lookupTSVariable().getVariableDecl();
 	}
 

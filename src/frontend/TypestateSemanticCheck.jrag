@@ -2,9 +2,9 @@ import java.util.*;
 
 aspect typestateSemanticCheck {
 
-//	protected void TypestateDecl.semanticCheck() {
-//		createTypestate().normalise().printPaths();
-//	}
+	protected void TypestateDecl.semanticCheck() {
+		createTypestate().normalise().printPaths();
+	}
 
 	protected void State.semanticCheck() {
 		if(isDuplicate())
@@ -18,12 +18,14 @@ aspect typestateSemanticCheck {
 	}
 
 	protected void TypestateLabel.semanticCheck() {
+		// System.out.println("Maiu2" + this.toString());
+
 		if(getTarget() == null)
 			addSemanticError("No Definition for state: " + getLabel());
 	}
 
 	protected void TTypestate.semanticCheck() {
-		// System.out.println("Maiu1" + this);
+		// System.out.println("Maiu1" + this.toString());
 
 		TypeDecl t = getAccess().lookupTSType();
 
@@ -59,9 +61,6 @@ aspect typestateSemanticCheck {
 		TypeDecl t;
 		if(getTypestate() instanceof TypestateSwitch) {
 			t = getTType().getAccess().lookupTSType();
-
-			// System.out.println("---------- " + t.getParent() + " " + getTType().getAccess() + " " + t.isEnumDeclType() + " " + t.isEnumDecl()
-			// +  getTType().getAccess().type().name());
 			if(!t.isEnumDeclType())
 				addSemanticError("Method " + signature() + " should return an enumeration type.");
 			else {
@@ -81,7 +80,7 @@ aspect typestateSemanticCheck {
 			for(int j = i + 1; j < getNumTypestateMethod(); j++) {
 				TypestateMethod tm2 = getTypestateMethod(j);
 				if(tm1.signature().equals(tm2.signature()))
-					addSemanticError("Duplicate method signature in the prefix of a set Sta: " + tm1.signature() + ".");
+					addSemanticError("Duplicate method signature in the prefix of a set State: " + tm1.signature() + ".");
 			}
 		}
 	}

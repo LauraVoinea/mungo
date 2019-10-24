@@ -64,7 +64,7 @@ aspect LookupTSVariable {
 
 	syn NameDecl TypeDecl.lookupTSVariable(String var) = null;
 	syn NameDecl ClassDecl.lookupTSVariable(String var) {
-		System.out.println("Derp 0 I'm right here " + this + " " + getFieldDecls());
+		// System.out.println("Derp 0 I'm right here " + this + " " + getFieldDecls());
 		for(Declarator vd : getFieldDecls()){
 			if(vd.getID().equals(var))
 				return vd.toNameDecl();
@@ -72,16 +72,16 @@ aspect LookupTSVariable {
 		//for possible future work
 		if(hasSuperClass()){
 
-			Iterator<Variable> iter = superclass().fieldsIterator();
-			while (iter.hasNext()) {
-				Variable decl = iter.next();
-				System.out.println("Derp1 " + decl.name() + " " + getFieldDecls());
-				if (!decl.isPrivate() && decl.accessibleFrom(this)
-						&& decl.name().equals(var)) {
-							System.out.println("Derp2 " + decl + " " + getFieldDecls());
-				}
-			}
-			System.out.println("Derp3 " + this + " " + getFieldDecls());
+			// Iterator<Variable> iter = superclass().fieldsIterator();
+			// while (iter.hasNext()) {
+			// 	Variable decl = iter.next();
+			// 	System.out.println("Derp1 " + decl.name() + " " + getFieldDecls());
+			// 	if (!decl.isPrivate() && decl.accessibleFrom(this)
+			// 			&& decl.name().equals(var)) {
+			// 				// System.out.println("Derp2 " + decl + " " + getFieldDecls());
+			// 	}
+			// }
+			// System.out.println("Derp3 " + this + " " + getFieldDecls());
 
 			return getSuperClass().lookupTSType().lookupTSVariable(var);
 		}

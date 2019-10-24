@@ -1,14 +1,20 @@
 aspect LookupTSMethod {
 
 	syn lazy TypeDecl[] MethodAccess.getParameterTypes() {
-		TypeDecl[] ParameterAccess = new TypeDecl[getNumArg()];
+		TypeDecl[] parameterAccess = new TypeDecl[getNumArg()];
+		// System.out.println("*****Method Access**** " + this + " " + hostType()
+		// + " " + this.getArg(0) +  getNumArg());
+
+
 		for(int i = 0; i < getNumArg(); i++){
-			ParameterAccess[i] = getArg(i).type();
+			parameterAccess[i] = getArg(i).type();
+			// System.out.println("&&&& " +  getArg(i).type());
 		}
-		return ParameterAccess;
+		return parameterAccess;
 	}
 
 	syn lazy TypeDecl[] TypestateMethod.getParameterTypes() {
+		// System.out.println("****TypestateMethod***** " + this);
 		TypeDecl[] ParameterAccess = new TypeDecl[getTTypeList().getNumTType()];
 		for(int i = 0; i <  getTTypeList().getNumTType(); i++)
 			ParameterAccess[i] = getTTypeList().getTType(i).getAccess().type();
@@ -45,8 +51,13 @@ aspect LookupTSMethod {
 
 
 	syn boolean MethodDecl.isTarget(String method, TypeDecl[] parameters) {
-		if(!getID().equals(method) || getNumParameter() != parameters.length)
+
+		if(!getID().equals(method) || getNumParameter() != parameters.length){
+			// System.out.println("Maiu1 " + getID() + " " + hostType() + " " + getNumParameter()
+			// + " " + parameters.length);
 			return false;
+		}
+
 
 		for(int i = 0; i < getNumParameter(); i++) {
 			TypeDecl t = getParameter(i).getTypeAccess().type();
@@ -54,10 +65,13 @@ aspect LookupTSMethod {
 			//noname type should be matched with any type
 			//t can never be instanceof NullType
 			//overriden equals(Object o) method
-			if(!parameters[i].equals(t) && !(t instanceof UnknownType))
+			// System.out.println("---- " + this + parameters[i] + " " + t +" "+ parameters[i].name().equals(t.name())
+			// + " " + (t instanceof UnknownType));
+			if(!parameters[i].name().equals(t.name()) && !(t instanceof UnknownType))
 				return false;
 		}
-
+		// System.out.println("Maiu1 " + getID() + " " + hostType() + " " + getNumParameter()
+		// + " " + parameters.length);
 		return true;
 	}
 
@@ -68,7 +82,11 @@ aspect LookupTSMethod {
 	eq ClassDecl.lookupTSMethodTargets(String method, TypeDecl[] parameters) {
 		ArrayList<MethodDecl> a = new ArrayList<MethodDecl>();
 
+
 		for(MethodDecl m : getMethodDecls()){
+			// System.out.println("do i ever get here? " + this + " "
+			// + m + " " + m.isTarget(method, parameters));
+
 			if(m.isTarget(method, parameters)){
 				a.add(m);
 				}
@@ -77,7 +95,7 @@ aspect LookupTSMethod {
 		//Implementing super class access
 		if((a.size() == 0) && hasSuperClass()) {
 			//TODO check if lookupType() really exists
-			System.out.println("do i ever get here? " + this);
+			// System.out.println("do i ever get here? " + this);
 			if(!getSuperClass().lookupTSType().isUnknown()){
 				return getSuperClass().lookupTSType().lookupTSMethodTargets(method, parameters);
 			}
